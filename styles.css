@@ -2918,10 +2918,14 @@
       }
     }
 
-    /* ─── Signature reveal (frame sequence above Contact) ─── */
+    /* ─── Signature reveal (frame sequence above Contact) ───
+       100-frame portrait (9:16) sequence — scroll length tuned to the
+       frame count (was 500vh for the old 208-frame set; ~2.5vh per
+       frame keeps the same scrub feel with half the frames instead of
+       dragging the same 500vh across fewer stills). */
     .cta-seq {
       position: relative;
-      height: 500vh;
+      height: 260vh;
       background: #000;
       overflow: visible;
       contain: layout style;
@@ -3012,7 +3016,7 @@
       transform-origin: left center;
     }
     @media (max-width: 768px) {
-      .cta-seq { height: 480vh; }
+      .cta-seq { height: 240vh; }
       .cta-seq-content { padding-bottom: calc(3.6rem + env(safe-area-inset-bottom)); }
     }
     @media (max-height: 620px) {
