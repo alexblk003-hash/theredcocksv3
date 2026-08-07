@@ -197,11 +197,22 @@
 
         if(entry.isIntersecting) {
           entry.target.classList.add('active');
+          // First time this section is seen: lock its cinematic entrance
+          // in place permanently (opacity/transform/blur settle to final
+          // state) so it never replays on later scroll-backs — only the
+          // much smaller .lux-exiting dimming (below) reverses.
+          entry.target.classList.add('lux-locked');
+          entry.target.classList.remove('lux-exiting');
 
           // Only decode/play videos for sections actually on screen
           sectionVideos.forEach(v => v.play().catch(() => {}));
         } else {
           entry.target.classList.remove('active');
+          // Quiet, subtle "leaving" dim — only once it's already been
+          // revealed at least once; never applies before the first reveal.
+          if (entry.target.classList.contains('lux-locked')) {
+            entry.target.classList.add('lux-exiting');
+          }
 
           sectionVideos.forEach(v => v.pause());
         }
@@ -221,6 +232,7 @@
         const rect = sec.getBoundingClientRect();
         if (rect.top < window.innerHeight && rect.bottom > 0) {
           sec.classList.add('active');
+          sec.classList.add('lux-locked');
         }
       });
     }, 1200);
@@ -924,7 +936,7 @@ window.CTA_FRAMES=["assets/images/contact-seq/frame_001.webp", "assets/images/co
 
 /* ---- next inline block ---- */
 
-window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-seq/frame_002.webp", "assets/images/mid-seq/frame_003.webp", "assets/images/mid-seq/frame_004.webp", "assets/images/mid-seq/frame_005.webp", "assets/images/mid-seq/frame_006.webp", "assets/images/mid-seq/frame_007.webp", "assets/images/mid-seq/frame_008.webp", "assets/images/mid-seq/frame_009.webp", "assets/images/mid-seq/frame_010.webp", "assets/images/mid-seq/frame_011.webp", "assets/images/mid-seq/frame_012.webp", "assets/images/mid-seq/frame_013.webp", "assets/images/mid-seq/frame_014.webp", "assets/images/mid-seq/frame_015.webp", "assets/images/mid-seq/frame_016.webp", "assets/images/mid-seq/frame_017.webp", "assets/images/mid-seq/frame_018.webp", "assets/images/mid-seq/frame_019.webp", "assets/images/mid-seq/frame_020.webp", "assets/images/mid-seq/frame_021.webp", "assets/images/mid-seq/frame_022.webp", "assets/images/mid-seq/frame_023.webp", "assets/images/mid-seq/frame_024.webp", "assets/images/mid-seq/frame_025.webp", "assets/images/mid-seq/frame_026.webp", "assets/images/mid-seq/frame_027.webp", "assets/images/mid-seq/frame_028.webp", "assets/images/mid-seq/frame_029.webp", "assets/images/mid-seq/frame_030.webp", "assets/images/mid-seq/frame_031.webp", "assets/images/mid-seq/frame_032.webp", "assets/images/mid-seq/frame_033.webp", "assets/images/mid-seq/frame_034.webp", "assets/images/mid-seq/frame_035.webp", "assets/images/mid-seq/frame_036.webp", "assets/images/mid-seq/frame_037.webp", "assets/images/mid-seq/frame_038.webp", "assets/images/mid-seq/frame_039.webp", "assets/images/mid-seq/frame_040.webp", "assets/images/mid-seq/frame_041.webp", "assets/images/mid-seq/frame_042.webp", "assets/images/mid-seq/frame_043.webp", "assets/images/mid-seq/frame_044.webp", "assets/images/mid-seq/frame_045.webp", "assets/images/mid-seq/frame_046.webp", "assets/images/mid-seq/frame_047.webp", "assets/images/mid-seq/frame_048.webp", "assets/images/mid-seq/frame_049.webp", "assets/images/mid-seq/frame_050.webp", "assets/images/mid-seq/frame_051.webp", "assets/images/mid-seq/frame_052.webp", "assets/images/mid-seq/frame_053.webp", "assets/images/mid-seq/frame_054.webp", "assets/images/mid-seq/frame_055.webp", "assets/images/mid-seq/frame_056.webp", "assets/images/mid-seq/frame_057.webp", "assets/images/mid-seq/frame_058.webp", "assets/images/mid-seq/frame_059.webp", "assets/images/mid-seq/frame_060.webp", "assets/images/mid-seq/frame_061.webp", "assets/images/mid-seq/frame_062.webp", "assets/images/mid-seq/frame_063.webp", "assets/images/mid-seq/frame_064.webp", "assets/images/mid-seq/frame_065.webp", "assets/images/mid-seq/frame_066.webp", "assets/images/mid-seq/frame_067.webp", "assets/images/mid-seq/frame_068.webp", "assets/images/mid-seq/frame_069.webp", "assets/images/mid-seq/frame_070.webp", "assets/images/mid-seq/frame_071.webp", "assets/images/mid-seq/frame_072.webp", "assets/images/mid-seq/frame_073.webp", "assets/images/mid-seq/frame_074.webp", "assets/images/mid-seq/frame_075.webp", "assets/images/mid-seq/frame_076.webp", "assets/images/mid-seq/frame_077.webp", "assets/images/mid-seq/frame_078.webp", "assets/images/mid-seq/frame_079.webp", "assets/images/mid-seq/frame_080.webp", "assets/images/mid-seq/frame_081.webp", "assets/images/mid-seq/frame_082.webp", "assets/images/mid-seq/frame_083.webp", "assets/images/mid-seq/frame_084.webp", "assets/images/mid-seq/frame_085.webp", "assets/images/mid-seq/frame_086.webp", "assets/images/mid-seq/frame_087.webp", "assets/images/mid-seq/frame_088.webp", "assets/images/mid-seq/frame_089.webp", "assets/images/mid-seq/frame_090.webp", "assets/images/mid-seq/frame_091.webp", "assets/images/mid-seq/frame_092.webp", "assets/images/mid-seq/frame_093.webp", "assets/images/mid-seq/frame_094.webp", "assets/images/mid-seq/frame_095.webp", "assets/images/mid-seq/frame_096.webp", "assets/images/mid-seq/frame_097.webp", "assets/images/mid-seq/frame_098.webp", "assets/images/mid-seq/frame_099.webp", "assets/images/mid-seq/frame_100.webp"];
+window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-seq/frame_002.webp", "assets/images/mid-seq/frame_003.webp", "assets/images/mid-seq/frame_004.webp", "assets/images/mid-seq/frame_005.webp", "assets/images/mid-seq/frame_006.webp", "assets/images/mid-seq/frame_007.webp", "assets/images/mid-seq/frame_008.webp", "assets/images/mid-seq/frame_009.webp", "assets/images/mid-seq/frame_010.webp", "assets/images/mid-seq/frame_011.webp", "assets/images/mid-seq/frame_012.webp", "assets/images/mid-seq/frame_013.webp", "assets/images/mid-seq/frame_014.webp", "assets/images/mid-seq/frame_015.webp", "assets/images/mid-seq/frame_016.webp", "assets/images/mid-seq/frame_017.webp", "assets/images/mid-seq/frame_018.webp", "assets/images/mid-seq/frame_019.webp", "assets/images/mid-seq/frame_020.webp", "assets/images/mid-seq/frame_021.webp", "assets/images/mid-seq/frame_022.webp", "assets/images/mid-seq/frame_023.webp", "assets/images/mid-seq/frame_024.webp", "assets/images/mid-seq/frame_025.webp", "assets/images/mid-seq/frame_026.webp", "assets/images/mid-seq/frame_027.webp", "assets/images/mid-seq/frame_028.webp", "assets/images/mid-seq/frame_029.webp", "assets/images/mid-seq/frame_030.webp", "assets/images/mid-seq/frame_031.webp", "assets/images/mid-seq/frame_032.webp", "assets/images/mid-seq/frame_033.webp", "assets/images/mid-seq/frame_034.webp", "assets/images/mid-seq/frame_035.webp", "assets/images/mid-seq/frame_036.webp", "assets/images/mid-seq/frame_037.webp", "assets/images/mid-seq/frame_038.webp", "assets/images/mid-seq/frame_039.webp", "assets/images/mid-seq/frame_040.webp", "assets/images/mid-seq/frame_041.webp", "assets/images/mid-seq/frame_042.webp", "assets/images/mid-seq/frame_043.webp", "assets/images/mid-seq/frame_044.webp", "assets/images/mid-seq/frame_045.webp", "assets/images/mid-seq/frame_046.webp", "assets/images/mid-seq/frame_047.webp", "assets/images/mid-seq/frame_048.webp", "assets/images/mid-seq/frame_049.webp", "assets/images/mid-seq/frame_050.webp", "assets/images/mid-seq/frame_051.webp", "assets/images/mid-seq/frame_052.webp", "assets/images/mid-seq/frame_053.webp", "assets/images/mid-seq/frame_054.webp", "assets/images/mid-seq/frame_055.webp", "assets/images/mid-seq/frame_056.webp", "assets/images/mid-seq/frame_057.webp", "assets/images/mid-seq/frame_058.webp", "assets/images/mid-seq/frame_059.webp", "assets/images/mid-seq/frame_060.webp", "assets/images/mid-seq/frame_061.webp", "assets/images/mid-seq/frame_062.webp", "assets/images/mid-seq/frame_063.webp", "assets/images/mid-seq/frame_064.webp", "assets/images/mid-seq/frame_065.webp", "assets/images/mid-seq/frame_066.webp", "assets/images/mid-seq/frame_067.webp", "assets/images/mid-seq/frame_068.webp", "assets/images/mid-seq/frame_069.webp", "assets/images/mid-seq/frame_070.webp", "assets/images/mid-seq/frame_071.webp", "assets/images/mid-seq/frame_072.webp", "assets/images/mid-seq/frame_073.webp", "assets/images/mid-seq/frame_074.webp", "assets/images/mid-seq/frame_075.webp", "assets/images/mid-seq/frame_076.webp", "assets/images/mid-seq/frame_077.webp", "assets/images/mid-seq/frame_078.webp", "assets/images/mid-seq/frame_079.webp", "assets/images/mid-seq/frame_080.webp", "assets/images/mid-seq/frame_081.webp", "assets/images/mid-seq/frame_082.webp"];
 
 /* ---- next inline block ---- */
 
@@ -1279,9 +1291,9 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
     contentSelector: '.mid-seq-content',
     cueId: 'mid-seq-cue',
     barSelector: '#mid-seq-progress i',
-    nativeW: 1280,
-    nativeH: 720,
-    focusX: 0.2,
+    nativeW: 720,
+    nativeH: 1280,
+    focusX: 0.5,
     focusXMobile: 0.5,
     deferLoad: true
   });
@@ -1883,11 +1895,32 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
   // scroll on the hero passes straight through to the page — the embedded
   // player never sees the touch, which is what fixes the video visibly
   // stuttering/pausing whenever someone touched the screen.
-  var HERO_EMBED_BASE = 'https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=Warrior_donning_rooster_mask_in_202608071320_nhlr5k&controls=false&autoplay=true&loop=true&playsinline=true&fluid=true&aspectRatio=9:16&cropMode=fill&bigPlayButton=false&showinfo=false';
+  var HERO_EMBED_BASE = 'https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=5b39426f-48a1-4f92-b1dd-33c6db392575_1_mp5bhh&controls=false&autoplay=true&loop=true&playsinline=true&fluid=true&aspectRatio=9:16&cropMode=fill&bigPlayButton=false&showinfo=false';
   function heroEmbedSrc(muted) { return HERO_EMBED_BASE + '&muted=' + (muted ? 'true' : 'false'); }
 
   var heroCurrentlyMuted = true;
   var heroSoundWanted = false;
+
+  // Fixes the visible flash/glitch at load time: the iframe stays
+  // transparent (revealing the black background) until the Cloudinary
+  // player has actually finished loading, then fades in smoothly.
+  // Guarded with a fallback timer + immediate-check, because by the time
+  // this script runs (it's loaded at the end of body) the iframe's own
+  // 'load' event may already have fired — missing that event previously
+  // left the video stuck at opacity:0 (black screen, no autoplay visible).
+  if (heroIframe) {
+    var heroRevealed = false;
+    function revealHero() {
+      if (heroRevealed) return;
+      heroRevealed = true;
+      heroIframe.classList.add('is-loaded');
+    }
+    heroIframe.addEventListener('load', revealHero);
+    // Fallback: if load already fired before we attached the listener,
+    // or never fires for some reason, reveal anyway after a short delay
+    // so the video is never stuck hidden.
+    setTimeout(revealHero, 600);
+  }
 
   function setSoundIcon(isOn) {
     if (soundIconOff) soundIconOff.style.display = isOn ? 'none' : '';

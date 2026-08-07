@@ -1142,25 +1142,51 @@
       #products .product-live-pill .dot { animation: none; }
     }
 
-    /* 3D Depth Scroll Section Transition
-       NOTE: this used to also carry its own rotateX/translateY/scale
-       transform. That transform sat on the SAME sections that contain
-       .pro-glass-card boxes, which independently spiral in via their
-       own transform + their own IntersectionObserver (see the SPIRAL
-       3D BOX ENTRANCE script near the bottom of this file). Two
-       transform-driven entrances on nested elements, each on its own
-       observer/threshold, compounded and went out of sync — the
-       section would go flat while a card inside it was still
-       spiralling (or vice versa), reading as a glitch/double-motion.
-       Keeping this to an opacity-only fade removes that compounding;
-       the spiral system is now the only thing that moves/rotates/
-       scales these boxes. */
+    /* CINEMATIC SECTION REVEAL — premium fade/rise/settle instead of a
+       flat opacity-only appear. Kept deliberately restrained (40px,
+       0.98 scale, light blur) and GPU-only (opacity/transform/filter)
+       so it stays smooth and doesn't fight the nested .pro-glass-card
+       spiral entrances (see note lower in this file about that past
+       compounding bug) — this only ever plays ONCE per section, via
+       the .lux-locked class added in script.js the first time a
+       section enters view, so it can never re-trigger and clash with
+       anything nested animating on its own separate schedule.
+       .active keeps doing its original job (video play/pause + pausing
+       looping animations off-screen, see :not(.active) rule below) and
+       is untouched. .lux-exiting is a much smaller, continuous, reversible
+       dimming for sections quietly leaving the viewport — not a replay
+       of the entrance, just a soft "settling back" so nothing cuts
+       abruptly from one section to the next. */
     .scroll-section {
       opacity: 0;
-      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(40px) scale(0.98);
+      filter: blur(6px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .scroll-section.active {
+    .scroll-section.active { opacity: 1; }
+    .scroll-section.lux-locked {
       opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+    .scroll-section.lux-locked.lux-exiting {
+      opacity: 0.92;
+      transform: translateY(-10px) scale(0.99);
+      filter: blur(1.5px);
+      transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-section,
+      .scroll-section.active,
+      .scroll-section.lux-locked,
+      .scroll-section.lux-locked.lux-exiting {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        transition: none !important;
+      }
     }
 
     /* TIGHTER SECTION RHYTHM — the stock py-28 (7rem top+bottom = 224px
@@ -2552,6 +2578,11 @@
     .hero-video-iframe {
       pointer-events: none;
       background: #000;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .hero-video-iframe.is-loaded {
+      opacity: 1;
     }
     @media (max-width: 768px) {
       .hero-video-wrapper-916 {
