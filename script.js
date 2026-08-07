@@ -1933,9 +1933,13 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
   }
 
   function setHeroMuted(muted) {
-    if (!heroIframe || heroCurrentlyMuted === muted) return;
+    if (!heroIframe) return;
     heroCurrentlyMuted = muted;
-    heroIframe.src = heroEmbedSrc(muted);
+    // Swap src parameter so Cloudinary video actually plays its original sound track
+    var newSrc = heroEmbedSrc(muted);
+    if (heroIframe.src !== newSrc) {
+      heroIframe.src = newSrc;
+    }
     setSoundIcon(!muted);
   }
 
@@ -2157,8 +2161,11 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
     });
   }
 
-  // 3. Interactive 3D Touch & Gyro Tilt Effect for Cards
+  // 3. Interactive 3D Touch & Gyro Tilt Effect for Cards (Desktop mouse only to keep Mobile Android 60FPS)
   function bind3DTilt() {
+    var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouchDevice) return; // Skip 3D card tilt on touch screens to guarantee butter-smooth Android scrolling
+
     var cards = document.querySelectorAll('.pro-glass-card, .ceo-photocard');
     cards.forEach(function(card){
       if (card.closest('#ceo')) return;
@@ -2183,8 +2190,6 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
       }
       card.addEventListener('mousemove', onMove, { passive: true });
       card.addEventListener('mouseleave', onLeave, { passive: true });
-      card.addEventListener('touchmove', onMove, { passive: true });
-      card.addEventListener('touchend', onLeave, { passive: true });
     });
   }
 
