@@ -88,8 +88,8 @@
         const delay = (Math.random() * -20).toFixed(1);
         const depth = (Math.random() * 0.7 + 0.3).toFixed(2); // parallax strength
         p.dataset.depth = depth;
-        const glow = isMobile3D ? '' : 'box-shadow:0 0 6px 1px rgba(255,79,163,.5);';
-        p.style.cssText = `position:absolute;left:${left}%;top:${top}%;width:${size}px;height:${size}px;border-radius:50%;background:#ff4fa3;opacity:.55;${glow}animation:heroParticleFloat ${dur}s ease-in-out ${delay}s infinite;`;
+        const glow = isMobile3D ? '' : 'box-shadow:0 0 6px 1px rgba(168,67,46,.5);';
+        p.style.cssText = `position:absolute;left:${left}%;top:${top}%;width:${size}px;height:${size}px;border-radius:50%;background:#A8432E;opacity:.55;${glow}animation:heroParticleFloat ${dur}s ease-in-out ${delay}s infinite;`;
         frag.appendChild(p);
       }
       layer.appendChild(frag);
@@ -1300,7 +1300,7 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
         var scale = 0.93 + (progress * 0.12);
         var rotateX = (0.5 - progress) * 4;
         videoFrame.style.transform = 'scale(' + scale.toFixed(3) + ') rotateX(' + rotateX.toFixed(2) + 'deg)';
-        videoFrame.style.boxShadow = '0 ' + (20 + progress * 20).toFixed(0) + 'px 70px rgba(224, 19, 106, ' + (0.2 + progress * 0.25).toFixed(2) + ')';
+        videoFrame.style.boxShadow = '0 ' + (20 + progress * 20).toFixed(0) + 'px 70px rgba(168,67,46, ' + (0.2 + progress * 0.25).toFixed(2) + ')';
       }
     }
 
@@ -1326,7 +1326,7 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
       });
     }
 
-    ensureVideoPlays('.hero-video-media, .chef-video-media');
+    ensureVideoPlays('.chef-video-media');
   })();
   
 
@@ -1625,7 +1625,7 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
     var size = (7 - i * 0.7).toFixed(1);
     var s = document.createElement('span');
     s.style.cssText = 'position:absolute;top:0;left:0;width:' + size + 'px;height:' + size + 'px;border-radius:50%;' +
-      'background:radial-gradient(circle, rgba(255,79,163,.9), rgba(200,169,106,.4) 60%, transparent 70%);' +
+      'background:radial-gradient(circle, rgba(168,67,46,.9), rgba(192,138,82,.4) 60%, transparent 70%);' +
       'opacity:' + (1 - i / N * 0.85).toFixed(2) + ';transform:translate(-50%,-50%);will-change:transform;';
     wrap.appendChild(s);
     dots.push(s);
@@ -1851,7 +1851,7 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
 
   var HERO_LOCK_MS = 9000; // hard, fixed lock — independent of video length/state
 
-  var heroVideo = document.getElementById('hero-video-el') || document.querySelector('.hero-video-media');
+  var heroIframe = document.getElementById('hero-video-iframe-el');
   var chefVideo = document.getElementById('chef-video-el') || document.querySelector('.chef-video-media');
   var heroCueText = document.getElementById('hero-cue-text') || document.querySelector('#hero-seq-cue span');
   var chefBadgeText = document.getElementById('chef-badge-text') || document.querySelector('.chef-video-badge span:last-child');
@@ -1876,33 +1876,18 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
   var heroCue = document.getElementById('hero-seq-cue');
   var heroProgressBar = document.querySelector('#hero-seq-progress i');
 
-  // --- 1. HERO VIDEO: autoplay + sound toggle (tap-only, never on scroll) ---
-  // Always start muted — every browser allows this, and it keeps autoplay
-  // reliable. Loop is set immediately (not just on unlock) so a video
-  // shorter than the 9s lock keeps playing instead of freezing on its
-  // last frame. Sound only ever changes because the person tapped the
-  // button below — a scroll/swipe gesture never touches mute state,
-  // which is what was causing playback to visibly stop on touch before.
-  if (heroVideo) {
-    heroVideo.muted = true;
-    heroVideo.setAttribute('muted', '');
-    heroVideo.loop = true;
-    var tryHeroAutoplay = function(){ heroVideo.play().catch(function(){}); };
-    tryHeroAutoplay();
-    heroVideo.addEventListener('loadeddata', tryHeroAutoplay);
-    heroVideo.addEventListener('canplay', tryHeroAutoplay);
-    document.addEventListener('visibilitychange', function(){
-      if (!document.hidden) tryHeroAutoplay();
-    });
-    window.addEventListener('pageshow', tryHeroAutoplay);
-    window.addEventListener('load', tryHeroAutoplay);
+  // --- 1. HERO VIDEO: Cloudinary player embedded via iframe. Autoplay,
+  // loop and mute are baked into the embed URL itself (so playback is
+  // owned by the player, not fought over by our own play()/pause() calls).
+  // The iframe has pointer-events:none (see CSS), so every tap, swipe or
+  // scroll on the hero passes straight through to the page — the embedded
+  // player never sees the touch, which is what fixes the video visibly
+  // stuttering/pausing whenever someone touched the screen.
+  var HERO_EMBED_BASE = 'https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=Warrior_donning_rooster_mask_in_202608071320_nhlr5k&controls=false&autoplay=true&loop=true&playsinline=true&fluid=true&aspectRatio=9:16&cropMode=fill&bigPlayButton=false&showinfo=false';
+  function heroEmbedSrc(muted) { return HERO_EMBED_BASE + '&muted=' + (muted ? 'true' : 'false'); }
 
-    // Safety net: if playback ever stops on its own (OS quirk, buffering
-    // hiccup) resume it immediately so it never sits paused.
-    heroVideo.addEventListener('pause', function(){
-      if (document.visibilityState === 'visible') tryHeroAutoplay();
-    });
-  }
+  var heroCurrentlyMuted = true;
+  var heroSoundWanted = false;
 
   function setSoundIcon(isOn) {
     if (soundIconOff) soundIconOff.style.display = isOn ? 'none' : '';
@@ -1914,15 +1899,20 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
     }
   }
 
-  if (soundBtn && heroVideo) {
+  function setHeroMuted(muted) {
+    if (!heroIframe || heroCurrentlyMuted === muted) return;
+    heroCurrentlyMuted = muted;
+    heroIframe.src = heroEmbedSrc(muted);
+    setSoundIcon(!muted);
+  }
+
+  if (soundBtn && heroIframe) {
     setSoundIcon(false);
     soundBtn.addEventListener('click', function(e){
       e.preventDefault();
       e.stopPropagation();
-      heroVideo.muted = !heroVideo.muted;
-      heroSoundWanted = !heroVideo.muted;
-      if (!heroVideo.muted) heroVideo.play().catch(function(){});
-      setSoundIcon(!heroVideo.muted);
+      heroSoundWanted = heroCurrentlyMuted; // about to flip, so "wanted" = the new state
+      setHeroMuted(!heroCurrentlyMuted);
     });
   }
 
@@ -1931,20 +1921,14 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
   // hero section leaves view, and un-muted again only if it was wanted
   // AND the section is back in view. This stops the original audio from
   // continuing to play once the person has scrolled to a later section. ---
-  var heroSoundWanted = false;
   var heroSection = document.getElementById('home');
-  if (heroVideo && heroSection && 'IntersectionObserver' in window) {
+  if (heroIframe && heroSection && 'IntersectionObserver' in window) {
     var heroSoundObserver = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if (entry.isIntersecting) {
-          if (heroSoundWanted) {
-            heroVideo.muted = false;
-            heroVideo.play().catch(function(){});
-            setSoundIcon(true);
-          }
+          if (heroSoundWanted) setHeroMuted(false);
         } else {
-          heroVideo.muted = true;
-          setSoundIcon(false);
+          setHeroMuted(true);
         }
       });
     }, { threshold: 0.4 });
@@ -1966,7 +1950,7 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
     }
   }
 
-  if (heroVideo) {
+  if (heroIframe) {
     lockBody();
     var heroLockStart = Date.now();
     (function tickHeroProgress(){
@@ -2183,3 +2167,135 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
     boot();
   }
 })();
+
+
+/* ---- next inline block ---- */
+
+
+  /* ===========================================================================
+     LUXURY 3D BRANCH TREE — ambient background object, desktop/tablet only.
+     Procedurally grown branch structure in crimson→rose-gold, sitting behind
+     all content. Rotates gently on its own, tilts toward the mouse (parallax),
+     and turns further as you scroll — pure decoration, zero interaction cost,
+     and skipped entirely on phones to protect performance on low-end devices.
+     =========================================================================== */
+  (function () {
+    if (typeof THREE === 'undefined') return; // CDN blocked / offline — fail silently
+    if (window.innerWidth <= 768) return; // keep phones on the lightweight CSS-only background
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const canvas = document.getElementById('lux-tree-canvas');
+    if (!canvas) return;
+
+    let width = window.innerWidth, height = window.innerHeight;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+    renderer.setSize(width, height);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+    camera.position.set(0, 0.5, 9);
+
+    const treeGroup = new THREE.Group();
+    scene.add(treeGroup);
+
+    // ---- procedural branch generator ------------------------------------
+    // Builds a set of line segments recursively, each generation thinner,
+    // shorter, and shifted toward gold, giving a coral/antler-like silhouette.
+    const positions = [];
+    const colors = [];
+    const colorTrunk = new THREE.Color('#35180F');
+    const colorMid = new THREE.Color('#A8432E');
+    const colorTip = new THREE.Color('#C08A52');
+
+    function branch(origin, dir, len, depth, maxDepth) {
+      const end = origin.clone().add(dir.clone().multiplyScalar(len));
+      const t = depth / maxDepth;
+      const col = t < 0.5
+        ? colorTrunk.clone().lerp(colorMid, t * 2)
+        : colorMid.clone().lerp(colorTip, (t - 0.5) * 2);
+
+      positions.push(origin.x, origin.y, origin.z, end.x, end.y, end.z);
+      colors.push(col.r, col.g, col.b, col.r, col.g, col.b);
+
+      if (depth >= maxDepth) return;
+
+      const children = depth === 0 ? 4 : (Math.random() < 0.75 ? 2 : 3);
+      for (let i = 0; i < children; i++) {
+        const spread = 0.55 + Math.random() * 0.5;
+        const axis = new THREE.Vector3(
+          (Math.random() - 0.5),
+          (Math.random() - 0.5),
+          (Math.random() - 0.5)
+        ).normalize();
+        const newDir = dir.clone()
+          .applyAxisAngle(axis, spread)
+          .normalize()
+          .lerp(new THREE.Vector3(0, 1, 0), 0.12) // gentle upward bias, feels alive
+          .normalize();
+        branch(end, newDir, len * (0.68 + Math.random() * 0.1), depth + 1, maxDepth);
+      }
+    }
+
+    // Grow two clusters so the canopy reads as a full ambient backdrop rather
+    // than a single centered plant.
+    branch(new THREE.Vector3(-2.6, -3.2, -2), new THREE.Vector3(0.15, 1, -0.1).normalize(), 1.7, 0, 6);
+    branch(new THREE.Vector3(2.8, -3.4, -3), new THREE.Vector3(-0.1, 1, 0.1).normalize(), 1.6, 0, 6);
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+    const material = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.85,
+    });
+
+    const lines = new THREE.LineSegments(geometry, material);
+    treeGroup.add(lines);
+    treeGroup.scale.setScalar(1.9);
+    treeGroup.position.set(0, 0.6, 0);
+
+    // ---- interaction: mouse parallax + scroll-linked rotation -----------
+    let targetRotX = 0, targetRotY = 0;
+    let mouseRotX = 0, mouseRotY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = (e.clientY / window.innerHeight) * 2 - 1;
+      targetRotY = nx * 0.35;
+      targetRotX = ny * 0.18;
+    }, { passive: true });
+
+    let scrollRot = 0;
+    window.addEventListener('scroll', () => {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollableHeight > 0 ? (window.scrollY / scrollableHeight) : 0;
+      scrollRot = progress * Math.PI * 0.9; // slow full-page-scroll turn
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+      width = window.innerWidth; height = window.innerHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    });
+
+    let idle = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      idle += 0.0015;
+
+      // smooth-follow the mouse target (eases rather than snapping)
+      mouseRotX += (targetRotX - mouseRotX) * 0.04;
+      mouseRotY += (targetRotY - mouseRotY) * 0.04;
+
+      treeGroup.rotation.x = mouseRotX + Math.sin(idle * 0.6) * 0.05;
+      treeGroup.rotation.y = mouseRotY + scrollRot + idle;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+  })();

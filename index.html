@@ -15,7 +15,7 @@
   <meta name="owner" content="Aniruddha Mondal">
   <meta name="copyright" content="THE RED COCKS - Founded by Aniruddha Mondal">
   <meta name="description" content="THE RED COCKS — Government MSME Registered (UDYAM-WB-18-0206197) premium poultry and fresh meat business in Kolkata, founded by Aniruddha Mondal.">
-  <meta name="theme-color" content="#170a13">
+  <meta name="theme-color" content="#14070c">
   <meta property="og:type" content="website">
   <meta property="og:title" content="THE RED COCKS | Founded by Aniruddha Mondal | Govt. MSME Registered">
   <meta property="og:description" content="Official Government Registered MSME Poultry & Fresh Meat Business (UDYAM-WB-18-0206197), Kolkata. Founded by Aniruddha Mondal.">
@@ -92,6 +92,7 @@
 <body class="selection:bg-pink-500 selection:text-black">
 <div id="scroll-progress-bar" aria-hidden="true"><i></i></div>
 <div id="canvas3d-container" aria-hidden="true">
+  <canvas id="lux-tree-canvas"></canvas>
   <div id="canvas3d-depth">
     <div class="depth-orb depth-orb--1"></div>
     <div class="depth-orb depth-orb--2"></div>
@@ -117,20 +118,20 @@
     <div class="relative flex items-center justify-between px-6 py-3.5 rounded-full bg-black/85 backdrop-blur-3xl border border-pink-600/50 elite-nav-box shadow-2xl">
       <div class="flex items-center gap-3 z-10">
         <div class="relative w-10 h-10 flex items-center justify-center">
-          <div style="position:absolute; inset:-4px; border-radius:9999px; background:conic-gradient(from 0deg, #ff4fa3, #e0136a, #e0136a, #e0136a, #ff4fa3); animation: eliteNavRotateGlow 6s linear infinite; opacity:0.75; filter: blur(2px);"></div>
+          <div style="position:absolute; inset:-4px; border-radius:9999px; background:conic-gradient(from 0deg, #A8432E, #4A2418, #4A2418, #4A2418, #A8432E); animation: eliteNavRotateGlow 6s linear infinite; opacity:0.75; filter: blur(2px);"></div>
           <svg id="nav-scroll-ring" width="48" height="48" viewBox="0 0 48 48" style="position:absolute; inset:-5px; transform:rotate(-90deg); pointer-events:none;">
-            <circle cx="24" cy="24" r="21.5" fill="none" stroke="rgba(224,19,106,0.15)" stroke-width="1.5"></circle>
+            <circle cx="24" cy="24" r="21.5" fill="none" stroke="rgba(74,36,24,0.15)" stroke-width="1.5"></circle>
             <circle id="nav-scroll-ring-fg" cx="24" cy="24" r="21.5" fill="none" stroke="url(#nav-ring-gradient)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="135.09" stroke-dashoffset="135.09"></circle>
             <defs>
               <linearGradient id="nav-ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ff4fa3"></stop>
-                <stop offset="55%" stop-color="#e0136a"></stop>
-                <stop offset="100%" stop-color="#c8a96a"></stop>
+                <stop offset="0%" stop-color="#A8432E"></stop>
+                <stop offset="55%" stop-color="#4A2418"></stop>
+                <stop offset="100%" stop-color="#C08A52"></stop>
               </linearGradient>
             </defs>
           </svg>
-          <div class="relative w-10 h-10 rounded-full bg-gradient-to-tr from-pink-600 via-pink-400 to-pink-200 p-[2px] shadow-[0_0_20px_rgba(224,19,106,0.8)] flex items-center justify-center" style="transform: scale(1.35);">
-            <div class="w-full h-full rounded-full flex items-center justify-center relative overflow-hidden" style="background: radial-gradient(circle at 35% 30%, #ff4fa3, #3d0521 70%);">
+          <div class="relative w-10 h-10 rounded-full bg-gradient-to-tr from-pink-600 via-pink-400 to-pink-200 p-[2px] shadow-[0_0_20px_rgba(74,36,24,0.8)] flex items-center justify-center" style="transform: scale(1.35);">
+            <div class="w-full h-full rounded-full flex items-center justify-center relative overflow-hidden" style="background: radial-gradient(circle at 35% 30%, #A8432E, #2A130B 70%);">
               <video
                 autoplay muted loop playsinline preload="auto"
                 class="absolute inset-0 w-full h-full rounded-full"
@@ -157,7 +158,7 @@
         <a href="#faq" class="elite-nav-link" data-section="faq">FAQ</a>
       </div>
       <div class="z-10 flex items-center gap-2 shrink-0">
-        <div class="relative overflow-hidden shrink-0 hover:scale-105 transition-all duration-300" style="width:52px; height:38px; border-radius:10px; border:1px solid rgba(255,79,163,0.5); background:#170a13;">
+        <div class="relative overflow-hidden shrink-0 hover:scale-105 transition-all duration-300" style="width:52px; height:38px; border-radius:10px; border:1px solid rgba(168,67,46,0.5); background:#14070c;">
           <video
             autoplay muted loop playsinline preload="auto"
             class="absolute inset-0 w-full h-full"
@@ -167,10 +168,10 @@
             <source src="assets/videos/video_2.mp4" type="video/mp4">
           </video>
         </div>
-        <button id="nav-hamburger-btn" aria-label="Open menu" aria-expanded="false" class="cursor-pointer" style="display:none; width:38px; height:38px; border-radius:9999px; border:1px solid rgba(255,79,163,0.5); background:rgba(224,19,106,0.12); align-items:center; justify-content:center; position:relative;">
-          <span class="hamburger-bar" style="position:absolute; width:16px; height:1.5px; background:#ffc2df; border-radius:2px; transform:translateY(-5px); transition:transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.25s ease;"></span>
-          <span class="hamburger-bar" style="position:absolute; width:16px; height:1.5px; background:#ffc2df; border-radius:2px; transition:opacity 0.25s ease;"></span>
-          <span class="hamburger-bar" style="position:absolute; width:16px; height:1.5px; background:#ffc2df; border-radius:2px; transform:translateY(5px); transition:transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.25s ease;"></span>
+        <button id="nav-hamburger-btn" aria-label="Open menu" aria-expanded="false" class="cursor-pointer" style="display:none; width:38px; height:38px; border-radius:9999px; border:1px solid rgba(168,67,46,0.5); background:rgba(74,36,24,0.12); align-items:center; justify-content:center; position:relative;">
+          <span class="hamburger-bar" style="position:absolute; width:16px; height:1.5px; background:#D9BD98; border-radius:2px; transform:translateY(-5px); transition:transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.25s ease;"></span>
+          <span class="hamburger-bar" style="position:absolute; width:16px; height:1.5px; background:#D9BD98; border-radius:2px; transition:opacity 0.25s ease;"></span>
+          <span class="hamburger-bar" style="position:absolute; width:16px; height:1.5px; background:#D9BD98; border-radius:2px; transform:translateY(5px); transition:transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.25s ease;"></span>
         </button>
       </div>
     </div>
@@ -204,9 +205,16 @@
     <div class="hero-sticky">
       <div class="hero-video-container">
         <div class="hero-video-wrapper-916">
-          <video autoplay muted playsinline preload="auto" class="hero-video-media" id="hero-video-el">
-            <source src="https://res.cloudinary.com/dbpra7jk/video/upload/f_auto,q_auto/upscaled-video_1_no9hbu.mp4" type="video/mp4">
-          </video>
+          <iframe
+            id="hero-video-iframe-el"
+            class="hero-video-iframe"
+            src="https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=Warrior_donning_rooster_mask_in_202608071320_nhlr5k&controls=false&autoplay=true&loop=true&muted=true&playsinline=true&fluid=true&aspectRatio=9:16&cropMode=fill&bigPlayButton=false&showinfo=false"
+            title="THE RED COCKS — hero video"
+            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+            allowfullscreen
+            frameborder="0"
+            loading="eager"
+          ></iframe>
         </div>
       </div>
       <div class="hero-seq-veil"></div>
@@ -220,7 +228,9 @@
           <span class="hk-text">🇮🇳 Kolkata's Premier Poultry & Meat Enterprise</span>
           <span class="hk-line"></span>
         </div>
+        <div class="hero-title-glow" aria-hidden="true"></div>
         <h1 class="hero-seq-title gold-shimmer-text">THE RED COCKS</h1>
+        <div class="hero-title-rule"><span></span></div>
         <p class="hero-seq-sub">
           Farm-fresh, hygienically processed poultry and meat provisions, crafted to perfection.
         </p>
@@ -249,7 +259,7 @@
   <section id="products" data-theme-color="0x060503" data-intensity="2.2" class="scroll-section relative py-28 px-4 w-full border-t border-pink-600/20">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-16">
-        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(255,138,193,0.45)]">
+        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(191,130,86,0.45)]">
           <span class="text-xs font-black tracking-[0.3em] text-pink-300 uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">👑 SIGNATURE COLLECTION</span>
         </div>
         <h2 class="text-3xl sm:text-5xl font-black gold-shimmer-text tracking-wider uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">
@@ -356,23 +366,23 @@
   </section>
   <section id="about" data-theme-color="0x030508" data-intensity="1.8" class="scroll-section relative py-28 px-4 w-full border-t border-pink-600/20 overflow-hidden">
     <div class="absolute -top-24 -left-20 w-[480px] h-[480px] bg-pink-600/10 rounded-full blur-[150px] pointer-events-none"></div>
-    <div class="absolute bottom-0 -right-16 w-[420px] h-[420px] bg-[#c8a96a]/10 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute bottom-0 -right-16 w-[420px] h-[420px] bg-[#C08A52]/10 rounded-full blur-[140px] pointer-events-none"></div>
     <div class="max-w-6xl mx-auto relative z-10">
       <div class="flex flex-col md:flex-row items-center gap-12 mb-16">
         <div class="w-full md:w-1/2">
-          <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(255,138,193,0.45)]">
+          <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(191,130,86,0.45)]">
             <span class="text-xs font-black tracking-[0.3em] text-pink-300 uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">🏛️ HERITAGE OF EXCELLENCE</span>
           </div>
           <h2 class="text-3xl sm:text-5xl font-black gold-shimmer-text tracking-wider uppercase mb-6" style="font-family:'Game Of Squids','Playfair Display',serif;">
             Quality You Can Trust
           </h2>
           <div class="flex gap-4 mb-8">
-            <div class="w-[3px] rounded-full flex-shrink-0" style="background:linear-gradient(180deg,#e0136a,#c8a96a);"></div>
+            <div class="w-[3px] rounded-full flex-shrink-0" style="background:linear-gradient(180deg,#4A2418,#C08A52);"></div>
             <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
               Founded by Aniruddha Mondal and based in Kolkata, THE RED COCKS is committed to delivering fresh, quality poultry and meat to our customers. Every stage of processing is handled with care and strict hygiene standards.
             </p>
           </div>
-          <div class="pro-glass-card heritage-plate rounded-[26px] p-6 sm:p-7 relative overflow-hidden" style="--a1:#e0136a; --a2:#c8a96a; --a3:#ff4fa3;">
+          <div class="pro-glass-card heritage-plate rounded-[26px] p-6 sm:p-7 relative overflow-hidden" style="--a1:#4A2418; --a2:#C08A52; --a3:#A8432E;">
             <div class="aurora-blob"></div>
             <div class="flex items-center gap-3.5 mb-4 relative z-10">
               <div class="heritage-seal">✦</div>
@@ -420,14 +430,14 @@
   <section id="ceo" data-theme-color="0x020202" data-intensity="2.5" class="scroll-section relative py-28 px-4 w-full border-t border-pink-600/20">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-16">
-        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(255,138,193,0.45)]">
+        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(191,130,86,0.45)]">
           <span class="text-xs font-black tracking-[0.3em] text-pink-300 uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">👤 FOUNDER</span>
         </div>
         <h2 class="text-3xl sm:text-5xl font-black gold-shimmer-text tracking-wider uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">
           Meet the Founder
         </h2>
       </div>
-      <div class="pro-glass-card rounded-[35px] p-8 md:p-14 relative overflow-hidden" style="--a1:#c8a96a; --a2:#e0136a; --a3:#ff4fa3;">
+      <div class="pro-glass-card rounded-[35px] p-8 md:p-14 relative overflow-hidden" style="--a1:#C08A52; --a2:#4A2418; --a3:#A8432E;">
         <div class="aurora-blob"></div>
         <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-pink-500/10 rounded-full blur-[120px] pointer-events-none"></div>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -497,7 +507,7 @@
     <div class="max-w-6xl mx-auto relative z-10">
       <!-- Section Header -->
       <div class="text-center mb-10 sm:mb-14">
-        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_30px_rgba(255,138,193,0.5)]">
+        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_30px_rgba(191,130,86,0.5)]">
           <span class="text-pink-400 text-sm animate-pulse">🇮🇳</span>
           <span class="text-[11px] sm:text-xs font-black tracking-[0.3em] text-pink-300 uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">OUR DREAM & NATIONWIDE VISION</span>
         </div>
@@ -526,7 +536,7 @@
       </div>
 
       <!-- Video Presentation Container (Edge-to-Edge Zoomed Frame - 0 Black Canvas, 0 Play/Pause Controls) -->
-      <div class="relative w-full max-w-5xl mx-auto rounded-[24px] sm:rounded-[36px] p-[2px] bg-gradient-to-b from-pink-500 via-pink-600/50 to-transparent shadow-[0_0_70px_rgba(224,19,106,0.5)] mb-12" style="transform: none !important; transform-style: flat !important;">
+      <div class="relative w-full max-w-5xl mx-auto rounded-[24px] sm:rounded-[36px] p-[2px] bg-gradient-to-b from-pink-500 via-pink-600/50 to-transparent shadow-[0_0_70px_rgba(74,36,24,0.5)] mb-12" style="transform: none !important; transform-style: flat !important;">
         <!-- Corner Metallic Accents -->
         <span class="corner-bracket corner-tl"></span>
         <span class="corner-bracket corner-tr"></span>
@@ -534,7 +544,7 @@
         <span class="corner-bracket corner-br"></span>
 
         <!-- Inner Glass Container (Flat No 3D) -->
-        <div class="pro-glass-card rounded-[22px] sm:rounded-[34px] overflow-hidden p-2 sm:p-3.5 relative" style="transform: none !important; transform-style: flat !important; --a1:#e0136a; --a2:#ff4fa3; --a3:#c8a96a;">
+        <div class="pro-glass-card rounded-[22px] sm:rounded-[34px] overflow-hidden p-2 sm:p-3.5 relative" style="transform: none !important; transform-style: flat !important; --a1:#4A2418; --a2:#A8432E; --a3:#C08A52;">
           <div class="aurora-blob"></div>
 
           <!-- Video Aspect Ratio Frame (Guaranteed Visible on All Devices & Phones) -->
@@ -576,11 +586,11 @@
       <!-- Feature Grid Cards with Small Text Boxes & Stats (Flat No 3D, Phone-Optimized) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-7" style="transform: none !important;">
         <!-- Card 1 -->
-        <div class="pro-glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden group hover:border-pink-400/80 transition-all duration-300" style="transform: none !important; --a1:#e0136a; --a2:#ff4fa3; --a3:#c8a96a;">
+        <div class="pro-glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden group hover:border-pink-400/80 transition-all duration-300" style="transform: none !important; --a1:#4A2418; --a2:#A8432E; --a3:#C08A52;">
           <div class="aurora-blob"></div>
           <div>
             <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-2xl text-pink-300 shadow-[0_0_20px_rgba(255,79,163,0.3)]">
+              <div class="w-12 h-12 rounded-2xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-2xl text-pink-300 shadow-[0_0_20px_rgba(168,67,46,0.3)]">
                 🚀
               </div>
               <span class="text-xs font-mono font-bold text-pink-300 bg-pink-950/80 px-3 py-1 rounded-full border border-pink-500/30">
@@ -606,11 +616,11 @@
         </div>
 
         <!-- Card 2 -->
-        <div class="pro-glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden group hover:border-pink-400/80 transition-all duration-300" style="transform: none !important; --a1:#c8a96a; --a2:#e0136a; --a3:#ff8ac1;">
+        <div class="pro-glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden group hover:border-pink-400/80 transition-all duration-300" style="transform: none !important; --a1:#C08A52; --a2:#4A2418; --a3:#BF8256;">
           <div class="aurora-blob"></div>
           <div>
             <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-2xl text-pink-300 shadow-[0_0_20px_rgba(255,79,163,0.3)]">
+              <div class="w-12 h-12 rounded-2xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-2xl text-pink-300 shadow-[0_0_20px_rgba(168,67,46,0.3)]">
                 👑
               </div>
               <span class="text-xs font-mono font-bold text-pink-300 bg-pink-950/80 px-3 py-1 rounded-full border border-pink-500/30">
@@ -636,11 +646,11 @@
         </div>
 
         <!-- Card 3 -->
-        <div class="pro-glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden group hover:border-pink-400/80 transition-all duration-500" style="transform: none !important; --a1:#ff4fa3; --a2:#ff8ac1; --a3:#e0136a;">
+        <div class="pro-glass-card rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden group hover:border-pink-400/80 transition-all duration-500" style="transform: none !important; --a1:#A8432E; --a2:#BF8256; --a3:#4A2418;">
           <div class="aurora-blob"></div>
           <div>
             <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-2xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-2xl text-pink-300 shadow-[0_0_20px_rgba(255,79,163,0.3)]">
+              <div class="w-12 h-12 rounded-2xl bg-pink-500/20 border border-pink-500/40 flex items-center justify-center text-2xl text-pink-300 shadow-[0_0_20px_rgba(168,67,46,0.3)]">
                 ⚡
               </div>
               <span class="text-xs font-mono font-bold text-pink-300 bg-pink-950/80 px-3 py-1 rounded-full border border-pink-500/30">
@@ -700,7 +710,7 @@
       <span class="corner-bracket corner-br"></span>
       <div class="hero-kicker mb-4">
         <span class="hk-line"></span>
-        <span class="inline-flex items-center px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 shadow-[0_0_28px_rgba(255,138,193,0.45)]">
+        <span class="inline-flex items-center px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 shadow-[0_0_28px_rgba(191,130,86,0.45)]">
           <span class="text-xs font-black tracking-[0.3em] text-pink-300 uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">📞 Get In Touch</span>
         </span>
         <span class="hk-line"></span>
@@ -712,11 +722,11 @@
         For orders, questions, or partnership inquiries, reach out to us directly.
       </p>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <a href="https://instagram.com/ik.aniii" target="_blank" rel="noopener noreferrer" class="contact-card-pro pro-glass-card rounded-3xl p-8 flex flex-col items-center gap-4 group cursor-pointer relative" style="--a1:#ff4fa3; --a2:#e0136a; --a3:#ff4fa3; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.85), 0 0 35px -5px rgba(255,79,163,0.35);">
+        <a href="https://instagram.com/ik.aniii" target="_blank" rel="noopener noreferrer" class="contact-card-pro pro-glass-card rounded-3xl p-8 flex flex-col items-center gap-4 group cursor-pointer relative" style="--a1:#A8432E; --a2:#4A2418; --a3:#A8432E; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.85), 0 0 35px -5px rgba(168,67,46,0.35);">
           <div class="aurora-blob"></div>
           <span class="contact-card-index">01</span>
           <span class="contact-status-pill"><span class="contact-status-dot"></span>Active Now</span>
-          <div class="ig-glow-icon glow-icon-badge glow-icon-featured w-20 h-20 rounded-2xl bg-gradient-to-tr from-pink-500 via-pink-500 to-pink-600 p-[2px]" style="--glow:#ff4fa3;">
+          <div class="ig-glow-icon glow-icon-badge glow-icon-featured w-20 h-20 rounded-2xl bg-gradient-to-tr from-pink-500 via-pink-500 to-pink-600 p-[2px]" style="--glow:#A8432E;">
             <div class="w-full h-full bg-black rounded-2xl flex items-center justify-center">
               <span class="glow-icon-glyph text-4xl">📸</span>
             </div>
@@ -728,11 +738,11 @@
           <span class="contact-card-divider"></span>
           <span class="mt-2 px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-[10px] font-black tracking-widest text-pink-300 uppercase group-hover:bg-pink-500/20 transition-colors">Follow Us</span>
         </a>
-        <div class="contact-card-pro contact-card-featured pro-glass-card rounded-3xl p-8 md:p-10 flex flex-col items-center gap-4 relative md:scale-110 md:-translate-y-3 z-10 shadow-[0_0_60px_rgba(224,19,106,0.35)]" style="--a1:#e0136a; --a2:#ff4fa3; --a3:#c8a96a;">
+        <div class="contact-card-pro contact-card-featured pro-glass-card rounded-3xl p-8 md:p-10 flex flex-col items-center gap-4 relative md:scale-110 md:-translate-y-3 z-10 shadow-[0_0_60px_rgba(74,36,24,0.35)]" style="--a1:#4A2418; --a2:#A8432E; --a3:#C08A52;">
           <div class="aurora-blob"></div>
           <span class="contact-card-index">02</span>
           <span class="contact-status-pill"><span class="contact-status-dot"></span>Response &lt; 2 Hrs</span>
-          <div class="glow-icon-badge glow-icon-featured w-20 h-20 rounded-2xl bg-gradient-to-tr from-pink-600 via-pink-400 to-pink-200 p-[2px]" style="--glow:#e0136a;">
+          <div class="glow-icon-badge glow-icon-featured w-20 h-20 rounded-2xl bg-gradient-to-tr from-pink-600 via-pink-400 to-pink-200 p-[2px]" style="--glow:#4A2418;">
             <div class="w-full h-full bg-black rounded-2xl flex items-center justify-center">
               <span class="glow-icon-glyph text-4xl">✉️</span>
             </div>
@@ -744,11 +754,11 @@
           <span class="contact-card-divider"></span>
           <button type="button" onclick="copyContactEmail(this)" class="mt-2 px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/30 text-[10px] font-black tracking-widest text-pink-300 uppercase hover:bg-pink-500/20 transition-colors">Copy Email</button>
         </div>
-        <div class="contact-card-pro pro-glass-card rounded-3xl p-8 flex flex-col items-center gap-4 relative" style="--a1:#ff8ac1; --a2:#ff4fa3; --a3:#e0136a; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.85), 0 0 35px -5px rgba(255,138,193,0.35);">
+        <div class="contact-card-pro pro-glass-card rounded-3xl p-8 flex flex-col items-center gap-4 relative" style="--a1:#BF8256; --a2:#A8432E; --a3:#4A2418; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.85), 0 0 35px -5px rgba(191,130,86,0.35);">
           <div class="aurora-blob"></div>
           <span class="contact-card-index">03</span>
           <span class="contact-status-pill"><span class="contact-status-dot"></span>By Invitation</span>
-          <div class="glow-icon-badge glow-icon-featured w-20 h-20 rounded-2xl bg-gradient-to-tr from-pink-600 via-pink-400 to-pink-200 p-[2px]" style="--glow:#ff8ac1;">
+          <div class="glow-icon-badge glow-icon-featured w-20 h-20 rounded-2xl bg-gradient-to-tr from-pink-600 via-pink-400 to-pink-200 p-[2px]" style="--glow:#BF8256;">
             <div class="w-full h-full bg-black rounded-2xl flex items-center justify-center">
               <span class="glow-icon-glyph text-4xl">🛎️</span>
             </div>
@@ -767,7 +777,7 @@
     <div class="max-w-7xl mx-auto">
       <!-- Section Header -->
       <div class="text-center mb-16">
-        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(255,138,193,0.45)]">
+        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(191,130,86,0.45)]">
           <span class="text-xs font-black tracking-[0.3em] text-pink-300 uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">✨ CULINARY CRAFTSMANSHIP</span>
         </div>
         <h2 class="text-3xl sm:text-5xl font-black gold-shimmer-text tracking-wider uppercase mb-4" style="font-family:'Game Of Squids','Playfair Display',serif;">
@@ -796,25 +806,25 @@
       <!-- 4 Premium Feature Cards Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="pro-glass-card p-6 rounded-2xl border border-pink-500/20 bg-black/40 backdrop-blur-md hover:border-pink-500/50 transition-all duration-300">
-          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-2xl mb-4 shadow-[0_0_15px_rgba(224,19,106,0.3)]">🔪</div>
+          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-2xl mb-4 shadow-[0_0_15px_rgba(74,36,24,0.3)]">🔪</div>
           <h3 class="text-white font-bold text-lg mb-2 uppercase tracking-wide">Master Knife Skills</h3>
           <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Artisanal hand-carved cuts performed by master butchers with 15+ years of culinary mastery.</p>
         </div>
 
         <div class="pro-glass-card p-6 rounded-2xl border border-pink-500/20 bg-black/40 backdrop-blur-md hover:border-pink-500/50 transition-all duration-300">
-          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-2xl mb-4 shadow-[0_0_15px_rgba(224,19,106,0.3)]">❄️</div>
+          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-2xl mb-4 shadow-[0_0_15px_rgba(74,36,24,0.3)]">❄️</div>
           <h3 class="text-white font-bold text-lg mb-2 uppercase tracking-wide">Cryo-Fresh Sealing</h3>
           <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Instant -38°C blast-chilling locks in natural juices, rich texture, and peak nutritional value.</p>
         </div>
 
         <div class="pro-glass-card p-6 rounded-2xl border border-pink-500/20 bg-black/40 backdrop-blur-md hover:border-pink-500/50 transition-all duration-300">
-          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-2xl mb-4 shadow-[0_0_15px_rgba(224,19,106,0.3)]">🌿</div>
+          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-2xl mb-4 shadow-[0_0_15px_rgba(74,36,24,0.3)]">🌿</div>
           <h3 class="text-white font-bold text-lg mb-2 uppercase tracking-wide">Organic Marination</h3>
           <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Infused with saffron, Himalayan pink salt, cold-pressed mustard oil, and authentic herbs.</p>
         </div>
 
         <div class="pro-glass-card p-6 rounded-2xl border border-pink-500/20 bg-black/40 backdrop-blur-md hover:border-pink-500/50 transition-all duration-300">
-          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-2xl mb-4 shadow-[0_0_15px_rgba(224,19,106,0.3)]">🏅</div>
+          <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-2xl mb-4 shadow-[0_0_15px_rgba(74,36,24,0.3)]">🏅</div>
           <h3 class="text-white font-bold text-lg mb-2 uppercase tracking-wide">100% Farm-Raised</h3>
           <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Naturally bred poultry with zero antibiotics, hormones, or artificial preservatives.</p>
         </div>
@@ -825,7 +835,7 @@
   <section id="vision-pillars" data-theme-color="0x050306" data-intensity="2.0" class="scroll-section relative py-28 px-4 w-full border-t border-pink-600/20">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-16">
-        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(255,138,193,0.45)]">
+        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(191,130,86,0.45)]">
           <span class="text-xs font-black tracking-[0.3em] text-pink-300 uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">🔮 OUR VISION</span>
         </div>
         <h2 class="text-3xl sm:text-5xl font-black gold-shimmer-text tracking-wider uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">
@@ -890,14 +900,14 @@
     </div>
     <div class="relative z-10 max-w-6xl mx-auto">
       <div class="text-center mb-14">
-        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(255,138,193,0.45)]">
+        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(191,130,86,0.45)]">
           <span class="text-xs font-black tracking-[0.3em] text-pink-300 uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">🎬 THE SIGNATURE EXPERIENCE</span>
         </div>
         <h2 class="text-3xl sm:text-5xl font-black gold-shimmer-text tracking-wider uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">
           Watch The Craft Unfold
         </h2>
       </div>
-      <div class="relative w-full max-w-3xl mx-auto rounded-[28px] overflow-hidden border-2 border-pink-500/50 shadow-[0_0_60px_rgba(224,19,106,0.35)] bg-black mb-16" style="aspect-ratio: 16 / 9;">
+      <div class="relative w-full max-w-3xl mx-auto rounded-[28px] overflow-hidden border-2 border-pink-500/50 shadow-[0_0_60px_rgba(74,36,24,0.35)] bg-black mb-16" style="aspect-ratio: 16 / 9;">
         <iframe
           src="https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=Mera_website_h_jha_m_chicken_p_1_czscsd&autoplay=true&muted=true&loop=true&controls=false"
           class="absolute inset-0 w-full h-full"
@@ -911,11 +921,11 @@
           <div class="fan-card">
             <span class="fan-tag">N°01</span>
             <div class="fan-media">
-              <div class="fan-art" style="--a1:#c8a96a; --a2:#e0136a; --a3:#ff4fa3;">
+              <div class="fan-art" style="--a1:#C08A52; --a2:#4A2418; --a3:#A8432E;">
                 <div class="fan-art-texture"></div>
                 <div class="fan-art-glow"></div>
                 <div class="fan-art-ring"></div>
-                <div class="fan-art-badge" style="--glow:#c8a96a;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l4 3 5-6 5 6 4-3-2 11H5L3 8z"/><circle cx="12" cy="4" r="1.4" fill="currentColor" stroke="none"/></svg></span></div>
+                <div class="fan-art-badge" style="--glow:#C08A52;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l4 3 5-6 5 6 4-3-2 11H5L3 8z"/><circle cx="12" cy="4" r="1.4" fill="currentColor" stroke="none"/></svg></span></div>
                 <div class="fan-art-sheen"></div>
               </div>
               <div class="fan-overlay"></div>
@@ -929,11 +939,11 @@
           <div class="fan-card">
             <span class="fan-tag">N°02</span>
             <div class="fan-media">
-              <div class="fan-art" style="--a1:#ff4fa3; --a2:#ff8ac1; --a3:#c8a96a;">
+              <div class="fan-art" style="--a1:#A8432E; --a2:#BF8256; --a3:#C08A52;">
                 <div class="fan-art-texture"></div>
                 <div class="fan-art-glow"></div>
                 <div class="fan-art-ring"></div>
-                <div class="fan-art-badge" style="--glow:#ff4fa3;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 10-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span></div>
+                <div class="fan-art-badge" style="--glow:#A8432E;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 10-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span></div>
                 <div class="fan-art-sheen"></div>
               </div>
               <div class="fan-overlay"></div>
@@ -947,11 +957,11 @@
           <div class="fan-card">
             <span class="fan-tag">N°03</span>
             <div class="fan-media">
-              <div class="fan-art" style="--a1:#e0136a; --a2:#e0136a; --a3:#ff4fa3;">
+              <div class="fan-art" style="--a1:#4A2418; --a2:#4A2418; --a3:#A8432E;">
                 <div class="fan-art-texture"></div>
                 <div class="fan-art-glow"></div>
                 <div class="fan-art-ring"></div>
-                <div class="fan-art-badge" style="--glow:#e0136a;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.2 8.5-7 10-3.8-1.5-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span></div>
+                <div class="fan-art-badge" style="--glow:#4A2418;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.2 8.5-7 10-3.8-1.5-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span></div>
                 <div class="fan-art-sheen"></div>
               </div>
               <div class="fan-overlay"></div>
@@ -965,11 +975,11 @@
           <div class="fan-card">
             <span class="fan-tag">N°04</span>
             <div class="fan-media">
-              <div class="fan-art" style="--a1:#ff8ac1; --a2:#ff4fa3; --a3:#e0136a;">
+              <div class="fan-art" style="--a1:#BF8256; --a2:#A8432E; --a3:#4A2418;">
                 <div class="fan-art-texture"></div>
                 <div class="fan-art-glow"></div>
                 <div class="fan-art-ring"></div>
-                <div class="fan-art-badge" style="--glow:#ff8ac1;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M4.5 6l15 12M19.5 6l-15 12"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg></span></div>
+                <div class="fan-art-badge" style="--glow:#BF8256;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M4.5 6l15 12M19.5 6l-15 12"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg></span></div>
                 <div class="fan-art-sheen"></div>
               </div>
               <div class="fan-overlay"></div>
@@ -983,11 +993,11 @@
           <div class="fan-card">
             <span class="fan-tag">N°05</span>
             <div class="fan-media">
-              <div class="fan-art" style="--a1:#e0136a; --a2:#ff4fa3; --a3:#c8a96a;">
+              <div class="fan-art" style="--a1:#4A2418; --a2:#A8432E; --a3:#C08A52;">
                 <div class="fan-art-texture"></div>
                 <div class="fan-art-glow"></div>
                 <div class="fan-art-ring"></div>
-                <div class="fan-art-badge" style="--glow:#e0136a;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></svg></span></div>
+                <div class="fan-art-badge" style="--glow:#4A2418;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></svg></span></div>
                 <div class="fan-art-sheen"></div>
               </div>
               <div class="fan-overlay"></div>
@@ -1001,7 +1011,7 @@
           <div class="fan-card">
             <span class="fan-tag">N°06</span>
             <div class="fan-media">
-              <div class="fan-art" style="--a1:#22c55e; --a2:#ff4fa3; --a3:#e0136a;">
+              <div class="fan-art" style="--a1:#22c55e; --a2:#A8432E; --a3:#4A2418;">
                 <div class="fan-art-texture"></div>
                 <div class="fan-art-glow"></div>
                 <div class="fan-art-ring"></div>
@@ -1019,7 +1029,7 @@
           <div class="fan-card">
             <span class="fan-tag">N°07</span>
             <div class="fan-media">
-              <div class="fan-art" style="--a1:#fb923c; --a2:#e0136a; --a3:#ff4fa3;">
+              <div class="fan-art" style="--a1:#fb923c; --a2:#4A2418; --a3:#A8432E;">
                 <div class="fan-art-texture"></div>
                 <div class="fan-art-glow"></div>
                 <div class="fan-art-ring"></div>
@@ -1037,11 +1047,11 @@
           <div class="fan-card">
             <span class="fan-tag">N°08</span>
             <div class="fan-media">
-              <div class="fan-art" style="--a1:#ff4fa3; --a2:#c8a96a; --a3:#e0136a;">
+              <div class="fan-art" style="--a1:#A8432E; --a2:#C08A52; --a3:#4A2418;">
                 <div class="fan-art-texture"></div>
                 <div class="fan-art-glow"></div>
                 <div class="fan-art-ring"></div>
-                <div class="fan-art-badge" style="--glow:#ff4fa3;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.6L19 9l-5.2 1.4L12 16l-1.8-5.6L5 9l5.2-1.4L12 2z"/></svg></span></div>
+                <div class="fan-art-badge" style="--glow:#A8432E;"><span class="fan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.6L19 9l-5.2 1.4L12 16l-1.8-5.6L5 9l5.2-1.4L12 2z"/></svg></span></div>
                 <div class="fan-art-sheen"></div>
               </div>
               <div class="fan-overlay"></div>
@@ -1065,7 +1075,7 @@
   <section id="faq" data-theme-color="0x030204" data-intensity="1.8" class="scroll-section relative py-28 px-4 w-full border-t border-pink-600/20">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-14">
-        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(255,138,193,0.45)]">
+        <div class="inline-block px-5 py-2 rounded-full bg-pink-500/10 border border-pink-500/30 mb-4 shadow-[0_0_28px_rgba(191,130,86,0.45)]">
           <span class="text-xs font-black tracking-[0.3em] text-pink-300 uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">❓ FREQUENTLY ASKED</span>
         </div>
         <h2 class="text-3xl sm:text-5xl font-black gold-shimmer-text tracking-wider uppercase" style="font-family:'Game Of Squids','Playfair Display',serif;">
@@ -1073,7 +1083,7 @@
         </h2>
       </div>
       <div class="flex flex-col gap-4">
-        <details class="pro-glass-card rounded-2xl p-6 group" style="--a1:#e0136a; --a2:#ff4fa3; --a3:#c8a96a;">
+        <details class="pro-glass-card rounded-2xl p-6 group" style="--a1:#4A2418; --a2:#A8432E; --a3:#C08A52;">
           <div class="aurora-blob"></div>
           <summary class="cursor-pointer list-none flex items-center justify-between text-white font-bold text-sm sm:text-base tracking-wide">
             What is the minimum order?
@@ -1083,7 +1093,7 @@
             Contact us for current minimum order details for your requirement.
           </p>
         </details>
-        <details class="pro-glass-card rounded-2xl p-6 group" style="--a1:#c8a96a; --a2:#e0136a; --a3:#ff4fa3;">
+        <details class="pro-glass-card rounded-2xl p-6 group" style="--a1:#C08A52; --a2:#4A2418; --a3:#A8432E;">
           <div class="aurora-blob"></div>
           <summary class="cursor-pointer list-none flex items-center justify-between text-white font-bold text-sm sm:text-base tracking-wide">
             Do you deliver within Kolkata?
@@ -1093,7 +1103,7 @@
             Yes, we deliver fresh poultry and meat within Kolkata. Contact us for delivery timing and areas covered.
           </p>
         </details>
-        <details class="pro-glass-card rounded-2xl p-6 group" style="--a1:#ff4fa3; --a2:#ff8ac1; --a3:#e0136a;">
+        <details class="pro-glass-card rounded-2xl p-6 group" style="--a1:#A8432E; --a2:#BF8256; --a3:#4A2418;">
           <div class="aurora-blob"></div>
           <summary class="cursor-pointer list-none flex items-center justify-between text-white font-bold text-sm sm:text-base tracking-wide">
             How is packaging handled?
@@ -1103,7 +1113,7 @@
             All orders are packed hygienically and handled with care to maintain freshness.
           </p>
         </details>
-        <details class="pro-glass-card rounded-2xl p-6 group" style="--a1:#ff8ac1; --a2:#ff4fa3; --a3:#c8a96a;">
+        <details class="pro-glass-card rounded-2xl p-6 group" style="--a1:#BF8256; --a2:#A8432E; --a3:#C08A52;">
           <div class="aurora-blob"></div>
           <summary class="cursor-pointer list-none flex items-center justify-between text-white font-bold text-sm sm:text-base tracking-wide">
             Can I request specific cuts?
@@ -1227,6 +1237,7 @@
 
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
