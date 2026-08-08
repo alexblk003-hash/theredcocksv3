@@ -2925,7 +2925,7 @@
        dragging the same 500vh across fewer stills). */
     .cta-seq {
       position: relative;
-      height: 360vh;
+      height: 260vh;
       background: #000;
       overflow: visible;
       contain: layout style;
@@ -3016,7 +3016,7 @@
       transform-origin: left center;
     }
     @media (max-width: 768px) {
-      .cta-seq { height: 320vh; }
+      .cta-seq { height: 240vh; }
       .cta-seq-content { padding-bottom: calc(3.6rem + env(safe-area-inset-bottom)); }
     }
     @media (max-height: 620px) {
@@ -3034,7 +3034,7 @@
        biased toward the left edge instead of centered). ─── */
     .mid-seq {
       position: relative;
-      height: 620vh;
+      height: 520vh;
       background: #000;
       overflow: visible;
       contain: layout style;
@@ -3137,7 +3137,7 @@
       will-change: transform;
     }
     @media (max-width: 768px) {
-      .mid-seq { height: 420vh; }
+      .mid-seq { height: 340vh; }
       .mid-seq-content { padding-bottom: calc(3.6rem + env(safe-area-inset-bottom)); }
     }
     @media (max-height: 620px) {
@@ -3146,121 +3146,6 @@
     @media (prefers-reduced-motion: reduce) {
       .mid-seq { height: 100vh; }
       #mid-seq-cue .cue-mouse::before { animation: none; }
-    }
-
-    /* ─── Heritage / unboxing frame sequence — sits right above the
-       "Provenance Perfected" section. Same sticky-canvas engine, tuned
-       centered (product/box stays centered in every frame). ─── */
-    .heritage-seq {
-      position: relative;
-      height: 560vh;
-      background: #000;
-      overflow: visible;
-      contain: layout style;
-    }
-    .heritage-sticky {
-      position: -webkit-sticky;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      height: 100svh;
-      width: 100%;
-      overflow: hidden;
-      background: #000;
-      display: block;
-      z-index: 2;
-    }
-    #heritage-frame-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      background: #000;
-      transform: translateZ(0);
-    }
-    .heritage-seq-veil {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(120% 80% at 50% 0%, rgba(0,0,0,0.65), rgba(0,0,0,0) 55%),
-        linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.45) 100%),
-        radial-gradient(90% 70% at 50% 105%, rgba(74,36,24,0.28), rgba(0,0,0,0) 60%);
-    }
-    .heritage-seq-content {
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      padding: 0 1.25rem calc(4.5rem + env(safe-area-inset-bottom)) 1.25rem;
-      text-align: center;
-      z-index: 3;
-      will-change: transform, opacity;
-      pointer-events: none;
-    }
-    .heritage-seq-content > * { pointer-events: auto; }
-    .heritage-seq-title {
-      font-size: clamp(2rem, 7vw, 4.6rem);
-      font-weight: 900;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      line-height: 1.05;
-      margin: 0 0 0.7rem;
-      text-shadow: 0 0 55px rgba(168,67,46,0.75), 0 0 100px rgba(74,36,24,0.4);
-    }
-    .heritage-seq-sub {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-style: italic;
-      color: rgba(226,226,226,0.9);
-      font-size: clamp(0.82rem, 2.4vw, 1.05rem);
-      max-width: 560px;
-      margin: 0 auto 1.4rem;
-    }
-    #heritage-seq-cue {
-      position: absolute; left: 50%; transform: translateX(-50%);
-      bottom: calc(1.1rem + env(safe-area-inset-bottom));
-      z-index: 4; display: flex; align-items: center; gap: 10px;
-      pointer-events: none;
-    }
-    #heritage-seq-cue span {
-      font-family: 'JetBrains Mono','Courier New',monospace;
-      font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(224,196,168,0.7);
-    }
-    #heritage-seq-cue .cue-mouse {
-      position: relative; width: 17px; height: 27px; border-radius: 9px;
-      border: 1px solid rgba(191,130,86,0.65);
-    }
-    #heritage-seq-cue .cue-mouse::before {
-      content: ''; position: absolute; left: 50%; margin-left: -1.5px; top: 5px;
-      width: 3px; height: 6px; border-radius: 2px; background: rgba(224,196,168,0.9);
-      animation: heroSeqDot 1.8s ease-in-out infinite;
-    }
-    #heritage-seq-progress {
-      position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
-      background: rgba(255,255,255,0.08); z-index: 5;
-    }
-    #heritage-seq-progress i {
-      display: block; height: 100%; width: 0%;
-      background: linear-gradient(to right, #4A2418, #C08A52);
-      transform-origin: left center;
-    }
-    #heritage-frame-canvas {
-      image-rendering: -webkit-optimize-contrast;
-      image-rendering: crisp-edges;
-      filter: saturate(1.08) contrast(1.06) brightness(1.02);
-      -webkit-filter: saturate(1.08) contrast(1.06) brightness(1.02);
-      backface-visibility: hidden;
-      will-change: transform;
-    }
-    @media (max-width: 768px) {
-      .heritage-seq { height: 380vh; }
-      .heritage-seq-content { padding-bottom: calc(3.6rem + env(safe-area-inset-bottom)); }
-    }
-    @media (max-height: 620px) {
-      .heritage-seq-sub { display: none; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .heritage-seq { height: 100vh; }
-      #heritage-seq-cue .cue-mouse::before { animation: none; }
     }
   
 
@@ -3289,7 +3174,7 @@
   /* Prevent layout reflow thrash from infinite keyframe animations while
      the hero sticky canvas is painting — these were the main jank source */
   .hero-sticky > canvas { contain: strict; }
-  .hero-sticky canvas, .cta-sticky canvas, .mid-sticky canvas, .heritage-sticky canvas {
+  .hero-sticky canvas, .cta-sticky canvas, .mid-sticky canvas {
     contain: strict;
     isolation: isolate;
   }
@@ -3565,6 +3450,46 @@
   @keyframes neonOrbit{ to{ transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce){ .hero-cta-btn::before, .reserve-btn::before{ animation: none; } }
 
+  /* =====================================================================
+     MOTION EDIT — a controlled cinematic layer, not more effects.
+     Palette, typography, imagery and layout intentionally stay unchanged.
+     ===================================================================== */
+  @media (hover: hover) and (pointer: fine) {
+    /* One discreet cursor treatment: no particle/comet tail. */
+    #cursor-comet { display: none !important; }
+
+    /* Smaller tilt retains physical depth without feeling playful. */
+    .pro-glass-card {
+      transition: transform .42s cubic-bezier(.16,1,.3,1), box-shadow .42s ease;
+    }
+  }
+
+  /* Section choreography stays crisp: opacity + transform, never a soft
+     filter transition. This is notably smoother on mid-range phones. */
+  .scroll-section.lux-locked {
+    transition: opacity .72s cubic-bezier(.16,1,.3,1),
+                transform .82s cubic-bezier(.16,1,.3,1) !important;
+  }
+
+  @media (max-width: 768px) {
+    .scroll-section,
+    .scroll-section.active,
+    .scroll-section.lux-locked,
+    .scroll-section.lux-locked.lux-exiting {
+      filter: none !important;
+    }
+
+    /* Keep both cinematic chapters, but cut their scroll demand on phones. */
+    .mid-seq { height: 260vh !important; }
+    .cta-seq { height: 190vh !important; }
+
+    /* Existing glass keeps its depth with a cheaper mobile blur. */
+    .pro-glass-card {
+      backdrop-filter: blur(6px) saturate(130%) !important;
+      -webkit-backdrop-filter: blur(6px) saturate(130%) !important;
+    }
+  }
+
   .fx-ripple{
     position: fixed; z-index: 9997; pointer-events: none; border-radius: 50%;
     border: 1.5px solid rgba(168,67,46,.85);
@@ -3645,3 +3570,5 @@
     background: linear-gradient(to right, #35180F, #A8432E, #C08A52) !important;
   }
   ::selection { background-color: #A8432E !important; color: #fff !important; }
+/* THE RED COCKS concierge — additive widget styles, isolated from page motion. */
+.trc-chat{position:fixed;right:18px;bottom:18px;z-index:1000;font-family:inherit}.trc-chat__launcher{border:1px solid rgba(244,114,182,.6);border-radius:999px;background:linear-gradient(135deg,#9d174d,#be185d);color:#fff;box-shadow:0 16px 35px rgba(157,23,77,.42),0 0 0 5px rgba(244,114,182,.1);display:flex;align-items:center;gap:9px;padding:13px 18px;font-size:12px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;transition:transform .22s ease,box-shadow .22s ease}.trc-chat__launcher:hover{transform:translateY(-2px);box-shadow:0 20px 42px rgba(157,23,77,.55),0 0 0 6px rgba(244,114,182,.14)}.trc-chat__spark{font-size:18px;line-height:1}.trc-chat__panel{width:min(380px,calc(100vw - 28px));height:min(560px,calc(100vh - 96px));margin-bottom:14px;overflow:hidden;border:1px solid rgba(244,114,182,.35);border-radius:24px;background:linear-gradient(155deg,rgba(35,6,19,.98),rgba(9,6,12,.98));box-shadow:0 28px 80px rgba(0,0,0,.6),inset 0 1px rgba(255,255,255,.08);display:flex;flex-direction:column;animation:trcChatIn .28s cubic-bezier(.16,1,.3,1)}.trc-chat__header{padding:18px 20px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(244,114,182,.18);background:radial-gradient(circle at 15% 0,rgba(236,72,153,.22),transparent 55%)}.trc-chat__eyebrow{display:block;color:#f9a8d4;font-size:9px;font-weight:900;letter-spacing:.19em}.trc-chat__header h2{margin:3px 0 0;color:#fff;font-size:18px;font-weight:900;letter-spacing:.03em}.trc-chat__close{border:0;background:transparent;color:#fbcfe8;font-size:29px;line-height:1;cursor:pointer;padding:2px 5px}.trc-chat__messages{flex:1;overflow-y:auto;padding:17px;display:flex;flex-direction:column;gap:11px;scroll-behavior:smooth}.trc-chat__message{max-width:88%;padding:11px 13px;border-radius:15px;font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.trc-chat__message--assistant{align-self:flex-start;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fce7f3;border-bottom-left-radius:4px}.trc-chat__message--user{align-self:flex-end;background:linear-gradient(135deg,#be185d,#9d174d);color:#fff;border-bottom-right-radius:4px}.trc-chat__typing{display:flex;gap:4px;align-items:center;min-width:48px}.trc-chat__typing i{width:6px;height:6px;border-radius:50%;background:#f9a8d4;animation:trcDot .9s infinite alternate}.trc-chat__typing i:nth-child(2){animation-delay:.18s}.trc-chat__typing i:nth-child(3){animation-delay:.36s}.trc-chat__form{display:flex;gap:8px;padding:12px 14px;border-top:1px solid rgba(244,114,182,.16);background:rgba(255,255,255,.025)}.trc-chat__form textarea{min-width:0;resize:none;max-height:100px;flex:1;border:1px solid rgba(255,255,255,.15);border-radius:14px;background:rgba(255,255,255,.07);color:#fff;padding:10px 12px;font:inherit;font-size:13px;outline:none}.trc-chat__form textarea:focus{border-color:#f472b6;box-shadow:0 0 0 3px rgba(244,114,182,.12)}.trc-chat__form button{width:42px;border:0;border-radius:13px;background:#ec4899;color:#fff;font-size:21px;cursor:pointer}.trc-chat__form button:disabled{opacity:.55;cursor:wait}.trc-chat__note{padding:0 15px 13px;margin:0;color:#9ca3af;font-size:9px;line-height:1.35}.trc-chat__error{color:#fecdd3}.trc-chat__panel[hidden]{display:none}@keyframes trcChatIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}@keyframes trcDot{to{transform:translateY(-4px);opacity:.45}}@media(max-width:480px){.trc-chat{right:12px;bottom:12px}.trc-chat__launcher-label{display:none}.trc-chat__launcher{padding:14px}.trc-chat__panel{height:min(580px,calc(100vh - 84px));margin-bottom:10px}}

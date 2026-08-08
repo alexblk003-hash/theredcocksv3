@@ -11,6 +11,48 @@
 
 /* ---- next inline block ---- */
 
+/* ---- THE RED COCKS concierge: client UI only; no provider key is present here. ---- */
+(function initTrcChat() {
+  const launcher = document.getElementById('trc-chat-launcher');
+  const panel = document.getElementById('trc-chat-panel');
+  const close = document.getElementById('trc-chat-close');
+  const form = document.getElementById('trc-chat-form');
+  const input = document.getElementById('trc-chat-input');
+  const send = document.getElementById('trc-chat-send');
+  const messages = document.getElementById('trc-chat-messages');
+  if (!launcher || !panel || !form || !input || !messages) return;
+
+  const history = [];
+  let busy = false;
+  const toggle = (open) => { panel.hidden = !open; launcher.setAttribute('aria-expanded', String(open)); if (open) input.focus(); };
+  launcher.addEventListener('click', () => toggle(panel.hidden));
+  close.addEventListener('click', () => toggle(false));
+  input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 100) + 'px'; });
+  input.addEventListener('keydown', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); form.requestSubmit(); } });
+  const addMessage = (text, role, extraClass = '') => { const node = document.createElement('div'); node.className = `trc-chat__message trc-chat__message--${role} ${extraClass}`; node.textContent = text; messages.appendChild(node); messages.scrollTop = messages.scrollHeight; return node; };
+  const typeReply = async (node, text) => { for (let i = 1; i <= text.length; i += 3) { node.textContent = text.slice(0, i); messages.scrollTop = messages.scrollHeight; await new Promise(resolve => setTimeout(resolve, 9)); } };
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const message = input.value.trim();
+    if (!message || busy) return;
+    busy = true; send.disabled = true; addMessage(message, 'user');
+    history.push({ role: 'user', content: message });
+    input.value = ''; input.style.height = 'auto';
+    const typing = addMessage('', 'assistant'); typing.innerHTML = '<span class="trc-chat__typing" aria-label="Thinking"><i></i><i></i><i></i></span>';
+    try {
+      const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, history: history.slice(-8) }) });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'Please try again in a moment.');
+      const reply = String(data.reply || 'Sorry, I could not prepare a response just now.');
+      typing.textContent = ''; await typeReply(typing, reply);
+      history.push({ role: 'model', content: reply });
+      if (history.length > 10) history.splice(0, history.length - 10);
+    } catch (error) {
+      typing.classList.add('trc-chat__error'); typing.textContent = error.message || 'Connection issue. Please try again.';
+    } finally { busy = false; send.disabled = false; input.focus(); }
+  });
+})();
+
 
     (function(){
       let touchStartY = 0;
@@ -937,7 +979,6 @@ window.CTA_FRAMES=["assets/images/reveal-seq/frame_001.webp", "assets/images/rev
 /* ---- next inline block ---- */
 
 window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-seq/frame_002.webp", "assets/images/mid-seq/frame_003.webp", "assets/images/mid-seq/frame_004.webp", "assets/images/mid-seq/frame_005.webp", "assets/images/mid-seq/frame_006.webp", "assets/images/mid-seq/frame_007.webp", "assets/images/mid-seq/frame_008.webp", "assets/images/mid-seq/frame_009.webp", "assets/images/mid-seq/frame_010.webp", "assets/images/mid-seq/frame_011.webp", "assets/images/mid-seq/frame_012.webp", "assets/images/mid-seq/frame_013.webp", "assets/images/mid-seq/frame_014.webp", "assets/images/mid-seq/frame_015.webp", "assets/images/mid-seq/frame_016.webp", "assets/images/mid-seq/frame_017.webp", "assets/images/mid-seq/frame_018.webp", "assets/images/mid-seq/frame_019.webp", "assets/images/mid-seq/frame_020.webp", "assets/images/mid-seq/frame_021.webp", "assets/images/mid-seq/frame_022.webp", "assets/images/mid-seq/frame_023.webp", "assets/images/mid-seq/frame_024.webp", "assets/images/mid-seq/frame_025.webp", "assets/images/mid-seq/frame_026.webp", "assets/images/mid-seq/frame_027.webp", "assets/images/mid-seq/frame_028.webp", "assets/images/mid-seq/frame_029.webp", "assets/images/mid-seq/frame_030.webp", "assets/images/mid-seq/frame_031.webp", "assets/images/mid-seq/frame_032.webp", "assets/images/mid-seq/frame_033.webp", "assets/images/mid-seq/frame_034.webp", "assets/images/mid-seq/frame_035.webp", "assets/images/mid-seq/frame_036.webp", "assets/images/mid-seq/frame_037.webp", "assets/images/mid-seq/frame_038.webp", "assets/images/mid-seq/frame_039.webp", "assets/images/mid-seq/frame_040.webp", "assets/images/mid-seq/frame_041.webp", "assets/images/mid-seq/frame_042.webp", "assets/images/mid-seq/frame_043.webp", "assets/images/mid-seq/frame_044.webp", "assets/images/mid-seq/frame_045.webp", "assets/images/mid-seq/frame_046.webp", "assets/images/mid-seq/frame_047.webp", "assets/images/mid-seq/frame_048.webp", "assets/images/mid-seq/frame_049.webp", "assets/images/mid-seq/frame_050.webp", "assets/images/mid-seq/frame_051.webp", "assets/images/mid-seq/frame_052.webp", "assets/images/mid-seq/frame_053.webp", "assets/images/mid-seq/frame_054.webp", "assets/images/mid-seq/frame_055.webp", "assets/images/mid-seq/frame_056.webp", "assets/images/mid-seq/frame_057.webp", "assets/images/mid-seq/frame_058.webp", "assets/images/mid-seq/frame_059.webp", "assets/images/mid-seq/frame_060.webp", "assets/images/mid-seq/frame_061.webp", "assets/images/mid-seq/frame_062.webp", "assets/images/mid-seq/frame_063.webp", "assets/images/mid-seq/frame_064.webp", "assets/images/mid-seq/frame_065.webp", "assets/images/mid-seq/frame_066.webp", "assets/images/mid-seq/frame_067.webp", "assets/images/mid-seq/frame_068.webp", "assets/images/mid-seq/frame_069.webp", "assets/images/mid-seq/frame_070.webp", "assets/images/mid-seq/frame_071.webp", "assets/images/mid-seq/frame_072.webp", "assets/images/mid-seq/frame_073.webp", "assets/images/mid-seq/frame_074.webp", "assets/images/mid-seq/frame_075.webp", "assets/images/mid-seq/frame_076.webp", "assets/images/mid-seq/frame_077.webp", "assets/images/mid-seq/frame_078.webp", "assets/images/mid-seq/frame_079.webp", "assets/images/mid-seq/frame_080.webp", "assets/images/mid-seq/frame_081.webp", "assets/images/mid-seq/frame_082.webp"];
-window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/images/heritage-seq/frame_002.webp", "assets/images/heritage-seq/frame_003.webp", "assets/images/heritage-seq/frame_004.webp", "assets/images/heritage-seq/frame_005.webp", "assets/images/heritage-seq/frame_006.webp", "assets/images/heritage-seq/frame_007.webp", "assets/images/heritage-seq/frame_008.webp", "assets/images/heritage-seq/frame_009.webp", "assets/images/heritage-seq/frame_010.webp", "assets/images/heritage-seq/frame_011.webp", "assets/images/heritage-seq/frame_012.webp", "assets/images/heritage-seq/frame_013.webp", "assets/images/heritage-seq/frame_014.webp", "assets/images/heritage-seq/frame_015.webp", "assets/images/heritage-seq/frame_016.webp", "assets/images/heritage-seq/frame_017.webp", "assets/images/heritage-seq/frame_018.webp", "assets/images/heritage-seq/frame_019.webp", "assets/images/heritage-seq/frame_020.webp", "assets/images/heritage-seq/frame_021.webp", "assets/images/heritage-seq/frame_022.webp", "assets/images/heritage-seq/frame_023.webp", "assets/images/heritage-seq/frame_024.webp", "assets/images/heritage-seq/frame_025.webp", "assets/images/heritage-seq/frame_026.webp", "assets/images/heritage-seq/frame_027.webp", "assets/images/heritage-seq/frame_028.webp", "assets/images/heritage-seq/frame_029.webp", "assets/images/heritage-seq/frame_030.webp", "assets/images/heritage-seq/frame_031.webp", "assets/images/heritage-seq/frame_032.webp", "assets/images/heritage-seq/frame_033.webp", "assets/images/heritage-seq/frame_034.webp", "assets/images/heritage-seq/frame_035.webp", "assets/images/heritage-seq/frame_036.webp", "assets/images/heritage-seq/frame_037.webp", "assets/images/heritage-seq/frame_038.webp", "assets/images/heritage-seq/frame_039.webp", "assets/images/heritage-seq/frame_040.webp", "assets/images/heritage-seq/frame_041.webp", "assets/images/heritage-seq/frame_042.webp", "assets/images/heritage-seq/frame_043.webp", "assets/images/heritage-seq/frame_044.webp", "assets/images/heritage-seq/frame_045.webp", "assets/images/heritage-seq/frame_046.webp", "assets/images/heritage-seq/frame_047.webp", "assets/images/heritage-seq/frame_048.webp", "assets/images/heritage-seq/frame_049.webp", "assets/images/heritage-seq/frame_050.webp", "assets/images/heritage-seq/frame_051.webp", "assets/images/heritage-seq/frame_052.webp", "assets/images/heritage-seq/frame_053.webp", "assets/images/heritage-seq/frame_054.webp", "assets/images/heritage-seq/frame_055.webp", "assets/images/heritage-seq/frame_056.webp", "assets/images/heritage-seq/frame_057.webp", "assets/images/heritage-seq/frame_058.webp", "assets/images/heritage-seq/frame_059.webp", "assets/images/heritage-seq/frame_060.webp", "assets/images/heritage-seq/frame_061.webp", "assets/images/heritage-seq/frame_062.webp", "assets/images/heritage-seq/frame_063.webp", "assets/images/heritage-seq/frame_064.webp", "assets/images/heritage-seq/frame_065.webp", "assets/images/heritage-seq/frame_066.webp", "assets/images/heritage-seq/frame_067.webp", "assets/images/heritage-seq/frame_068.webp", "assets/images/heritage-seq/frame_069.webp", "assets/images/heritage-seq/frame_070.webp", "assets/images/heritage-seq/frame_071.webp", "assets/images/heritage-seq/frame_072.webp", "assets/images/heritage-seq/frame_073.webp", "assets/images/heritage-seq/frame_074.webp", "assets/images/heritage-seq/frame_075.webp", "assets/images/heritage-seq/frame_076.webp", "assets/images/heritage-seq/frame_077.webp", "assets/images/heritage-seq/frame_078.webp", "assets/images/heritage-seq/frame_079.webp", "assets/images/heritage-seq/frame_080.webp", "assets/images/heritage-seq/frame_081.webp", "assets/images/heritage-seq/frame_082.webp", "assets/images/heritage-seq/frame_083.webp", "assets/images/heritage-seq/frame_084.webp", "assets/images/heritage-seq/frame_085.webp", "assets/images/heritage-seq/frame_086.webp", "assets/images/heritage-seq/frame_087.webp", "assets/images/heritage-seq/frame_088.webp", "assets/images/heritage-seq/frame_089.webp", "assets/images/heritage-seq/frame_090.webp", "assets/images/heritage-seq/frame_091.webp", "assets/images/heritage-seq/frame_092.webp", "assets/images/heritage-seq/frame_093.webp", "assets/images/heritage-seq/frame_094.webp", "assets/images/heritage-seq/frame_095.webp", "assets/images/heritage-seq/frame_096.webp", "assets/images/heritage-seq/frame_097.webp", "assets/images/heritage-seq/frame_098.webp", "assets/images/heritage-seq/frame_099.webp", "assets/images/heritage-seq/frame_100.webp"];
 
 /* ---- next inline block ---- */
 
@@ -1145,11 +1186,7 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
     function tick() {
       var diff = target - smooth;
       if (Math.abs(diff) < 0.00025) { smooth = target; }
-      // Lower factor = the frame catches up to the scroll position more
-      // slowly, which reads as a weighted/"sticky" premium glide instead
-      // of a snappy 1:1 follow. 0.18 felt fast/thin; 0.10 gives a heavier
-      // settle without turning laggy or unresponsive.
-      else { smooth += diff * (reduce ? 1 : 0.10); }
+      else { smooth += diff * (reduce ? 1 : 0.18); }
 
       var want = currentIndex();
       var use = resolve(want);
@@ -1305,24 +1342,15 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
     deferLoad: true
   });
 
-  initFrameSeq({
-    sectionId: 'heritage',
-    canvasId: 'heritage-frame-canvas',
-    frames: window.HERITAGE_FRAMES,
-    contentSelector: '.heritage-seq-content',
-    cueId: 'heritage-seq-cue',
-    barSelector: '#heritage-seq-progress i',
-    nativeW: 720,
-    nativeH: 1280,
-    focusX: 0.5,
-    focusXMobile: 0.5,
-    deferLoad: true
-  });
-
   /* ── Chef Video Smooth Scroll Scale Animation ── */
   (function() {
     var videoFrame = document.getElementById('chef-video-frame');
     if (!videoFrame) return;
+
+    // The page already has two cinematic scroll-scrubbed image chapters.
+    // A third continuous scroll transform on the chef video made the journey
+    // mechanically busy and repainted a large shadow on every scroll frame.
+    return;
 
     function onScrollVideo() {
       var rect = videoFrame.getBoundingClientRect();
@@ -1370,6 +1398,10 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   'use strict';
   if (window.__premiumPolishInit) return;
   window.__premiumPolishInit = true;
+
+  // Do not auto-animate every section, flex group and card. Those broad
+  // selectors stacked a second reveal system over the deliberate choreography.
+  return;
 
   var reduced = window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1469,6 +1501,10 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   var cards = Array.prototype.slice.call(document.querySelectorAll('#products .product-card-pro'));
   if (!cards.length) return;
 
+  // Product cards use the single spatial tilt system later in this file.
+  // Keeping two mouse handlers caused both systems to compete for transform.
+  return;
+
   /* ---- cursor tilt + spotlight sheen (desktop only) ---- */
   if (canHover && !reduceMotion) {
     cards.forEach(function(card){
@@ -1525,6 +1561,10 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   var boxes = Array.prototype.slice.call(document.querySelectorAll('.pro-glass-card'))
     .filter(function(box){ return !box.closest('#reviews'); });
   if (!boxes.length || reduceMotion || !('IntersectionObserver' in window)) return;
+
+  // Cards already receive the spatial entrance system. A second replaying
+  // entrance made every scroll-back look like a generic UI animation.
+  return;
 
   // Stagger siblings that share a parent (grid cells, FAQ items...) so
   // a row/group spirals in as a cascade rather than all at once. Set
@@ -1630,6 +1670,10 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
 (function(){
   'use strict';
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // Keep the refined cursor ring and glow, but remove the comet trail and
+  // click ripples. One pointer language reads more like luxury.
+  return;
 
   function spawnRipple(x, y){
     var r = document.createElement('div');
@@ -1882,7 +1926,8 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
 (function(){
   'use strict';
 
-  var HERO_LOCK_MS = 9000; // hard, fixed lock — independent of video length/state
+  // The cinematic hero starts immediately; it never blocks exploration.
+  var HERO_LOCK_MS = 0;
 
   var heroIframe = document.getElementById('hero-video-iframe-el');
   var chefVideo = document.getElementById('chef-video-el') || document.querySelector('.chef-video-media');
@@ -1893,7 +1938,8 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   var soundIconOn = document.getElementById('hero-sound-icon-on');
 
   var heroUnlocked = false;
-  var chefUnlocked = false;
+  // The chef film is an ambient scroll moment, not a forced intermission.
+  var chefUnlocked = true;
   var chefTriggered = false;
 
   function lockBody() {
@@ -2009,7 +2055,6 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   }
 
   if (heroIframe) {
-    lockBody();
     var heroLockStart = Date.now();
     (function tickHeroProgress(){
       var elapsed = Date.now() - heroLockStart;
