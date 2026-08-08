@@ -2375,198 +2375,109 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   })();
 
 /* ============================================================
-   REDBOT — local, rule-based FAQ assistant. No external API,
-   no network calls, no key required. Matches keywords in the
-   visitor's question against a small knowledge base built from
-   this site's own content (founder, products, delivery, etc.)
-   and replies with the best-matching pre-written answer.
+   REDBOT — REAL AI
    ============================================================ */
-(function(){
+(function () {
   'use strict';
-  var launcher = document.getElementById('redbot-launcher');
-  var panel = document.getElementById('redbot-panel');
-  var closeBtn = document.getElementById('redbot-close-btn');
-  var messages = document.getElementById('redbot-messages');
-  var chipsWrap = document.getElementById('redbot-quickchips');
-  var form = document.getElementById('redbot-form');
-  var input = document.getElementById('redbot-input');
+
+  const launcher = document.getElementById('redbot-launcher');
+  const panel = document.getElementById('redbot-panel');
+  const closeBtn = document.getElementById('redbot-close-btn');
+  const messages = document.getElementById('redbot-messages');
+  const form = document.getElementById('redbot-form');
+  const input = document.getElementById('redbot-input');
+
   if (!launcher || !panel || !form || !input) return;
 
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var opened = false;
-  var chipsShown = false;
+  const AI_ENDPOINT = 'https://theredcocksv3.vercel.app/api/chat';
 
-  /* ---- knowledge base: [keywords[], answer] ---- */
-  var KB = [
-    {
-      kw: ['founder', 'ceo', 'owner', 'who runs', 'who is behind', 'aniruddha', 'mondal', 'who started', 'who made this'],
-      a: 'THE RED COCKS was founded by <strong>Aniruddha Mondal</strong>, based in Kolkata, West Bengal. His goal was simple — bring fresh, hygienically processed poultry and meat to customers who care about quality. His words: "Quality and freshness you can trust, every single time." You can see his full message in the Founder section above.'
-    },
-    {
-      kw: ['product', 'sell', 'offer', 'collection', 'chicken', 'pork', 'egg', 'meat', 'menu', 'items', 'cuts available'],
-      a: 'Our Signature Collection includes premium poultry, pork and eggs — like the Imperial Golden Reserve Eggs, Sovereign Organic Poultry, Truffle-Spiced Chicken Reserve, Heritage Iberico & Prime Pork, Smoked Applewood Pork Belly, and the Whipped Golden Quail Egg Selection. Scroll to the "Masterpiece Cuts & Reserves" section to see them all with video previews.'
-    },
-    {
-      kw: ['delivery', 'deliver', 'ship', 'area', 'kolkata', 'timing', 'when will i get'],
-      a: 'Yes, we deliver fresh poultry and meat within Kolkata. For exact delivery timing and the areas we cover, please reach out to us directly via the Contact section — our team will confirm details for your location.'
-    },
-    {
-      kw: ['minimum order', 'min order', 'moq', 'how much can i order', 'smallest order'],
-      a: 'Minimum order requirements can vary — please contact us directly through the Contact section and we\'ll confirm the current minimum for your specific requirement.'
-    },
-    {
-      kw: ['packaging', 'packed', 'hygiene', 'hygienic', 'clean', 'safe'],
-      a: 'Every order is packed hygienically and handled with care from processing to delivery, to keep everything fresh and safe by the time it reaches you.'
-    },
-    {
-      kw: ['custom cut', 'specific cut', 'portion', 'cut preference', 'request a cut'],
-      a: 'Yes — get in touch with us and we\'ll do our best to accommodate your specific cut and portioning preferences.'
-    },
-    {
-      kw: ['contact', 'email', 'phone', 'number', 'reach', 'message', 'instagram', 'social'],
-      a: 'You can reach us at <a href="mailto:www.theredcocks@gmail.com">www.theredcocks@gmail.com</a> or on Instagram <a href="https://instagram.com/ik.aniii" target="_blank" rel="noopener noreferrer">@ik.aniii</a>. There\'s also a full Contact section further down the page.'
-    },
-    {
-      kw: ['location', 'where are you', 'based', 'address', 'city'],
-      a: 'THE RED COCKS is based in Kolkata, West Bengal, India.'
-    },
-    {
-      kw: ['registration', 'msme', 'udyam', 'legal', 'registered', 'license'],
-      a: 'THE RED COCKS is a registered MSME in West Bengal, India — Udyam Registration No. UDYAM-WB-18-0206197.'
-    },
-    {
-      kw: ['about', 'what is the red cocks', 'who are you', 'company', 'business', 'what do you do'],
-      a: 'THE RED COCKS is Kolkata\'s premier poultry & meat enterprise — offering farm-fresh, hygienically processed provisions crafted to perfection, founded by Aniruddha Mondal.'
-    },
-    {
-      kw: ['reserve', 'book', 'order now', 'buy', 'purchase', 'checkout', 'cart'],
-      a: 'You can add items to your cart from the Masterpiece Cuts & Reserves section using "Reserve" — then open the cart (top right) and hit "Reserve via Concierge" to complete your request.'
-    },
-    {
-      kw: ['hello', 'hi', 'hey', 'namaste', 'yo'],
-      a: 'Hey! 👋 Welcome to THE RED COCKS. Ask me about our founder, products, delivery, or how to place an order — happy to help.'
-    },
-    {
-      kw: ['thank', 'thanks', 'thnx', 'ty'],
-      a: 'You\'re welcome! Let me know if there\'s anything else about THE RED COCKS I can help with. 🙏'
-    }
-  ];
+  let conversation = [];
 
-  var FALLBACK = 'I\'m not fully sure about that one — I can help with questions about our founder, products, delivery, minimum orders, packaging, or contact details. Try one of the quick options below, or rephrase your question!';
-
-  var CHIPS = [
-    { label: '👤 About the Founder', q: 'Who is the founder?' },
-    { label: '🍗 Our Products', q: 'What products do you offer?' },
-    { label: '🚚 Delivery Info', q: 'Do you deliver in Kolkata?' },
-    { label: '✉️ Contact Us', q: 'How can I contact you?' }
-  ];
-
-  function matchAnswer(text){
-    var t = text.toLowerCase();
-    var best = null, bestScore = 0;
-    KB.forEach(function(entry){
-      var score = 0;
-      entry.kw.forEach(function(k){ if (t.indexOf(k) !== -1) score += k.length; });
-      if (score > bestScore) { bestScore = score; best = entry; }
-    });
-    return best ? best.a : FALLBACK;
-  }
-
-  function scrollToBottom(){
+  function addMessage(text, type) {
+    const msg = document.createElement('div');
+    msg.className = 'redbot-msg ' + type;
+    msg.textContent = text;
+    messages.appendChild(msg);
     messages.scrollTop = messages.scrollHeight;
   }
 
-  function addMessage(text, who){
-    var el = document.createElement('div');
-    el.className = 'redbot-msg ' + who;
-    el.innerHTML = text;
-    if (reduceMotion) el.style.animation = 'none';
-    messages.appendChild(el);
-    scrollToBottom();
+  function showTyping() {
+    const typing = document.createElement('div');
+    typing.className = 'redbot-msg bot';
+    typing.id = 'redbot-typing';
+    typing.textContent = 'Typing...';
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
   }
 
-  function showChipsOnce(){
-    if (chipsShown) return;
-    chipsShown = true;
-    CHIPS.forEach(function(c, i){
-      var chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = 'redbot-chip';
-      chip.textContent = c.label;
-      chip.style.animationDelay = reduceMotion ? '0s' : (i * 0.07) + 's';
-      chip.addEventListener('click', function(){ handleUserQuery(c.q); });
-      chipsWrap.appendChild(chip);
+  async function sendMessage(text) {
+    text = text.trim();
+    if (!text) return;
+
+    addMessage(text, 'user');
+    input.value = '';
+    showTyping();
+
+    conversation.push({
+      role: 'user',
+      content: text
+    });
+
+    try {
+      const response = await fetch(AI_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          messages: conversation.slice(-10)
+        })
+      });
+
+      const data = await response.json();
+
+      const typing = document.getElementById('redbot-typing');
+      if (typing) typing.remove();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'AI request failed');
+      }
+
+      const reply = data.reply || 'Sorry, I could not answer that.';
+
+      addMessage(reply, 'bot');
+
+      conversation.push({
+        role: 'assistant',
+        content: reply
+      });
+
+    } catch (error) {
+      console.error(error);
+
+      const typing = document.getElementById('redbot-typing');
+      if (typing) typing.remove();
+
+      addMessage(
+        'Sorry, AI se connection mein problem aa rahi hai. Thodi der baad try karo.',
+        'bot'
+      );
+    }
+  }
+
+  launcher.addEventListener('click', function () {
+    panel.classList.toggle('open');
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function () {
+      panel.classList.remove('open');
     });
   }
 
-  function handleUserQuery(text){
-    text = text.trim();
-    if (!text) return;
-    addMessage(escapeHtml(text), 'user');
-    input.value = '';
-
-    var typing = document.createElement('div');
-    typing.className = 'redbot-typing';
-    typing.innerHTML = '<span></span><span></span><span></span>';
-    messages.appendChild(typing);
-    scrollToBottom();
-
-    var delay = reduceMotion ? 120 : (450 + Math.random() * 500);
-    setTimeout(function(){
-      typing.remove();
-      addMessage(matchAnswer(text), 'bot');
-    }, delay);
-  }
-
-  function escapeHtml(s){
-    var div = document.createElement('div');
-    div.textContent = s;
-    return div.innerHTML;
-  }
-
-  function openPanel(){
-    opened = true;
-    panel.classList.add('open');
-    panel.setAttribute('aria-hidden', 'false');
-    launcher.classList.add('open');
-    launcher.setAttribute('aria-expanded', 'true');
-    if (!messages.childElementCount) {
-      setTimeout(function(){
-        addMessage('Welcome to <strong>THE RED COCKS</strong>! I can answer questions about our founder, products, delivery, and more — ask away or tap a quick option below. 👇', 'bot');
-        showChipsOnce();
-      }, reduceMotion ? 0 : 200);
-    }
-    setTimeout(function(){ input.focus({ preventScroll: true }); }, 350);
-  }
-
-  function closePanel(){
-    opened = false;
-    panel.classList.remove('open');
-    panel.setAttribute('aria-hidden', 'true');
-    launcher.classList.remove('open');
-    launcher.setAttribute('aria-expanded', 'false');
-  }
-
-  function toggle(){ opened ? closePanel() : openPanel(); }
-
-  launcher.addEventListener('click', toggle);
-  launcher.addEventListener('keydown', function(e){
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-  });
-  closeBtn.addEventListener('click', closePanel);
-
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' && opened) closePanel();
-  });
-
-  document.addEventListener('click', function(e){
-    if (!opened) return;
-    if (panel.contains(e.target) || launcher.contains(e.target)) return;
-    closePanel();
-  });
-
-  form.addEventListener('submit', function(e){
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
-    handleUserQuery(input.value);
+    sendMessage(input.value);
   });
+
 })();
