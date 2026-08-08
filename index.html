@@ -200,6 +200,38 @@
   </aside>
   <div id="cart-toast" role="status" aria-live="polite"></div>
 
+  <!-- ============================================================
+       WEBSITE FAQ CHATBOT — no external API, fully self-contained.
+       A small local knowledge base matches keywords in what the
+       visitor types (or taps as a quick-reply chip) to a pre-written
+       answer about the founder, products, delivery, etc. Everything
+       animates in: the launcher pulses, the panel slides/fades open,
+       each message and the typing dots animate in on arrival.
+       ============================================================ -->
+  <div id="redbot-launcher" role="button" tabindex="0" aria-label="Open chat assistant" aria-expanded="false">
+    <span id="redbot-launcher-icon">💬</span>
+    <span id="redbot-launcher-close">✕</span>
+    <span id="redbot-launcher-ping"></span>
+  </div>
+
+  <div id="redbot-panel" role="dialog" aria-modal="false" aria-label="THE RED COCKS assistant" aria-hidden="true">
+    <div id="redbot-header">
+      <div id="redbot-header-avatar">👑</div>
+      <div id="redbot-header-text">
+        <span id="redbot-header-title">THE RED COCKS Assistant</span>
+        <span id="redbot-header-sub"><i id="redbot-status-dot"></i> Online · Answers about us</span>
+      </div>
+      <button id="redbot-close-btn" type="button" aria-label="Close chat">✕</button>
+    </div>
+    <div id="redbot-messages"></div>
+    <div id="redbot-quickchips"></div>
+    <form id="redbot-form" autocomplete="off">
+      <input id="redbot-input" type="text" placeholder="Ask about the founder, products, delivery…" aria-label="Type your question" maxlength="200">
+      <button id="redbot-send-btn" type="submit" aria-label="Send message">➤</button>
+    </form>
+  </div>
+
+
   <main>
   <section id="home" data-theme-color="0x010101" class="hero-seq relative w-full">
     <div class="hero-sticky">
@@ -362,6 +394,29 @@
           <div class="fan-arrow fan-next" role="button" aria-label="Next">→</div>
         </div>
       </div>
+    </div>
+  </section>
+  <!-- 📦 HERITAGE UNBOXING FRAME SEQUENCE (sits right above Provenance Perfected) -->
+  <section id="heritage" data-theme-color="0x020103" class="heritage-seq relative w-full border-t border-pink-600/20">
+    <div class="heritage-sticky">
+      <canvas id="heritage-frame-canvas" aria-hidden="true"></canvas>
+      <div class="heritage-seq-veil"></div>
+      <div class="heritage-seq-content">
+        <div class="hero-kicker">
+          <span class="hk-line"></span>
+          <span class="hk-text">Farm To Doorstep</span>
+          <span class="hk-line"></span>
+        </div>
+        <h2 class="heritage-seq-title gold-shimmer-text">Sealed With Pride</h2>
+        <p class="heritage-seq-sub">
+          Every bird, hand-checked and sealed in our signature box before it reaches you.
+        </p>
+      </div>
+      <div id="heritage-seq-cue">
+        <div class="cue-mouse"></div>
+        <span>Scroll to Explore</span>
+      </div>
+      <div id="heritage-seq-progress"><i></i></div>
     </div>
   </section>
   <section id="about" data-theme-color="0x030508" data-intensity="1.8" class="scroll-section relative py-28 px-4 w-full border-t border-pink-600/20 overflow-hidden">
@@ -1174,28 +1229,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- Branded assistant: UI stays on this site; requests go only to /api/chat. -->
-  <section class="trc-chat" aria-label="THE RED COCKS assistant">
-    <button class="trc-chat__launcher" id="trc-chat-launcher" type="button" aria-label="Open THE RED COCKS assistant" aria-expanded="false" aria-controls="trc-chat-panel">
-      <span class="trc-chat__spark">✦</span><span class="trc-chat__launcher-label">Ask us</span>
-    </button>
-    <div class="trc-chat__panel" id="trc-chat-panel" role="dialog" aria-modal="false" aria-labelledby="trc-chat-title" hidden>
-      <div class="trc-chat__header">
-        <div><span class="trc-chat__eyebrow">THE RED COCKS</span><h2 id="trc-chat-title">Concierge</h2></div>
-        <button class="trc-chat__close" id="trc-chat-close" type="button" aria-label="Close chat">×</button>
-      </div>
-      <div class="trc-chat__messages" id="trc-chat-messages" aria-live="polite">
-        <div class="trc-chat__message trc-chat__message--assistant">Hello! I’m the THE RED COCKS concierge. Ask about fresh cuts, delivery, bulk orders, or anything else—English, Hindi, or Bangla is welcome.</div>
-      </div>
-      <form class="trc-chat__form" id="trc-chat-form">
-        <label class="sr-only" for="trc-chat-input">Message</label>
-        <textarea id="trc-chat-input" rows="1" maxlength="1000" placeholder="Type your message…" required></textarea>
-        <button id="trc-chat-send" type="submit" aria-label="Send message"><span>➜</span></button>
-      </form>
-      <p class="trc-chat__note">AI responses can make mistakes. Please confirm final orders with our team.</p>
-    </div>
-  </section>
   
   
   

@@ -11,48 +11,6 @@
 
 /* ---- next inline block ---- */
 
-/* ---- THE RED COCKS concierge: client UI only; no provider key is present here. ---- */
-(function initTrcChat() {
-  const launcher = document.getElementById('trc-chat-launcher');
-  const panel = document.getElementById('trc-chat-panel');
-  const close = document.getElementById('trc-chat-close');
-  const form = document.getElementById('trc-chat-form');
-  const input = document.getElementById('trc-chat-input');
-  const send = document.getElementById('trc-chat-send');
-  const messages = document.getElementById('trc-chat-messages');
-  if (!launcher || !panel || !form || !input || !messages) return;
-
-  const history = [];
-  let busy = false;
-  const toggle = (open) => { panel.hidden = !open; launcher.setAttribute('aria-expanded', String(open)); if (open) input.focus(); };
-  launcher.addEventListener('click', () => toggle(panel.hidden));
-  close.addEventListener('click', () => toggle(false));
-  input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 100) + 'px'; });
-  input.addEventListener('keydown', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); form.requestSubmit(); } });
-  const addMessage = (text, role, extraClass = '') => { const node = document.createElement('div'); node.className = `trc-chat__message trc-chat__message--${role} ${extraClass}`; node.textContent = text; messages.appendChild(node); messages.scrollTop = messages.scrollHeight; return node; };
-  const typeReply = async (node, text) => { for (let i = 1; i <= text.length; i += 3) { node.textContent = text.slice(0, i); messages.scrollTop = messages.scrollHeight; await new Promise(resolve => setTimeout(resolve, 9)); } };
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const message = input.value.trim();
-    if (!message || busy) return;
-    busy = true; send.disabled = true; addMessage(message, 'user');
-    history.push({ role: 'user', content: message });
-    input.value = ''; input.style.height = 'auto';
-    const typing = addMessage('', 'assistant'); typing.innerHTML = '<span class="trc-chat__typing" aria-label="Thinking"><i></i><i></i><i></i></span>';
-    try {
-      const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, history: history.slice(-8) }) });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || 'Please try again in a moment.');
-      const reply = String(data.reply || 'Sorry, I could not prepare a response just now.');
-      typing.textContent = ''; await typeReply(typing, reply);
-      history.push({ role: 'model', content: reply });
-      if (history.length > 10) history.splice(0, history.length - 10);
-    } catch (error) {
-      typing.classList.add('trc-chat__error'); typing.textContent = error.message || 'Connection issue. Please try again.';
-    } finally { busy = false; send.disabled = false; input.focus(); }
-  });
-})();
-
 
     (function(){
       let touchStartY = 0;
@@ -755,7 +713,8 @@
         '#certifications .grid.grid-cols-1.gap-5 > div',
         '#signature-film .grid.grid-cols-2.gap-5 > div',
         '#faq .flex.flex-col.gap-4 > details',
-        '#contact .grid.grid-cols-1.gap-6 > div'
+        '#contact .grid.grid-cols-1.gap-6 > div',
+        'footer .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 > div'
       ];
       const seenGroups = new Map();
       groupSelectors.forEach((sel) => {
@@ -979,6 +938,7 @@ window.CTA_FRAMES=["assets/images/reveal-seq/frame_001.webp", "assets/images/rev
 /* ---- next inline block ---- */
 
 window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-seq/frame_002.webp", "assets/images/mid-seq/frame_003.webp", "assets/images/mid-seq/frame_004.webp", "assets/images/mid-seq/frame_005.webp", "assets/images/mid-seq/frame_006.webp", "assets/images/mid-seq/frame_007.webp", "assets/images/mid-seq/frame_008.webp", "assets/images/mid-seq/frame_009.webp", "assets/images/mid-seq/frame_010.webp", "assets/images/mid-seq/frame_011.webp", "assets/images/mid-seq/frame_012.webp", "assets/images/mid-seq/frame_013.webp", "assets/images/mid-seq/frame_014.webp", "assets/images/mid-seq/frame_015.webp", "assets/images/mid-seq/frame_016.webp", "assets/images/mid-seq/frame_017.webp", "assets/images/mid-seq/frame_018.webp", "assets/images/mid-seq/frame_019.webp", "assets/images/mid-seq/frame_020.webp", "assets/images/mid-seq/frame_021.webp", "assets/images/mid-seq/frame_022.webp", "assets/images/mid-seq/frame_023.webp", "assets/images/mid-seq/frame_024.webp", "assets/images/mid-seq/frame_025.webp", "assets/images/mid-seq/frame_026.webp", "assets/images/mid-seq/frame_027.webp", "assets/images/mid-seq/frame_028.webp", "assets/images/mid-seq/frame_029.webp", "assets/images/mid-seq/frame_030.webp", "assets/images/mid-seq/frame_031.webp", "assets/images/mid-seq/frame_032.webp", "assets/images/mid-seq/frame_033.webp", "assets/images/mid-seq/frame_034.webp", "assets/images/mid-seq/frame_035.webp", "assets/images/mid-seq/frame_036.webp", "assets/images/mid-seq/frame_037.webp", "assets/images/mid-seq/frame_038.webp", "assets/images/mid-seq/frame_039.webp", "assets/images/mid-seq/frame_040.webp", "assets/images/mid-seq/frame_041.webp", "assets/images/mid-seq/frame_042.webp", "assets/images/mid-seq/frame_043.webp", "assets/images/mid-seq/frame_044.webp", "assets/images/mid-seq/frame_045.webp", "assets/images/mid-seq/frame_046.webp", "assets/images/mid-seq/frame_047.webp", "assets/images/mid-seq/frame_048.webp", "assets/images/mid-seq/frame_049.webp", "assets/images/mid-seq/frame_050.webp", "assets/images/mid-seq/frame_051.webp", "assets/images/mid-seq/frame_052.webp", "assets/images/mid-seq/frame_053.webp", "assets/images/mid-seq/frame_054.webp", "assets/images/mid-seq/frame_055.webp", "assets/images/mid-seq/frame_056.webp", "assets/images/mid-seq/frame_057.webp", "assets/images/mid-seq/frame_058.webp", "assets/images/mid-seq/frame_059.webp", "assets/images/mid-seq/frame_060.webp", "assets/images/mid-seq/frame_061.webp", "assets/images/mid-seq/frame_062.webp", "assets/images/mid-seq/frame_063.webp", "assets/images/mid-seq/frame_064.webp", "assets/images/mid-seq/frame_065.webp", "assets/images/mid-seq/frame_066.webp", "assets/images/mid-seq/frame_067.webp", "assets/images/mid-seq/frame_068.webp", "assets/images/mid-seq/frame_069.webp", "assets/images/mid-seq/frame_070.webp", "assets/images/mid-seq/frame_071.webp", "assets/images/mid-seq/frame_072.webp", "assets/images/mid-seq/frame_073.webp", "assets/images/mid-seq/frame_074.webp", "assets/images/mid-seq/frame_075.webp", "assets/images/mid-seq/frame_076.webp", "assets/images/mid-seq/frame_077.webp", "assets/images/mid-seq/frame_078.webp", "assets/images/mid-seq/frame_079.webp", "assets/images/mid-seq/frame_080.webp", "assets/images/mid-seq/frame_081.webp", "assets/images/mid-seq/frame_082.webp"];
+window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/images/heritage-seq/frame_002.webp", "assets/images/heritage-seq/frame_003.webp", "assets/images/heritage-seq/frame_004.webp", "assets/images/heritage-seq/frame_005.webp", "assets/images/heritage-seq/frame_006.webp", "assets/images/heritage-seq/frame_007.webp", "assets/images/heritage-seq/frame_008.webp", "assets/images/heritage-seq/frame_009.webp", "assets/images/heritage-seq/frame_010.webp", "assets/images/heritage-seq/frame_011.webp", "assets/images/heritage-seq/frame_012.webp", "assets/images/heritage-seq/frame_013.webp", "assets/images/heritage-seq/frame_014.webp", "assets/images/heritage-seq/frame_015.webp", "assets/images/heritage-seq/frame_016.webp", "assets/images/heritage-seq/frame_017.webp", "assets/images/heritage-seq/frame_018.webp", "assets/images/heritage-seq/frame_019.webp", "assets/images/heritage-seq/frame_020.webp", "assets/images/heritage-seq/frame_021.webp", "assets/images/heritage-seq/frame_022.webp", "assets/images/heritage-seq/frame_023.webp", "assets/images/heritage-seq/frame_024.webp", "assets/images/heritage-seq/frame_025.webp", "assets/images/heritage-seq/frame_026.webp", "assets/images/heritage-seq/frame_027.webp", "assets/images/heritage-seq/frame_028.webp", "assets/images/heritage-seq/frame_029.webp", "assets/images/heritage-seq/frame_030.webp", "assets/images/heritage-seq/frame_031.webp", "assets/images/heritage-seq/frame_032.webp", "assets/images/heritage-seq/frame_033.webp", "assets/images/heritage-seq/frame_034.webp", "assets/images/heritage-seq/frame_035.webp", "assets/images/heritage-seq/frame_036.webp", "assets/images/heritage-seq/frame_037.webp", "assets/images/heritage-seq/frame_038.webp", "assets/images/heritage-seq/frame_039.webp", "assets/images/heritage-seq/frame_040.webp", "assets/images/heritage-seq/frame_041.webp", "assets/images/heritage-seq/frame_042.webp", "assets/images/heritage-seq/frame_043.webp", "assets/images/heritage-seq/frame_044.webp", "assets/images/heritage-seq/frame_045.webp", "assets/images/heritage-seq/frame_046.webp", "assets/images/heritage-seq/frame_047.webp", "assets/images/heritage-seq/frame_048.webp", "assets/images/heritage-seq/frame_049.webp", "assets/images/heritage-seq/frame_050.webp", "assets/images/heritage-seq/frame_051.webp", "assets/images/heritage-seq/frame_052.webp", "assets/images/heritage-seq/frame_053.webp", "assets/images/heritage-seq/frame_054.webp", "assets/images/heritage-seq/frame_055.webp", "assets/images/heritage-seq/frame_056.webp", "assets/images/heritage-seq/frame_057.webp", "assets/images/heritage-seq/frame_058.webp", "assets/images/heritage-seq/frame_059.webp", "assets/images/heritage-seq/frame_060.webp", "assets/images/heritage-seq/frame_061.webp", "assets/images/heritage-seq/frame_062.webp", "assets/images/heritage-seq/frame_063.webp", "assets/images/heritage-seq/frame_064.webp", "assets/images/heritage-seq/frame_065.webp", "assets/images/heritage-seq/frame_066.webp", "assets/images/heritage-seq/frame_067.webp", "assets/images/heritage-seq/frame_068.webp", "assets/images/heritage-seq/frame_069.webp", "assets/images/heritage-seq/frame_070.webp", "assets/images/heritage-seq/frame_071.webp", "assets/images/heritage-seq/frame_072.webp", "assets/images/heritage-seq/frame_073.webp", "assets/images/heritage-seq/frame_074.webp", "assets/images/heritage-seq/frame_075.webp", "assets/images/heritage-seq/frame_076.webp", "assets/images/heritage-seq/frame_077.webp", "assets/images/heritage-seq/frame_078.webp", "assets/images/heritage-seq/frame_079.webp", "assets/images/heritage-seq/frame_080.webp", "assets/images/heritage-seq/frame_081.webp", "assets/images/heritage-seq/frame_082.webp", "assets/images/heritage-seq/frame_083.webp", "assets/images/heritage-seq/frame_084.webp", "assets/images/heritage-seq/frame_085.webp", "assets/images/heritage-seq/frame_086.webp", "assets/images/heritage-seq/frame_087.webp", "assets/images/heritage-seq/frame_088.webp", "assets/images/heritage-seq/frame_089.webp", "assets/images/heritage-seq/frame_090.webp", "assets/images/heritage-seq/frame_091.webp", "assets/images/heritage-seq/frame_092.webp", "assets/images/heritage-seq/frame_093.webp", "assets/images/heritage-seq/frame_094.webp", "assets/images/heritage-seq/frame_095.webp", "assets/images/heritage-seq/frame_096.webp", "assets/images/heritage-seq/frame_097.webp", "assets/images/heritage-seq/frame_098.webp", "assets/images/heritage-seq/frame_099.webp", "assets/images/heritage-seq/frame_100.webp"];
 
 /* ---- next inline block ---- */
 
@@ -1186,7 +1146,11 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
     function tick() {
       var diff = target - smooth;
       if (Math.abs(diff) < 0.00025) { smooth = target; }
-      else { smooth += diff * (reduce ? 1 : 0.18); }
+      // Lower factor = the frame catches up to the scroll position more
+      // slowly, which reads as a weighted/"sticky" premium glide instead
+      // of a snappy 1:1 follow. 0.18 felt fast/thin; 0.10 gives a heavier
+      // settle without turning laggy or unresponsive.
+      else { smooth += diff * (reduce ? 1 : 0.10); }
 
       var want = currentIndex();
       var use = resolve(want);
@@ -1342,15 +1306,24 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
     deferLoad: true
   });
 
+  initFrameSeq({
+    sectionId: 'heritage',
+    canvasId: 'heritage-frame-canvas',
+    frames: window.HERITAGE_FRAMES,
+    contentSelector: '.heritage-seq-content',
+    cueId: 'heritage-seq-cue',
+    barSelector: '#heritage-seq-progress i',
+    nativeW: 720,
+    nativeH: 1280,
+    focusX: 0.5,
+    focusXMobile: 0.5,
+    deferLoad: true
+  });
+
   /* ── Chef Video Smooth Scroll Scale Animation ── */
   (function() {
     var videoFrame = document.getElementById('chef-video-frame');
     if (!videoFrame) return;
-
-    // The page already has two cinematic scroll-scrubbed image chapters.
-    // A third continuous scroll transform on the chef video made the journey
-    // mechanically busy and repainted a large shadow on every scroll frame.
-    return;
 
     function onScrollVideo() {
       var rect = videoFrame.getBoundingClientRect();
@@ -1398,10 +1371,6 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
   'use strict';
   if (window.__premiumPolishInit) return;
   window.__premiumPolishInit = true;
-
-  // Do not auto-animate every section, flex group and card. Those broad
-  // selectors stacked a second reveal system over the deliberate choreography.
-  return;
 
   var reduced = window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1501,10 +1470,6 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
   var cards = Array.prototype.slice.call(document.querySelectorAll('#products .product-card-pro'));
   if (!cards.length) return;
 
-  // Product cards use the single spatial tilt system later in this file.
-  // Keeping two mouse handlers caused both systems to compete for transform.
-  return;
-
   /* ---- cursor tilt + spotlight sheen (desktop only) ---- */
   if (canHover && !reduceMotion) {
     cards.forEach(function(card){
@@ -1561,10 +1526,6 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
   var boxes = Array.prototype.slice.call(document.querySelectorAll('.pro-glass-card'))
     .filter(function(box){ return !box.closest('#reviews'); });
   if (!boxes.length || reduceMotion || !('IntersectionObserver' in window)) return;
-
-  // Cards already receive the spatial entrance system. A second replaying
-  // entrance made every scroll-back look like a generic UI animation.
-  return;
 
   // Stagger siblings that share a parent (grid cells, FAQ items...) so
   // a row/group spirals in as a cascade rather than all at once. Set
@@ -1671,10 +1632,6 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
   'use strict';
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // Keep the refined cursor ring and glow, but remove the comet trail and
-  // click ripples. One pointer language reads more like luxury.
-  return;
-
   function spawnRipple(x, y){
     var r = document.createElement('div');
     r.className = 'fx-ripple';
@@ -1755,6 +1712,7 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
 (function(){
   'use strict';
   var STORAGE_KEY = 'redcocks_cart_v1';
+  var cartReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var toggleBtn = document.getElementById('cart-toggle-btn');
   var closeBtn = document.getElementById('cart-close-btn');
   var overlay = document.getElementById('cart-overlay');
@@ -1814,11 +1772,24 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
           '<button type="button" class="cart-qty-btn" data-action="inc" data-id="' + item.id + '" aria-label="Increase quantity">+</button>' +
         '</div>' +
         '<button type="button" class="cart-remove-btn" data-action="remove" data-id="' + item.id + '">Remove</button>';
+      if (!cartReduceMotion) {
+        row.classList.add('cart-row-enter');
+        row.style.setProperty('--i', cart.indexOf(item));
+      }
       itemsList.appendChild(row);
     });
     subtotalEl.textContent = formatINR(subtotal);
     drawer.classList.toggle('is-empty', cart.length === 0);
     updateBadge();
+    if (!cartReduceMotion) {
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          itemsList.querySelectorAll('.cart-row-enter').forEach(function(el){
+            el.classList.add('cart-row-in');
+          });
+        });
+      });
+    }
   }
 
   function findItem(id){
@@ -1926,8 +1897,7 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
 (function(){
   'use strict';
 
-  // The cinematic hero starts immediately; it never blocks exploration.
-  var HERO_LOCK_MS = 0;
+  var HERO_LOCK_MS = 9000; // hard, fixed lock — independent of video length/state
 
   var heroIframe = document.getElementById('hero-video-iframe-el');
   var chefVideo = document.getElementById('chef-video-el') || document.querySelector('.chef-video-media');
@@ -1938,8 +1908,7 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
   var soundIconOn = document.getElementById('hero-sound-icon-on');
 
   var heroUnlocked = false;
-  // The chef film is an ambient scroll moment, not a forced intermission.
-  var chefUnlocked = true;
+  var chefUnlocked = false;
   var chefTriggered = false;
 
   function lockBody() {
@@ -2055,6 +2024,7 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
   }
 
   if (heroIframe) {
+    lockBody();
     var heroLockStart = Date.now();
     (function tickHeroProgress(){
       var elapsed = Date.now() - heroLockStart;
@@ -2403,3 +2373,200 @@ window.MID_FRAMES=["assets/images/mid-seq/frame_001.webp", "assets/images/mid-se
     }
     animate();
   })();
+
+/* ============================================================
+   REDBOT — local, rule-based FAQ assistant. No external API,
+   no network calls, no key required. Matches keywords in the
+   visitor's question against a small knowledge base built from
+   this site's own content (founder, products, delivery, etc.)
+   and replies with the best-matching pre-written answer.
+   ============================================================ */
+(function(){
+  'use strict';
+  var launcher = document.getElementById('redbot-launcher');
+  var panel = document.getElementById('redbot-panel');
+  var closeBtn = document.getElementById('redbot-close-btn');
+  var messages = document.getElementById('redbot-messages');
+  var chipsWrap = document.getElementById('redbot-quickchips');
+  var form = document.getElementById('redbot-form');
+  var input = document.getElementById('redbot-input');
+  if (!launcher || !panel || !form || !input) return;
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var opened = false;
+  var chipsShown = false;
+
+  /* ---- knowledge base: [keywords[], answer] ---- */
+  var KB = [
+    {
+      kw: ['founder', 'ceo', 'owner', 'who runs', 'who is behind', 'aniruddha', 'mondal', 'who started', 'who made this'],
+      a: 'THE RED COCKS was founded by <strong>Aniruddha Mondal</strong>, based in Kolkata, West Bengal. His goal was simple — bring fresh, hygienically processed poultry and meat to customers who care about quality. His words: "Quality and freshness you can trust, every single time." You can see his full message in the Founder section above.'
+    },
+    {
+      kw: ['product', 'sell', 'offer', 'collection', 'chicken', 'pork', 'egg', 'meat', 'menu', 'items', 'cuts available'],
+      a: 'Our Signature Collection includes premium poultry, pork and eggs — like the Imperial Golden Reserve Eggs, Sovereign Organic Poultry, Truffle-Spiced Chicken Reserve, Heritage Iberico & Prime Pork, Smoked Applewood Pork Belly, and the Whipped Golden Quail Egg Selection. Scroll to the "Masterpiece Cuts & Reserves" section to see them all with video previews.'
+    },
+    {
+      kw: ['delivery', 'deliver', 'ship', 'area', 'kolkata', 'timing', 'when will i get'],
+      a: 'Yes, we deliver fresh poultry and meat within Kolkata. For exact delivery timing and the areas we cover, please reach out to us directly via the Contact section — our team will confirm details for your location.'
+    },
+    {
+      kw: ['minimum order', 'min order', 'moq', 'how much can i order', 'smallest order'],
+      a: 'Minimum order requirements can vary — please contact us directly through the Contact section and we\'ll confirm the current minimum for your specific requirement.'
+    },
+    {
+      kw: ['packaging', 'packed', 'hygiene', 'hygienic', 'clean', 'safe'],
+      a: 'Every order is packed hygienically and handled with care from processing to delivery, to keep everything fresh and safe by the time it reaches you.'
+    },
+    {
+      kw: ['custom cut', 'specific cut', 'portion', 'cut preference', 'request a cut'],
+      a: 'Yes — get in touch with us and we\'ll do our best to accommodate your specific cut and portioning preferences.'
+    },
+    {
+      kw: ['contact', 'email', 'phone', 'number', 'reach', 'message', 'instagram', 'social'],
+      a: 'You can reach us at <a href="mailto:www.theredcocks@gmail.com">www.theredcocks@gmail.com</a> or on Instagram <a href="https://instagram.com/ik.aniii" target="_blank" rel="noopener noreferrer">@ik.aniii</a>. There\'s also a full Contact section further down the page.'
+    },
+    {
+      kw: ['location', 'where are you', 'based', 'address', 'city'],
+      a: 'THE RED COCKS is based in Kolkata, West Bengal, India.'
+    },
+    {
+      kw: ['registration', 'msme', 'udyam', 'legal', 'registered', 'license'],
+      a: 'THE RED COCKS is a registered MSME in West Bengal, India — Udyam Registration No. UDYAM-WB-18-0206197.'
+    },
+    {
+      kw: ['about', 'what is the red cocks', 'who are you', 'company', 'business', 'what do you do'],
+      a: 'THE RED COCKS is Kolkata\'s premier poultry & meat enterprise — offering farm-fresh, hygienically processed provisions crafted to perfection, founded by Aniruddha Mondal.'
+    },
+    {
+      kw: ['reserve', 'book', 'order now', 'buy', 'purchase', 'checkout', 'cart'],
+      a: 'You can add items to your cart from the Masterpiece Cuts & Reserves section using "Reserve" — then open the cart (top right) and hit "Reserve via Concierge" to complete your request.'
+    },
+    {
+      kw: ['hello', 'hi', 'hey', 'namaste', 'yo'],
+      a: 'Hey! 👋 Welcome to THE RED COCKS. Ask me about our founder, products, delivery, or how to place an order — happy to help.'
+    },
+    {
+      kw: ['thank', 'thanks', 'thnx', 'ty'],
+      a: 'You\'re welcome! Let me know if there\'s anything else about THE RED COCKS I can help with. 🙏'
+    }
+  ];
+
+  var FALLBACK = 'I\'m not fully sure about that one — I can help with questions about our founder, products, delivery, minimum orders, packaging, or contact details. Try one of the quick options below, or rephrase your question!';
+
+  var CHIPS = [
+    { label: '👤 About the Founder', q: 'Who is the founder?' },
+    { label: '🍗 Our Products', q: 'What products do you offer?' },
+    { label: '🚚 Delivery Info', q: 'Do you deliver in Kolkata?' },
+    { label: '✉️ Contact Us', q: 'How can I contact you?' }
+  ];
+
+  function matchAnswer(text){
+    var t = text.toLowerCase();
+    var best = null, bestScore = 0;
+    KB.forEach(function(entry){
+      var score = 0;
+      entry.kw.forEach(function(k){ if (t.indexOf(k) !== -1) score += k.length; });
+      if (score > bestScore) { bestScore = score; best = entry; }
+    });
+    return best ? best.a : FALLBACK;
+  }
+
+  function scrollToBottom(){
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function addMessage(text, who){
+    var el = document.createElement('div');
+    el.className = 'redbot-msg ' + who;
+    el.innerHTML = text;
+    if (reduceMotion) el.style.animation = 'none';
+    messages.appendChild(el);
+    scrollToBottom();
+  }
+
+  function showChipsOnce(){
+    if (chipsShown) return;
+    chipsShown = true;
+    CHIPS.forEach(function(c, i){
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'redbot-chip';
+      chip.textContent = c.label;
+      chip.style.animationDelay = reduceMotion ? '0s' : (i * 0.07) + 's';
+      chip.addEventListener('click', function(){ handleUserQuery(c.q); });
+      chipsWrap.appendChild(chip);
+    });
+  }
+
+  function handleUserQuery(text){
+    text = text.trim();
+    if (!text) return;
+    addMessage(escapeHtml(text), 'user');
+    input.value = '';
+
+    var typing = document.createElement('div');
+    typing.className = 'redbot-typing';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    messages.appendChild(typing);
+    scrollToBottom();
+
+    var delay = reduceMotion ? 120 : (450 + Math.random() * 500);
+    setTimeout(function(){
+      typing.remove();
+      addMessage(matchAnswer(text), 'bot');
+    }, delay);
+  }
+
+  function escapeHtml(s){
+    var div = document.createElement('div');
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  function openPanel(){
+    opened = true;
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    launcher.classList.add('open');
+    launcher.setAttribute('aria-expanded', 'true');
+    if (!messages.childElementCount) {
+      setTimeout(function(){
+        addMessage('Welcome to <strong>THE RED COCKS</strong>! I can answer questions about our founder, products, delivery, and more — ask away or tap a quick option below. 👇', 'bot');
+        showChipsOnce();
+      }, reduceMotion ? 0 : 200);
+    }
+    setTimeout(function(){ input.focus({ preventScroll: true }); }, 350);
+  }
+
+  function closePanel(){
+    opened = false;
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    launcher.classList.remove('open');
+    launcher.setAttribute('aria-expanded', 'false');
+  }
+
+  function toggle(){ opened ? closePanel() : openPanel(); }
+
+  launcher.addEventListener('click', toggle);
+  launcher.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+  });
+  closeBtn.addEventListener('click', closePanel);
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && opened) closePanel();
+  });
+
+  document.addEventListener('click', function(e){
+    if (!opened) return;
+    if (panel.contains(e.target) || launcher.contains(e.target)) return;
+    closePanel();
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    handleUserQuery(input.value);
+  });
+})();
