@@ -90,7 +90,10 @@ RESPONSE RULES
       systemInstruction: {
         parts: [{ text: websiteKnowledge }]
       },
-      contents: contents
+      contents: contents,
+generationConfig: {
+  maxOutputTokens: 300
+}
     })
   }
 );
