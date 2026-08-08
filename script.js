@@ -2389,7 +2389,7 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
 
   if (!launcher || !panel || !form || !input) return;
 
-  const AI_ENDPOINT = '/api/chat';
+  const AI_ENDPOINT = 'https://theredcocksv3.vercel.app/api/chat';
 
   let conversation = [];
 
