@@ -1310,8 +1310,8 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 66vw;
-      max-width: 300px;
+      width: 52vw;
+      max-width: 210px;
       border-radius: 22px;
       overflow: hidden;
       cursor: pointer;
