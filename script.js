@@ -998,6 +998,7 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
     return 'high';
   })();
 
+
   /* ---------- reusable scroll-scrubbed frame-sequence engine ----------
      Drives any sticky-canvas section: give it the section id, canvas id,
      frame list and native resolution and it handles cover-fit sizing
@@ -1459,7 +1460,6 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   }
 })();
 
-
 /* ---- next inline block ---- */
 
 
@@ -1739,7 +1739,7 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   var toastTimer = null;
 
   function formatINR(n){
-    return '₹' + n.toLocaleString('en-IN');
+    return n > 0 ? '₹' + n.toLocaleString('en-IN') : 'Price on confirmation';
   }
 
   function updateBadge(){
@@ -1757,14 +1757,14 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
     itemsList.innerHTML = '';
     var subtotal = 0;
     cart.forEach(function(item){
-      subtotal += item.price * item.qty;
+      subtotal += (item.price || 0) * item.qty;
       var row = document.createElement('div');
       row.className = 'cart-item-row';
       row.innerHTML =
         '<div class="cart-item-info">' +
           '<div class="cart-item-tag">' + item.tag + '</div>' +
           '<div class="cart-item-name">' + item.name + '</div>' +
-          '<div class="cart-item-price">' + formatINR(item.price * item.qty) + '</div>' +
+          '<div class="cart-item-price">' + (item.price > 0 ? formatINR(item.price * item.qty) : 'Price on confirmation') + '</div>' +
         '</div>' +
         '<div class="cart-item-qty">' +
           '<button type="button" class="cart-qty-btn" data-action="dec" data-id="' + item.id + '" aria-label="Decrease quantity">−</button>' +
@@ -1877,11 +1877,10 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
         return '- ' + it.name + '  x' + it.qty + '  (' + formatINR(it.price * it.qty) + ')';
       });
       var subtotal = cart.reduce(function(sum, it){ return sum + it.price * it.qty; }, 0);
-      var body = 'Hello The Red Cocks Concierge,\n\nI would like to reserve the following:\n\n' +
-        lines.join('\n') + '\n\nSubtotal: ' + formatINR(subtotal) +
-        '\n\nPlease confirm availability and delivery details.\n';
+      var body = 'Hello THE RED COCKS,\n\nI would like to enquire about the following:\n\n' +
+        lines.join('\n') + '\n\nPlease confirm availability, price and delivery details.\n';
       var mailto = 'mailto:www.theredcocks@gmail.com' +
-        '?subject=' + encodeURIComponent('Reserve Order — The Red Cocks') +
+        '?subject=' + encodeURIComponent('Product enquiry — THE RED COCKS') +
         '&body=' + encodeURIComponent(body);
       window.location.href = mailto;
     });
@@ -2480,4 +2479,38 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
     sendMessage(input.value);
   });
 
+})();
+
+/* Modern section entrances: one lightweight observer reveals headings and
+   cards in a stagger as each regular section enters the viewport. */
+(function () {
+  'use strict';
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window)) return;
+
+  var sections = document.querySelectorAll('main > section.scroll-section');
+  var targets = [];
+  sections.forEach(function (section) {
+    var intro = section.querySelector(':scope > div[class*="max-w"]');
+    if (intro) {
+      intro.classList.add('modern-section-reveal');
+      targets.push(intro);
+    }
+    var cards = section.querySelectorAll('.pro-glass-card, .fan-card, details, .ceo-photocard');
+    cards.forEach(function (card, index) {
+      card.classList.add('modern-card-reveal');
+      card.style.setProperty('--reveal-order', Math.min(index, 7));
+      targets.push(card);
+    });
+  });
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('modern-reveal-in');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
+
+  targets.forEach(function (target) { observer.observe(target); });
 })();
