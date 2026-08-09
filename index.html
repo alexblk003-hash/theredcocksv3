@@ -93,42 +93,54 @@
 <body class="selection:bg-pink-500 selection:text-black trc-loading">
 
 <div id="trc-preloader">
-  <div class="trc-dust" id="trc-dust"></div>
-  <div class="trc-scan"></div>
+  <div class="trc-grid-bg" aria-hidden="true"></div>
+  <div class="trc-glow trc-glow-a" aria-hidden="true"></div>
+  <div class="trc-glow trc-glow-b" aria-hidden="true"></div>
+  <div class="trc-particles" id="trc-particles" aria-hidden="true"></div>
 
-  <div class="trc-stage">
-    <div class="trc-emblem-wrap">
-      <div class="trc-emblem-glow"></div>
-      <div class="trc-ring r2"></div>
-      <div class="trc-ring r3"></div>
-      <div class="trc-emblem">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="trcG1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#e8cbb0"/>
-              <stop offset="45%" stop-color="#d9b98a"/>
-              <stop offset="100%" stop-color="#A8432E"/>
-            </linearGradient>
-          </defs>
-          <path fill="url(#trcG1)" d="M50 6c3 6 1 11-3 14 7-2 13 1 16 7 3-6 9-9 15-8-5 4-7 10-5 16 5-3 11-2 15 2-6 2-10 7-10 13 0 12-10 20-22 20h-2c-1 5-5 9-10 9-6 0-11-5-11-11 0-3 1-5 3-7-8-1-14-8-14-16 0-6 3-11 8-14-3-5-2-11 2-15 3 5 8 8 14 8-2-6 0-13 4-18z"/>
-          <circle cx="63" cy="34" r="2.4" fill="#14070c"/>
-        </svg>
-      </div>
+  <div class="trc-glass-card" id="trc-glass-card">
+    <div class="trc-mark">
+      <div class="trc-mark-glow"></div>
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="trcMarkG" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#e9d5ff"/>
+            <stop offset="50%" stop-color="#c084fc"/>
+            <stop offset="100%" stop-color="#67e8f9"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#trcMarkG)" d="M50 6c3 6 1 11-3 14 7-2 13 1 16 7 3-6 9-9 15-8-5 4-7 10-5 16 5-3 11-2 15 2-6 2-10 7-10 13 0 12-10 20-22 20h-2c-1 5-5 9-10 9-6 0-11-5-11-11 0-3 1-5 3-7-8-1-14-8-14-16 0-6 3-11 8-14-3-5-2-11 2-15 3 5 8 8 14 8-2-6 0-13 4-18z"/>
+        <circle cx="63" cy="34" r="2.4" fill="#060608"/>
+      </svg>
     </div>
 
-    <div class="trc-wordmark">
-      <div class="trc-brand-title">The Red Cocks</div>
-      <div class="trc-brand-sub">Premium Poultry &amp; Meat</div>
-    </div>
+    <p class="trc-cat-label">Premium Poultry &amp; Meat</p>
+    <h1 class="trc-heading">Step Into <span>The Red Cocks</span></h1>
+    <p class="trc-sub-desc">Farm-fresh, hygienically prepared poultry &amp; meat — crafted with care, delivered with trust.</p>
 
-    <div class="trc-progress-wrap">
-      <div class="trc-progress-track"><div class="trc-progress-fill" id="trc-fill"></div></div>
-      <div class="trc-progress-meta">
-        <span>Loading</span>
-        <span id="trc-pct">0%</span>
+    <div class="trc-enter-wrap" id="trc-enter-wrap">
+      <div class="trc-slide-track" id="trc-slide-track">
+        <div class="trc-slide-fill" id="trc-slide-fill"></div>
+        <span class="trc-slide-text" id="trc-slide-text">Slide to Enter</span>
+        <div class="trc-slide-handle"
+             id="trc-slide-handle"
+             role="slider"
+             tabindex="0"
+             aria-label="Slide to enter The Red Cocks website"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="trc-handle-pulse" id="trc-handle-pulse" aria-hidden="true"></span>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5l6 7-6 7" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M13 5l6 7-6 7" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+          </svg>
+        </div>
       </div>
+      <p class="trc-enter-hint" id="trc-enter-hint">Drag right to continue</p>
     </div>
   </div>
+
+  <div class="trc-burst" id="trc-burst" aria-hidden="true"></div>
+  <div class="trc-welcome-text" id="trc-welcome-text" aria-live="polite">Welcome to <span>The Red Cocks</span></div>
 </div>
 
 <div id="scroll-progress-bar" aria-hidden="true"><i></i></div>
@@ -155,72 +167,57 @@
     <span class="hidden md:inline">FOUNDED BY ANIRUDDHA MONDAL</span>
   </div>
 
-  <nav aria-label="Primary" class="fixed left-1/2 -translate-x-1/2 z-[9999] w-[92%] max-w-7xl" style="position:fixed; top:calc(2rem + env(safe-area-inset-top));">
-    <div class="relative flex items-center justify-between px-6 py-3.5 rounded-full bg-black/85 backdrop-blur-3xl border border-pink-600/50 elite-nav-box shadow-2xl">
-      <div class="flex items-center gap-3 z-10">
-        <div class="relative w-10 h-10 flex items-center justify-center">
-          <div style="position:absolute; inset:-4px; border-radius:9999px; background:conic-gradient(from 0deg, #A8432E, #4A2418, #4A2418, #4A2418, #A8432E); animation: eliteNavRotateGlow 6s linear infinite; opacity:0.75; filter: blur(2px);"></div>
-          <svg id="nav-scroll-ring" width="48" height="48" viewBox="0 0 48 48" style="position:absolute; inset:-5px; transform:rotate(-90deg); pointer-events:none;">
-            <circle cx="24" cy="24" r="21.5" fill="none" stroke="rgba(74,36,24,0.15)" stroke-width="1.5"></circle>
-            <circle id="nav-scroll-ring-fg" cx="24" cy="24" r="21.5" fill="none" stroke="url(#nav-ring-gradient)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="135.09" stroke-dashoffset="135.09"></circle>
-            <defs>
-              <linearGradient id="nav-ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#A8432E"></stop>
-                <stop offset="55%" stop-color="#4A2418"></stop>
-                <stop offset="100%" stop-color="#C08A52"></stop>
-              </linearGradient>
-            </defs>
-          </svg>
-          <div class="relative w-10 h-10 rounded-full bg-gradient-to-tr from-pink-600 via-pink-400 to-pink-200 p-[2px] shadow-[0_0_20px_rgba(74,36,24,0.8)] flex items-center justify-center" style="transform: scale(1.35);">
-            <div class="w-full h-full rounded-full flex items-center justify-center relative overflow-hidden" style="background: radial-gradient(circle at 35% 30%, #A8432E, #2A130B 70%);">
-              <video
-                autoplay muted loop playsinline preload="auto"
-                class="absolute inset-0 w-full h-full rounded-full"
-                style="object-fit:cover; pointer-events:none; transform: scale(1.9); transform-origin: center;"
-                title="Nav logo video"
-              >
-                <source src="assets/videos/video_1.mp4" type="video/mp4">
-              </video>
-              <span style="position:absolute; bottom:1px; right:1px; width:6px; height:6px; border-radius:9999px; background:#34d399; box-shadow:0 0 6px rgba(52,211,153,0.9); animation: aiStatusBlink 1.6s ease-in-out infinite; z-index:2;"></span>
-            </div>
-          </div>
-        </div>
-        <span class="site-brand-title text-pink-300 font-black tracking-[0.25em] text-xs sm:text-sm uppercase">THE RED COCKS</span>
+  <nav aria-label="Primary" class="trc-nav" id="site-nav">
+    <div class="trc-nav-inner">
+      <a href="#home" class="trc-nav-logo" aria-label="THE RED COCKS — Home">
+        <span class="trc-logo-full">THE RED COCKS</span>
+        <span class="trc-logo-short">TRC</span>
+      </a>
+
+      <div class="trc-nav-links" id="trc-nav-links" role="list">
+        <div class="trc-cone" id="trc-cone" aria-hidden="true"></div>
+        <div class="trc-indicator" id="trc-indicator" aria-hidden="true"></div>
+
+        <a role="listitem" href="#home" class="trc-nav-link" data-section="home" aria-label="Home" aria-current="page">
+          <svg class="trc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+          <span class="trc-label">Home</span>
+        </a>
+        <a role="listitem" href="#products" class="trc-nav-link" data-section="products" aria-label="Products">
+          <svg class="trc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="trc-label">Products</span>
+        </a>
+        <a role="listitem" href="#about" class="trc-nav-link" data-section="about" aria-label="About">
+          <svg class="trc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7.5" r="0.6" fill="currentColor" stroke="none"/></svg>
+          <span class="trc-label">About</span>
+        </a>
+        <a role="listitem" href="#culinary" class="trc-nav-link" data-section="culinary" aria-label="Our Process">
+          <svg class="trc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.97 7.97 0 0 0 0-2l2.03-1.58-2-3.46-2.39.96a8.06 8.06 0 0 0-1.73-1L14.9 3h-4l-.4 2.92a8.06 8.06 0 0 0-1.73 1l-2.39-.96-2 3.46L6.6 11a7.97 7.97 0 0 0 0 2l-2.02 1.58 2 3.46 2.39-.96c.53.43 1.12.77 1.73 1l.4 2.92h4l.4-2.92c.61-.23 1.2-.57 1.73-1l2.39.96 2-3.46L19.4 13Z"/></svg>
+          <span class="trc-label">Process</span>
+        </a>
+        <a role="listitem" href="#ceo" class="trc-nav-link" data-section="ceo" aria-label="Founder">
+          <svg class="trc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
+          <span class="trc-label">Founder</span>
+        </a>
+        <a role="listitem" href="#vision" class="trc-nav-link" data-section="vision" aria-label="Vision">
+          <svg class="trc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>
+          <span class="trc-label">Vision</span>
+        </a>
+        <a role="listitem" href="#contact" class="trc-nav-link" data-section="contact" aria-label="Contact">
+          <svg class="trc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6 8.5 7 8.5-7"/></svg>
+          <span class="trc-label">Contact</span>
+        </a>
+        <a role="listitem" href="#faq" class="trc-nav-link" data-section="faq" aria-label="FAQ">
+          <svg class="trc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.3 9a2.7 2.7 0 1 1 3.9 2.4c-.9.5-1.2 1-1.2 1.9"/><circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"/></svg>
+          <span class="trc-label">FAQ</span>
+        </a>
       </div>
-      <div id="nav-links-wrap" class="flex items-center gap-8 z-10 relative" style="overflow-x:auto; -ms-overflow-style:none; scrollbar-width:none;">
-        <div id="nav-active-pill"></div>
-        <a href="#home" class="elite-nav-link" data-section="home">Home</a>
-        <a href="#products" class="elite-nav-link" data-section="products">Products</a>
-        <a href="#about" class="elite-nav-link" data-section="about">About</a>
-        <a href="#culinary" class="elite-nav-link" data-section="culinary">Our Process</a>
-        <a href="#ceo" class="elite-nav-link" data-section="ceo">Founder</a>
-        <a href="#vision" class="elite-nav-link" data-section="vision">Vision</a>
-        <a href="#contact" class="elite-nav-link" data-section="contact">Contact</a>
-        <a href="#faq" class="elite-nav-link" data-section="faq">FAQ</a>
-      </div>
-      <div class="z-10 flex items-center gap-2 shrink-0">
-        <button id="cart-toggle-btn" type="button" class="cart-toggle-btn" aria-label="Open cart">
-          Cart <span id="cart-count-badge" aria-label="Items in cart"></span>
-        </button>
-        <div class="relative overflow-hidden shrink-0 hover:scale-105 transition-all duration-300" style="width:52px; height:38px; border-radius:10px; border:1px solid rgba(168,67,46,0.5); background:#14070c;">
-          <video
-            autoplay muted loop playsinline preload="auto"
-            class="absolute inset-0 w-full h-full"
-            style="object-fit:cover; pointer-events:none;"
-            title="Promo video"
-          >
-            <source src="assets/videos/video_2.mp4" type="video/mp4">
-          </video>
-        </div>
-        <button id="nav-hamburger-btn" aria-label="Open menu" aria-expanded="false" class="cursor-pointer" style="display:none; width:38px; height:38px; border-radius:9999px; border:1px solid rgba(168,67,46,0.5); background:rgba(74,36,24,0.12); align-items:center; justify-content:center; position:relative;">
-          <span class="hamburger-bar" style="position:absolute; width:16px; height:1.5px; background:#D9BD98; border-radius:2px; transform:translateY(-5px); transition:transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.25s ease;"></span>
-          <span class="hamburger-bar" style="position:absolute; width:16px; height:1.5px; background:#D9BD98; border-radius:2px; transition:opacity 0.25s ease;"></span>
-          <span class="hamburger-bar" style="position:absolute; width:16px; height:1.5px; background:#D9BD98; border-radius:2px; transform:translateY(5px); transition:transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.25s ease;"></span>
-        </button>
-      </div>
+
+      <button id="cart-toggle-btn" type="button" class="trc-cart-btn" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9.5" cy="20.5" r="1.3"/><circle cx="17" cy="20.5" r="1.3"/></svg>
+        <span id="cart-count-badge" aria-label="Items in cart"></span>
+      </button>
     </div>
   </nav>
-  <div id="nav-menu-scrim"></div>
 
   <div id="cart-overlay"></div>
   <aside id="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping cart" aria-hidden="true">
@@ -877,14 +874,6 @@
         </div>
       </div>
       <div class="contact-trust-strip">
-        <span class="contact-trust-item"><span class="cti-dot"></span>Govt. MSME Registered</span>
-        <span class="contact-trust-item"><span class="cti-dot"></span>100% Farm-Fresh</span>
-        <span class="contact-trust-item"><span class="cti-dot"></span>Hygienic Processing</span>
-        <span class="contact-trust-item"><span class="cti-dot"></span>Response &lt; 2 Hrs</span>
-      </div>
-    </div>
-  </section>
-
   <!-- ── 🔪 CULINARY ARTISTRY SECTION (Chef Video & Premium Craftsmanship) ── -->
   <section id="culinary" data-theme-color="0x080205" data-intensity="2.4" class="scroll-section relative py-28 px-4 w-full border-t border-pink-600/20 overflow-hidden">
     <div class="max-w-7xl mx-auto">
@@ -1356,62 +1345,157 @@
 <script src="script.js"></script>
 <script>
   (function(){
-    var dustEl = document.getElementById('trc-dust');
-    var N = 26;
-    for(var i=0;i<N;i++){
-      var s = document.createElement('span');
-      var left = Math.random()*100;
-      var delay = Math.random()*7;
-      var dur = 6 + Math.random()*4;
-      var dx = (Math.random()*80 - 40) + 'px';
-      var size = (Math.random()*2.2 + 1).toFixed(1);
-      s.style.width = size+'px';
-      s.style.height = size+'px';
-      s.style.left = left+'vw';
-      s.style.bottom = '-10px';
-      s.style.animationDelay = delay+'s';
-      s.style.animationDuration = dur+'s';
-      s.style.setProperty('--dx', dx);
-      dustEl.appendChild(s);
-    }
-
-    var fill = document.getElementById('trc-fill');
-    var pct = document.getElementById('trc-pct');
     var preloader = document.getElementById('trc-preloader');
-    var p = 0;
-    var realDone = false;
 
-    function setProgress(v){
-      p = Math.max(p, Math.min(v, 100));
-      fill.style.width = p + '%';
-      pct.textContent = Math.round(p) + '%';
+    // ---- Ambient floating particles ----
+    var particlesEl = document.getElementById('trc-particles');
+    if (particlesEl) {
+      var colors = ['#c084fc', '#67e8f9', '#e9d5ff'];
+      for (var i = 0; i < 24; i++) {
+        var s = document.createElement('span');
+        var left = Math.random() * 100;
+        var delay = Math.random() * 8;
+        var dur = 7 + Math.random() * 5;
+        var dx = (Math.random() * 70 - 35) + 'px';
+        var size = (Math.random() * 2.4 + 1.2).toFixed(1);
+        s.style.width = size + 'px';
+        s.style.height = size + 'px';
+        s.style.left = left + 'vw';
+        s.style.bottom = '-10px';
+        s.style.background = colors[i % colors.length];
+        s.style.boxShadow = '0 0 7px 1px ' + colors[i % colors.length];
+        s.style.animationDelay = delay + 's';
+        s.style.animationDuration = dur + 's';
+        s.style.setProperty('--dx', dx);
+        particlesEl.appendChild(s);
+      }
     }
-
-    // fake but smooth progress while real assets load in the background
-    var ticker = setInterval(function(){
-      var cap = realDone ? 100 : 90;
-      if(p < cap){
-        setProgress(p + Math.random()*7 + 2);
-      }
-      if(p >= 100){
-        clearInterval(ticker);
-        finish();
-      }
-    }, 220);
-
-    window.addEventListener('load', function(){
-      realDone = true;
-    });
 
     function finish(){
+      preloader.classList.add('trc-leaving');
+      document.body.classList.remove('trc-loading');
       setTimeout(function(){
-        preloader.classList.add('trc-leaving');
-        document.body.classList.remove('trc-loading');
-        setTimeout(function(){
-          preloader.remove();
-        }, 850);
-      }, 300);
+        preloader.remove();
+      }, 850);
     }
+
+    // ---- Slide-to-Enter gate ------------------------------------------
+    (function(){
+      var track = document.getElementById('trc-slide-track');
+      var fill = document.getElementById('trc-slide-fill');
+      var handle = document.getElementById('trc-slide-handle');
+      var label = document.getElementById('trc-slide-text');
+      var card = document.getElementById('trc-glass-card');
+
+      var hint = document.getElementById('trc-enter-hint');
+      var welcome = document.getElementById('trc-welcome-text');
+      var pulse = document.getElementById('trc-handle-pulse');
+      var burst = document.getElementById('trc-burst');
+      if (!track || !handle) { finish(); return; }
+
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var dragging = false;
+      var startX = 0;
+      var startLeft = 0;
+      var maxX = 0;
+      var current = 0; // 0..maxX
+      var done = false;
+
+      function metrics(){
+        maxX = Math.max(1, track.clientWidth - handle.offsetWidth - 8);
+      }
+      metrics();
+      window.addEventListener('resize', metrics);
+
+      function render(x){
+        current = Math.max(0, Math.min(maxX, x));
+        var frac = current / maxX;
+        var scale = dragging ? 1.06 : 1;
+        handle.style.transform = 'translateX(' + current + 'px) scale(' + scale + ')';
+        fill.style.width = (current + handle.offsetWidth) + 'px';
+        label.style.opacity = Math.max(0, 1 - frac * 1.6);
+        label.style.transform = 'translateX(' + (frac * 14) + 'px)';
+        handle.setAttribute('aria-valuenow', Math.round(frac * 100));
+      }
+
+      function snapBack(){
+        handle.style.transition = reduceMotion ? 'none' : 'transform .45s cubic-bezier(.34,1.56,.64,1)';
+        fill.style.transition = reduceMotion ? 'none' : 'width .45s cubic-bezier(.34,1.56,.64,1)';
+        label.style.transition = reduceMotion ? 'none' : 'opacity .3s ease, transform .3s ease';
+        render(0);
+        setTimeout(function(){
+          handle.style.transition = '';
+          fill.style.transition = '';
+        }, 460);
+      }
+
+      function complete(){
+        if (done) return;
+        done = true;
+        handle.style.transition = reduceMotion ? 'none' : 'transform .3s ease';
+        fill.style.transition = reduceMotion ? 'none' : 'width .3s ease';
+        render(maxX);
+        handle.setAttribute('aria-valuenow', 100);
+
+        if (burst) burst.classList.add('is-firing');
+
+        setTimeout(function(){
+          if (card) card.classList.add('trc-card-done');
+          if (welcome) welcome.classList.add('is-shown');
+          setTimeout(finish, reduceMotion ? 250 : 1100);
+        }, reduceMotion ? 0 : 250);
+      }
+
+      function onPointerDown(e){
+        if (done) return;
+        dragging = true;
+        handle.classList.add('is-dragging');
+        if (pulse) pulse.classList.add('is-stopped');
+        if (hint) hint.classList.add('is-shown');
+        handle.style.transition = 'none';
+        fill.style.transition = 'none';
+        label.style.transition = 'none';
+        startX = (e.touches ? e.touches[0].clientX : e.clientX);
+        startLeft = current;
+        document.addEventListener('pointermove', onPointerMove, { passive: false });
+        document.addEventListener('pointerup', onPointerUp);
+        document.addEventListener('touchmove', onPointerMove, { passive: false });
+        document.addEventListener('touchend', onPointerUp);
+      }
+      function onPointerMove(e){
+        if (!dragging) return;
+        e.preventDefault();
+        var clientX = (e.touches ? e.touches[0].clientX : e.clientX);
+        render(startLeft + (clientX - startX));
+      }
+      function onPointerUp(){
+        if (!dragging) return;
+        dragging = false;
+        handle.classList.remove('is-dragging');
+        document.removeEventListener('pointermove', onPointerMove);
+        document.removeEventListener('pointerup', onPointerUp);
+        document.removeEventListener('touchmove', onPointerMove);
+        document.removeEventListener('touchend', onPointerUp);
+        if (current >= maxX * 0.82) {
+          complete();
+        } else {
+          snapBack();
+        }
+      }
+
+      handle.addEventListener('pointerdown', onPointerDown);
+      handle.addEventListener('touchstart', onPointerDown, { passive: true });
+      handle.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          complete();
+        }
+      });
+
+      if (hint) {
+        setTimeout(function(){ hint.classList.add('is-shown'); }, 1400);
+      }
+    })();
   })();
 </script>
 </body>

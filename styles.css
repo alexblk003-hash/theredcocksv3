@@ -368,136 +368,180 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #35180F, #4A2418); border-radius: 3px; }
 
-    /* Ultra Luxury Glass Nav Link */
-    .elite-nav-link {
+    /* ═══════════════════════════════════════════════════════════════════
+       PREMIUM SPOTLIGHT NAVBAR — replaces the old elite-nav-* glass pill.
+       Dark glass bar, single moving spotlight cone + indicator bar that
+       glides to the active/hovered link. All sizing uses clamp()/%, so
+       every icon stays visible on phones — nothing scrolls sideways or
+       hides behind a hamburger.
+       ═══════════════════════════════════════════════════════════════════ */
+    .trc-nav {
+      position: fixed;
+      top: calc(1.1rem + env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      width: min(880px, 94vw);
+      transition: top 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .trc-nav-inner {
       position: relative;
-      color: #d1d5db;
-      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: clamp(8px, 2vw, 20px);
+      height: clamp(56px, 12vw, 68px);
+      padding: 0 clamp(10px, 2.4vw, 20px);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #131313 0%, #0c0c0c 100%);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow:
+        0 18px 45px rgba(0,0,0,0.55),
+        0 1px 0 rgba(255,255,255,0.04) inset,
+        0 -1px 0 rgba(0,0,0,0.5) inset;
+      box-sizing: border-box;
+    }
+    .trc-nav-logo {
+      flex: 0 0 auto;
+      color: #f2f2f2;
+      font-family: 'Cinzel', serif;
       font-weight: 800;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.18em;
+      font-size: clamp(10px, 2.4vw, 13px);
       text-transform: uppercase;
-      transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
-      display: inline-block;
+      text-decoration: none;
+      white-space: nowrap;
     }
-    .elite-nav-link:hover {
-      color: #A8432E;
-      text-shadow: 0 0 25px rgba(168,67,46, 0.9);
-      transform: translateY(-2px);
-    }
-    .elite-nav-link::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -4px;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #4A2418, #A8432E);
-      transition: width 0.4s ease;
-      box-shadow: 0 0 12px rgba(74,36,24, 0.8);
-    }
-    .elite-nav-link:hover::after { width: 100%; }
+    .trc-logo-short { display: none; }
 
-    /* Holographic Navbar Core — premium continuous hue-cycling glow */
-    @keyframes eliteNavCore {
-      0% {
-        box-shadow: 0 0 40px rgba(53,24,15, 0.35), inset 0 0 20px rgba(168,67,46, 0.15);
-        border-color: rgba(53,24,15, 0.55);
-      }
-      25% {
-        box-shadow: 0 0 60px rgba(74,36,24, 0.55), inset 0 0 26px rgba(191,130,86, 0.25);
-        border-color: rgba(74,36,24, 0.8);
-      }
-      50% {
-        box-shadow: 0 0 70px rgba(74,36,24, 0.6), inset 0 0 30px rgba(191,130,86, 0.3);
-        border-color: rgba(74,36,24, 0.85);
-      }
-      75% {
-        box-shadow: 0 0 60px rgba(74,36,24, 0.55), inset 0 0 26px rgba(168,67,46, 0.25);
-        border-color: rgba(74,36,24, 0.8);
-      }
-      100% {
-        box-shadow: 0 0 40px rgba(53,24,15, 0.35), inset 0 0 20px rgba(168,67,46, 0.15);
-        border-color: rgba(53,24,15, 0.55);
-      }
-    }
-    .elite-nav-box {
-      animation: eliteNavCore 12s infinite ease-in-out;
+    .trc-nav-links {
       position: relative;
-      overflow: hidden;
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      min-width: 0;
     }
-    /* Continuous premium sheen sweeping across the glass navbar */
-    @keyframes eliteNavSheen {
-      0% { transform: translateX(-120%) skewX(-15deg); }
-      100% { transform: translateX(220%) skewX(-15deg); }
+    .trc-nav-link {
+      position: relative;
+      z-index: 2;
+      flex: 1 1 0;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      color: #707070;
+      transition: color 0.35s ease;
+      outline: none;
     }
-    .elite-nav-box::after {
-      content: '';
+    .trc-nav-link:hover,
+    .trc-nav-link[aria-current="page"] { color: #f2f2f2; }
+    .trc-nav-link:focus-visible {
+      color: #f2f2f2;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+      border-radius: 10px;
+    }
+    .trc-icon {
+      width: clamp(16px, 4.6vw, 20px);
+      height: clamp(16px, 4.6vw, 20px);
+      flex-shrink: 0;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .trc-nav-link[aria-current="page"] .trc-icon { transform: translateY(-1px) scale(1.08); }
+    .trc-label {
+      font-size: clamp(9px, 1.6vw, 11px);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Single moving spotlight cone — clip-path trapezoid, narrow at the
+       top, wide at the bottom, sitting behind the icons (z-index 1). */
+    .trc-cone {
       position: absolute;
       top: 0;
+      bottom: 0;
+      width: 46px;
       left: 0;
-      width: 35%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
-      animation: eliteNavSheen 6s ease-in-out infinite;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.16) 100%);
+      clip-path: polygon(42% 0%, 58% 0%, 92% 100%, 8% 100%);
       pointer-events: none;
-    }
-    /* Rotating hue keyframe — used by the small circular AI halo ring around the emblem */
-    @keyframes eliteNavRotateGlow { to { transform: rotate(360deg); } }
-
-    /* Sliding "active section" pill — tracks whichever nav link matches the
-       section currently in view as you scroll, gliding smoothly between them. */
-    #nav-active-pill {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      height: 30px;
-      width: 0;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(74,36,24,0.28), rgba(168,67,46,0.22));
-      border: 1px solid rgba(168,67,46,0.45);
-      box-shadow: 0 0 18px rgba(168,67,46,0.35), inset 0 0 10px rgba(74,36,24,0.25);
-      transform: translateY(-50%);
-      transition: left 0.55s cubic-bezier(0.16,1,0.3,1), width 0.55s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
-      pointer-events: none;
+      z-index: 1;
       opacity: 0;
-      z-index: 0;
+      transition: opacity 0.3s ease;
+      will-change: transform;
     }
-    #nav-active-pill.ready { opacity: 1; }
-    .elite-nav-link { z-index: 1; }
+    .trc-nav-links.trc-ready .trc-cone { opacity: 1; }
 
-    /* Cursor-tracking spotlight: a soft light that follows the mouse across
-       the glass navbar, on top of the existing hue-cycling glow + sheen. */
-    .elite-nav-box {
-      --spot-x: 50%;
-      --spot-y: 50%;
-      --spot-opacity: 0;
-    }
-    .elite-nav-box::before {
-      content: '';
+    /* Indicator bar at the very top of the pill */
+    .trc-indicator {
       position: absolute;
-      inset: 0;
-      background: radial-gradient(circle 140px at var(--spot-x) var(--spot-y), rgba(255,255,255,0.14), transparent 70%);
-      opacity: var(--spot-opacity);
-      transition: opacity 0.4s ease;
+      top: -1px;
+      width: clamp(28px, 7vw, 40px);
+      height: 3px;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(180deg, #ffffff, rgba(255,255,255,0.55));
+      box-shadow: 0 3px 10px rgba(255,255,255,0.35);
       pointer-events: none;
-      z-index: 0;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      will-change: transform;
+    }
+    .trc-nav-links.trc-ready .trc-indicator { opacity: 1; }
+
+    .trc-cart-btn {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #f2f2f2;
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.15s ease;
+    }
+    .trc-cart-btn:hover { background: rgba(255,255,255,0.12); }
+    .trc-cart-btn:active { transform: scale(0.94); }
+    .trc-cart-btn:focus-visible { box-shadow: 0 0 0 2px rgba(255,255,255,0.5); }
+    #cart-count-badge:not(:empty) {
+      min-width: 15px;
+      height: 15px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: #f2f2f2;
+      color: #101010;
+      font-size: 10px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* PRO-LEVEL NAVBAR: smoothly compacts + intensifies once the page is
-       scrolled, on top of the existing continuous glow/sheen animation. */
-    nav > div:first-child {
-      transition: padding 0.45s cubic-bezier(0.16,1,0.3,1),
-                  background-color 0.45s ease,
-                  box-shadow 0.45s ease,
-                  transform 0.45s cubic-bezier(0.16,1,0.3,1);
+    @media (max-width: 640px) {
+      .trc-nav { top: calc(0.6rem + env(safe-area-inset-top)); width: 96vw; }
+      .trc-nav-inner { gap: 4px; padding: 0 8px; border-radius: 16px; }
+      .trc-logo-full { display: none; }
+      .trc-logo-short { display: inline; }
+      .trc-label { display: none; }
+      .trc-nav-link { gap: 0; }
+      .trc-cart-btn span:not(#cart-count-badge) { display: none; }
     }
-    nav.nav-scrolled > div:first-child {
-      padding-top: 0.6rem !important;
-      padding-bottom: 0.6rem !important;
-      background-color: rgba(20,8,14,0.72) !important;
-      backdrop-filter: blur(24px) saturate(180%) !important;
-      -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 30px rgba(74,36,24,0.3);
+
+    @media (prefers-reduced-motion: reduce) {
+      .trc-cone, .trc-indicator { transition: none; }
     }
 
     /* Continuous ambient background drift — always subtly alive, even before
@@ -1250,43 +1294,53 @@
        "active" center card and grayscale side cards, used for the
        showcase-style sections below the hero. Mobile-first: snap
        scrolling gives a native, thumb-friendly swipe on phones. ============ */
-    .fan-carousel { position: relative; padding: 8px 0 0; }
+    .fan-carousel { position: relative; padding: 8px 0 0; perspective: 1000px; overflow-x: hidden; }
     .fan-track {
-      display: flex;
-      gap: 14px;
-      overflow-x: auto;
-      overflow-y: visible;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      padding: 30px 42vw 46px;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      cursor: grab;
+      will-change: transform;
+      touch-action: pan-y;
+      user-select: none;
     }
-    .fan-track::-webkit-scrollbar { display: none; }
-    @media (min-width: 640px) {
-      .fan-track { padding: 36px 22vw 50px; gap: 18px; }
-    }
-    @media (min-width: 1024px) {
-      .fan-track { padding: 40px calc(50% - 150px) 54px; gap: 20px; justify-content: flex-start; }
-    }
+    .fan-track.is-dragging { cursor: grabbing; }
+    .fan-track.is-snapping { transition: transform .6s cubic-bezier(.22,1,.36,1); }
     .fan-card {
-      flex: 0 0 auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
       width: 66vw;
       max-width: 300px;
-      scroll-snap-align: center;
       border-radius: 22px;
-      position: relative;
       overflow: hidden;
       cursor: pointer;
       background: #0a0306;
       border: 1px solid rgba(255,255,255,0.08);
       filter: grayscale(1) brightness(.5);
-      transform: scale(.86);
+      transform: translate(-50%, -50%) rotateY(var(--fan-angle, 0deg)) translateZ(var(--fan-radius, 260px)) scale(.86);
       opacity: .55;
-      transition: transform .5s cubic-bezier(.22,1,.36,1), filter .5s ease, opacity .5s ease, border-color .5s ease, box-shadow .5s ease;
+      backface-visibility: hidden;
+      transition: filter .5s ease, opacity .5s ease, border-color .5s ease, box-shadow .5s ease, transform .5s cubic-bezier(.22,1,.36,1);
       will-change: transform, filter;
     }
     @media (min-width: 640px) { .fan-card { width: 240px; } }
+    /* The site-wide scroll-reveal system (.modern-card-reveal /
+       .modern-reveal-in, see styles.css "Modern scroll reveal") also
+       targets .fan-card and sets transform/opacity with !important,
+       which would otherwise wipe out the rotateY/translateZ placement
+       below once a card scrolls into view. This higher-specificity
+       !important rule keeps the 3D orbit position in control while
+       still letting that system fade the carousel in on scroll. */
+    .fan-carousel .fan-track .fan-card {
+      transform: translate(-50%, -50%) rotateY(var(--fan-angle, 0deg)) translateZ(var(--fan-radius, 260px)) scale(.86) !important;
+      opacity: .55 !important;
+      transition: filter .5s ease, opacity .5s ease, border-color .5s ease, box-shadow .5s ease, transform .5s cubic-bezier(.22,1,.36,1) !important;
+    }
+    .fan-carousel .fan-track .fan-card.is-active {
+      transform: translate(-50%, -50%) rotateY(var(--fan-angle, 0deg)) translateZ(var(--fan-radius, 260px)) scale(1) !important;
+      opacity: 1 !important;
+    }
     .fan-card .fan-media {
       position: relative;
       width: 100%;
@@ -1396,7 +1450,7 @@
     /* Active (centered) card: full color, pink glow, content revealed */
     .fan-card.is-active {
       filter: none;
-      transform: scale(1);
+      transform: translate(-50%, -50%) rotateY(var(--fan-angle, 0deg)) translateZ(var(--fan-radius, 260px)) scale(1);
       opacity: 1;
       border-color: rgba(74,36,24,.7);
       box-shadow: 0 25px 60px -10px rgba(74,36,24,.55), 0 0 0 1px rgba(74,36,24,.3) inset;
@@ -1608,7 +1662,6 @@
     }
 
     /* Slightly calmer, more premium glow intensity across the gaudiest shadows */
-    .elite-nav-box { animation-duration: 7s; }
     .gold-shimmer-text { animation-duration: 7s; }
 
     /* Refined section seams — a soft gradient hairline instead of a flat border */
@@ -1655,36 +1708,9 @@
     /* ─── Videos: always fill their container ─── */
     video { display: block; width: 100%; height: auto; object-fit: cover; }
 
-    /* ─── Navbar mobile ─── */
-    @media (max-width: 640px) {
-      nav { top: 8px !important; width: 96% !important; }
-      nav .px-6 { padding-left: 12px !important; padding-right: 12px !important; }
-      nav span.text-pink-300 { font-size: 10px !important; letter-spacing: 0.12em !important; }
-      nav button { font-size: 9px !important; padding: 8px 14px !important; }
-    }
-    @media (max-width: 380px) {
-      nav span.text-pink-300 { display: none; }
-    }
-
-    /* Nav links strip: identical pill-nav look on phone and desktop. On
-       narrow screens it becomes a horizontally-scrollable strip instead of
-       collapsing into a hamburger — same navbar, just swipeable. */
-    #nav-links-wrap::-webkit-scrollbar { display: none; }
-    @media (max-width: 768px) {
-      #nav-links-wrap {
-        gap: 20px !important;
-        padding: 4px 2px;
-        /* Fade the far edge so the scrollable overflow reads as an
-           intentional swipeable strip rather than clipped content. */
-        mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
-        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
-      }
-      #nav-links-wrap .elite-nav-link { font-size: 10px !important; white-space: nowrap; }
-    }
-    @media (max-width: 480px) {
-      #nav-links-wrap { gap: 16px !important; }
-      #nav-links-wrap .elite-nav-link { font-size: 9px !important; }
-    }
+    /* Old horizontal-scroll / hamburger nav rules removed — the new
+       .trc-nav sizes itself with clamp()/vw so every icon fits and stays
+       visible on phones (see the .trc-nav block above). */
 
     /* ─── Hero section ─── */
     @media (max-width: 640px) {
@@ -1843,7 +1869,7 @@
 
     /* Comfortable, reliably-tappable buttons/links on touch devices */
     @media (max-width: 768px) {
-      button, a.elite-nav-link { min-height: 40px; }
+      button, a.trc-nav-link { min-height: 40px; }
       section#products button, section#products a { min-height: 44px; }
     }
 
@@ -1858,97 +1884,8 @@
 /* ---- next style block ---- */
 
 
-    @media (max-width: 768px) {
-      .elite-nav-box {
-        background-color: rgba(10,4,7,0.72) !important;
-        backdrop-filter: blur(22px) saturate(190%) !important;
-        -webkit-backdrop-filter: blur(22px) saturate(190%) !important;
-        border-width: 1.5px !important;
-      }
-      /* eliteNavCore animates box-shadow + border-color, which forces a full
-         repaint of the whole pill every frame. Every other continuously-
-         animating element on the page gets paused via IntersectionObserver
-         when off-screen, but the nav is `position:fixed` and always visible
-         — so on mobile it was repainting on literally every scroll frame for
-         the whole session. Freezing it on a strong static glow keeps the
-         premium look with zero ongoing repaint cost. */
-      .elite-nav-box {
-        animation: none !important;
-        box-shadow: 0 0 55px rgba(74,36,24,0.5), inset 0 0 24px rgba(168,67,46,0.22) !important;
-        border-color: rgba(74,36,24,0.75) !important;
-      }
-    }
-
-    /* ═══ MOBILE DROPDOWN NAV MENU ═══
-       Replaces the horizontal-scrolling link strip on phones with a proper
-       hamburger + floating glass panel — reads as far more premium than a
-       swipeable strip, and keeps the nav pill itself short and clean. */
-    @media (max-width: 768px) {
-      #nav-hamburger-btn { display: flex !important; }
-
-      #nav-links-wrap {
-        position: fixed;
-        top: calc(90px + env(safe-area-inset-top));
-        left: 50%;
-        width: 92%;
-        max-width: 420px;
-        max-height: 72vh;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 6px !important;
-        overflow-x: visible;
-        overflow-y: auto;
-        padding: 16px 12px;
-        background: rgba(8,3,6,0.92);
-        backdrop-filter: blur(26px) saturate(190%);
-        -webkit-backdrop-filter: blur(26px) saturate(190%);
-        border: 1.5px solid rgba(74,36,24,0.5);
-        border-radius: 22px;
-        box-shadow: 0 25px 70px rgba(0,0,0,0.65), 0 0 45px rgba(74,36,24,0.25);
-        z-index: 9998;
-        mask-image: none !important;
-        -webkit-mask-image: none !important;
-        transform-origin: top center;
-        transform: translateX(-50%) translateY(-10px) scale(0.96);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.28s ease, transform 0.38s cubic-bezier(0.16,1,0.3,1);
-      }
-      #nav-links-wrap.mobile-open {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0) scale(1);
-        pointer-events: auto;
-      }
-      #nav-links-wrap .elite-nav-link {
-        padding: 13px 14px !important;
-        border-radius: 14px;
-        font-size: 12.5px !important;
-        border-bottom: 1px solid rgba(168,67,46,0.12);
-      }
-      #nav-links-wrap .elite-nav-link:last-child { border-bottom: none; }
-      #nav-links-wrap .elite-nav-link:active { background: rgba(74,36,24,0.16); }
-      #nav-active-pill { display: none !important; }
-
-      /* Hamburger -> X morph */
-      #nav-hamburger-btn.open .hamburger-bar:nth-child(1) { transform: translateY(0) rotate(45deg); }
-      #nav-hamburger-btn.open .hamburger-bar:nth-child(2) { opacity: 0; }
-      #nav-hamburger-btn.open .hamburger-bar:nth-child(3) { transform: translateY(0) rotate(-45deg); }
-
-      /* Dim the page behind the open menu so it reads as a real overlay */
-      #nav-menu-scrim {
-        position: fixed; inset: 0; z-index: 9997;
-        background: rgba(0,0,0,0.5);
-        opacity: 0; pointer-events: none;
-        transition: opacity 0.3s ease;
-      }
-      #nav-menu-scrim.visible { opacity: 1; pointer-events: auto; }
-    }
-    @media (min-width: 769px) {
-      #nav-menu-scrim { display: none; }
-    }
-    @media (min-width: 641px) and (max-width: 768px) {
-      #nav-links-wrap { top: calc(102px + env(safe-area-inset-top)) !important; }
-    }
+    /* Old hamburger + dropdown glass panel removed — every icon in the new
+       .trc-nav is visible at once on mobile, so no hidden menu is needed. */
   
 
 /* ---- next style block ---- */
@@ -2250,17 +2187,16 @@
           soft-glow look, far cheaper to render, so scrolling stays smooth.
        3) The horizontal nav-links strip gets proper momentum scrolling. */
     button, a, .cursor-pointer { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-    button:active, .hero-cta-btn:active, a.elite-nav-link:active {
+    button:active, .hero-cta-btn:active, a.trc-nav-link:active {
       transform: scale(0.96);
       transition: transform 0.12s ease-out;
     }
-    #nav-links-wrap { -webkit-overflow-scrolling: touch; }
     @media (max-width: 768px) {
       .blur-\[120px\], .blur-\[130px\], .blur-\[140px\] { --tw-blur: blur(55px); }
       .blur-\[150px\], .blur-\[160px\], .blur-\[180px\] { --tw-blur: blur(65px); }
     }
     @media (prefers-reduced-motion: reduce) {
-      button:active, .hero-cta-btn:active, a.elite-nav-link:active { transform: none; transition: none; }
+      button:active, .hero-cta-btn:active, a.trc-nav-link:active { transform: none; transition: none; }
     }
     #preloader-pct-center {
       font-family: 'JetBrains Mono', 'Courier New', ui-monospace, monospace;
@@ -3289,8 +3225,6 @@
   @media (max-width: 768px) {
     .pro-glass-card { backdrop-filter: blur(8px) saturate(140%); -webkit-backdrop-filter: blur(8px) saturate(140%); }
     .fan-card .fan-panel { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-    /* Disable the expensive always-on nav shimmer on phones */
-    nav .elite-nav-box::after { display: none; }
     /* Reduce depth orb blur on mobile (huge GPU cost) */
     .depth-orb { filter: blur(60px) !important; }
   }
@@ -3626,10 +3560,6 @@
   .fan-arrow.fan-next, .fan-arrow:hover {
     background: linear-gradient(135deg, #4A2418, #A8432E) !important;
   }
-  #nav-active-pill {
-    background: linear-gradient(90deg, rgba(74,36,24,0.35), rgba(192,138,82,0.25)) !important;
-    border-color: rgba(192,138,82,0.5) !important;
-  }
 
   /* Scroll progress bar + selection color, for full consistency */
   #scroll-progress-bar i {
@@ -3916,104 +3846,266 @@
   .modern-card-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
-/* ==================== PRELOADER (The Red Cocks) ==================== */
+/* ==================== PRELOADER: SLIDE TO ENTER ==================== */
 #trc-preloader{
   position:fixed; inset:0;
   display:flex; align-items:center; justify-content:center;
   background:
-    radial-gradient(120% 90% at 50% 8%, rgba(168,67,46,0.16) 0%, rgba(168,67,46,0) 55%),
-    radial-gradient(90% 70% at 50% 100%, rgba(192,138,82,0.10) 0%, rgba(192,138,82,0) 60%),
-    linear-gradient(180deg, #14070c 0%, #0d0209 60%, #050102 100%);
+    radial-gradient(55% 55% at 14% 12%, rgba(124,58,237,0.22) 0%, rgba(124,58,237,0) 60%),
+    radial-gradient(55% 55% at 88% 90%, rgba(34,211,238,0.16) 0%, rgba(34,211,238,0) 60%),
+    #060608;
   z-index:99999;
   overflow:hidden;
+  padding:20px;
 }
-#trc-preloader::before{
-  content:"";
-  position:absolute; inset:0;
-  background: radial-gradient(140% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%);
-  pointer-events:none;
+#trc-preloader .trc-grid-bg{
+  position:absolute; inset:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+  background-size:42px 42px;
+  -webkit-mask-image: radial-gradient(85% 85% at 50% 45%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(85% 85% at 50% 45%, #000 40%, transparent 100%);
 }
-#trc-preloader .trc-dust{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
-#trc-preloader .trc-dust span{
-  position:absolute; border-radius:50%;
-  background:#A8432E; opacity:0;
-  box-shadow:0 0 6px 1px rgba(168,67,46,.6);
-  animation: trc-drift 7s ease-in infinite;
+#trc-preloader .trc-glow{
+  position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none;
+  animation: trc-glowBreathe 6s ease-in-out infinite;
 }
-@keyframes trc-drift{
+#trc-preloader .trc-glow-a{
+  width:46vw; height:46vw; max-width:520px; max-height:520px;
+  top:-10%; left:-10%;
+  background:radial-gradient(circle, rgba(147,51,234,0.45) 0%, rgba(147,51,234,0) 70%);
+}
+#trc-preloader .trc-glow-b{
+  width:42vw; height:42vw; max-width:480px; max-height:480px;
+  bottom:-12%; right:-10%;
+  background:radial-gradient(circle, rgba(34,211,238,0.35) 0%, rgba(34,211,238,0) 70%);
+  animation-delay:1.5s;
+}
+@keyframes trc-glowBreathe{
+  0%,100%{ opacity:.75; transform:scale(1); }
+  50%{ opacity:1; transform:scale(1.12); }
+}
+
+#trc-preloader .trc-particles{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1; }
+#trc-preloader .trc-particles span{
+  position:absolute; border-radius:50%; opacity:0;
+  animation: trc-particleDrift 8s ease-in infinite;
+}
+@keyframes trc-particleDrift{
   0%{ transform:translateY(0) translateX(0) scale(0.6); opacity:0; }
-  10%{ opacity:.75; }
-  50%{ opacity:.95; }
-  80%{ opacity:.4; }
-  100%{ transform:translateY(-140vh) translateX(var(--dx,20px)) scale(1.1); opacity:0; }
+  12%{ opacity:.85; }
+  55%{ opacity:.9; }
+  85%{ opacity:.3; }
+  100%{ transform:translateY(-115vh) translateX(var(--dx,20px)) scale(1.1); opacity:0; }
 }
-#trc-preloader .trc-scan{
-  position:absolute; top:0; left:-60%; width:45%; height:100%;
-  background:linear-gradient(90deg, transparent, rgba(168,67,46,0.18), rgba(217,185,138,0.10), transparent);
-  animation: trc-sweep 4.5s cubic-bezier(.4,0,.2,1) infinite;
-  pointer-events:none;
+
+#trc-preloader .trc-glass-card{
+  position:relative; z-index:2;
+  width:min(420px, 100%);
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+  gap:16px;
+  padding:clamp(28px, 6vw, 44px) clamp(22px, 5vw, 36px);
+  border-radius:28px;
+  background:rgba(255,255,255,0.045);
+  border:1px solid rgba(255,255,255,0.10);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.55),
+    0 1px 0 rgba(255,255,255,0.06) inset;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  opacity:0; transform: translateY(14px) scale(0.98);
+  animation: trc-cardIn .8s cubic-bezier(.16,1,.3,1) .15s forwards;
 }
-@keyframes trc-sweep{ 0%{left:-60%;} 55%{left:130%;} 100%{left:130%;} }
-#trc-preloader .trc-stage{ position:relative; display:flex; flex-direction:column; align-items:center; gap:26px; z-index:2; }
-#trc-preloader .trc-emblem-wrap{ position:relative; width:132px; height:132px; display:flex; align-items:center; justify-content:center; }
-#trc-preloader .trc-emblem-glow{
-  position:absolute; inset:-40px; border-radius:50%;
-  background:radial-gradient(circle, rgba(168,67,46,0.35) 0%, rgba(168,67,46,0) 70%);
-  filter:blur(18px); animation: trc-pulse-glow 2.6s ease-in-out infinite;
+@keyframes trc-cardIn{ to{ opacity:1; transform:translateY(0) scale(1); } }
+
+#trc-preloader .trc-mark{
+  position:relative; width:56px; height:56px;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:2px;
 }
-@keyframes trc-pulse-glow{ 0%,100%{opacity:.55; transform:scale(0.94);} 50%{opacity:1; transform:scale(1.06);} }
-#trc-preloader .trc-ring{ position:absolute; inset:0; border-radius:50%; border:1px solid rgba(192,138,82,0.28); }
-#trc-preloader .trc-ring.r2{ inset:-16px; border-color:rgba(192,138,82,0.14); animation: trc-rotate 14s linear infinite; }
-#trc-preloader .trc-ring.r3{ inset:-16px; border-color:rgba(192,138,82,0.14); border-style:dashed; animation: trc-rotate-rev 22s linear infinite; }
-@keyframes trc-rotate{ to{ transform:rotate(360deg);} }
-@keyframes trc-rotate-rev{ to{ transform:rotate(-360deg);} }
-#trc-preloader .trc-emblem{
-  width:78px; height:78px; position:relative; opacity:0;
-  filter: drop-shadow(0 0 22px rgba(168,67,46,0.55));
-  animation: trc-emblem-reveal 1.6s cubic-bezier(.16,1,.3,1) 0.3s forwards;
+#trc-preloader .trc-mark svg{
+  width:44px; height:44px; position:relative; z-index:1;
+  filter: drop-shadow(0 0 14px rgba(192,132,252,0.5));
+  animation: trc-markIn 1s cubic-bezier(.16,1,.3,1) .35s both;
 }
-@keyframes trc-emblem-reveal{
-  0%{ opacity:0; transform:scale(0.7) rotate(-6deg); filter:blur(10px) drop-shadow(0 0 0 rgba(168,67,46,0)); }
-  100%{ opacity:1; transform:scale(1) rotate(0deg); filter:blur(0) drop-shadow(0 0 22px rgba(168,67,46,0.55)); }
+@keyframes trc-markIn{
+  0%{ opacity:0; transform:scale(0.6) rotate(-8deg); }
+  100%{ opacity:1; transform:scale(1) rotate(0deg); }
 }
-#trc-preloader .trc-emblem svg{ width:100%; height:100%; }
-#trc-preloader .trc-wordmark{ text-align:center; }
-#trc-preloader .trc-brand-title{
-  font-family:'Cinzel', serif; font-weight:800;
-  font-size:clamp(22px, 4.4vw, 34px); letter-spacing:0.16em; text-transform:uppercase;
-  background: linear-gradient(135deg, #ffffff 0%, #d9b98a 25%, #A8432E 50%, #e8cbb0 75%, #ffffff 100%);
+#trc-preloader .trc-mark-glow{
+  position:absolute; inset:-14px; border-radius:50%;
+  background:radial-gradient(circle, rgba(192,132,252,0.45) 0%, rgba(192,132,252,0) 70%);
+  filter:blur(10px);
+  animation: trc-markGlow 2.4s ease-in-out infinite;
+}
+@keyframes trc-markGlow{
+  0%,100%{ opacity:.5; transform:scale(0.92); }
+  50%{ opacity:1; transform:scale(1.1); }
+}
+
+#trc-preloader .trc-cat-label{
+  font-family:'Outfit', sans-serif; font-weight:600; font-size:11px;
+  letter-spacing:0.32em; text-transform:uppercase;
+  color:rgba(216,180,254,0.75);
+  margin:0;
+}
+#trc-preloader .trc-heading{
+  font-family:'Outfit', sans-serif; font-weight:800;
+  font-size:clamp(24px, 5.2vw, 32px); line-height:1.15;
+  color:#f5f5f7; margin:0;
+}
+#trc-preloader .trc-heading span{
+  background: linear-gradient(90deg, #c084fc, #67e8f9, #c084fc);
   background-size:220% auto;
   -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  opacity:0;
-  animation: trc-goldSweep 4.5s linear infinite, trc-fadeUp .9s ease .8s forwards;
+  animation: trc-textSweep 4.5s linear infinite;
 }
-@keyframes trc-goldSweep{ 0%{background-position:0% center;} 100%{background-position:220% center;} }
-@keyframes trc-fadeUp{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-#trc-preloader .trc-brand-sub{
-  margin-top:8px; font-family:'Outfit', sans-serif; font-weight:400; font-size:11px;
-  letter-spacing:0.42em; text-transform:uppercase; color: rgba(217,189,152,0.62);
-  opacity:0; animation: trc-fadeUp .9s ease 1.1s forwards;
+#trc-preloader .trc-sub-desc{
+  font-family:'Outfit', sans-serif; font-weight:400; font-size:13.5px; line-height:1.55;
+  color:rgba(228,228,231,0.62);
+  max-width:320px; margin:0 0 4px;
 }
-#trc-preloader .trc-progress-wrap{
-  width:200px; display:flex; flex-direction:column; align-items:center; gap:10px;
-  opacity:0; animation: trc-fadeUp .9s ease 1.3s forwards;
+
+#trc-preloader .trc-enter-wrap{
+  position:relative; display:flex; flex-direction:column; align-items:center; gap:12px;
+  width:100%; margin-top:6px;
 }
-#trc-preloader .trc-progress-track{
-  position:relative; width:100%; height:1px; background: rgba(217,189,152,0.16);
-  overflow:hidden; border-radius:1px;
+#trc-preloader .trc-slide-track{
+  position:relative;
+  width:100%; max-width:300px;
+  height:64px;
+  border-radius:999px;
+  background: rgba(255,255,255,0.045);
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.5),
+    0 1px 0 rgba(255,255,255,0.08) inset,
+    0 -1px 0 rgba(0,0,0,0.4) inset;
+  display:flex; align-items:center;
+  overflow:hidden;
+  touch-action:none;
 }
-#trc-preloader .trc-progress-fill{
-  position:absolute; top:0; left:0; height:100%; width:0%;
-  background:linear-gradient(90deg, #A8432E, #d9b98a, #e8cbb0);
-  box-shadow:0 0 12px rgba(217,185,138,0.6);
-  transition: width .25s ease-out;
+#trc-preloader .trc-slide-fill{
+  position:absolute; top:0; left:0; height:100%; width:58px;
+  background: linear-gradient(90deg, rgba(147,51,234,0.45), rgba(96,165,250,0.4), rgba(34,211,238,0.4));
+  box-shadow: 0 0 24px rgba(103,232,249,0.35);
+  pointer-events:none;
 }
-#trc-preloader .trc-progress-meta{
-  display:flex; justify-content:space-between; width:100%;
-  font-family:'Outfit', sans-serif; font-size:9px; letter-spacing:0.3em; text-transform:uppercase;
-  color:rgba(217,189,152,0.5);
+#trc-preloader .trc-slide-text{
+  position:relative; z-index:1;
+  width:100%; text-align:center;
+  font-family:'Outfit', sans-serif; font-weight:600; font-size:12.5px;
+  letter-spacing:0.2em; text-transform:uppercase;
+  color:rgba(237,233,254,0.8);
+  pointer-events:none;
+  user-select:none;
 }
-#trc-preloader #trc-pct{ color:#e8cbb0; font-variant-numeric: tabular-nums; }
+#trc-preloader .trc-slide-handle{
+  position:absolute; top:5px; left:5px;
+  width:54px; height:54px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background: radial-gradient(circle at 32% 28%, #c4b5fd 0%, #9333ea 55%, #7e22ce 100%);
+  box-shadow:
+    0 8px 22px rgba(147,51,234,0.55),
+    0 0 0 1px rgba(255,255,255,0.12) inset,
+    0 2px 4px rgba(255,255,255,0.45) inset;
+  cursor:grab;
+  z-index:2;
+  touch-action:none;
+  transition: transform .12s ease;
+  outline:none;
+}
+#trc-preloader .trc-slide-handle svg{ width:22px; height:22px; position:relative; z-index:2; }
+#trc-preloader .trc-handle-pulse{
+  position:absolute; inset:-8px; border-radius:50%;
+  border:2px solid rgba(192,132,252,0.55);
+  animation: trc-handlePulse 1.8s ease-out infinite;
+  pointer-events:none;
+}
+#trc-preloader .trc-handle-pulse.is-stopped{ animation:none; opacity:0; }
+@keyframes trc-handlePulse{
+  0%{ transform:scale(0.85); opacity:.9; }
+  100%{ transform:scale(1.55); opacity:0; }
+}
+#trc-preloader .trc-slide-handle.is-dragging{ cursor:grabbing; }
+#trc-preloader .trc-slide-handle:focus-visible{
+  box-shadow:
+    0 8px 22px rgba(147,51,234,0.55),
+    0 0 0 3px rgba(255,255,255,0.55);
+}
+#trc-preloader .trc-enter-hint{
+  font-family:'Outfit', sans-serif; font-size:10.5px; letter-spacing:0.24em; text-transform:uppercase;
+  color:rgba(228,228,231,0.4);
+  opacity:0; transition: opacity .6s ease;
+}
+#trc-preloader .trc-enter-hint.is-shown{ opacity:1; }
+
+#trc-preloader .trc-glass-card.trc-card-done{
+  animation: trc-cardOut .5s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes trc-cardOut{ to{ opacity:0; transform: translateY(-10px) scale(0.97); } }
+
+#trc-preloader .trc-burst{
+  position:absolute; left:50%; top:50%; z-index:2;
+  width:10px; height:10px; border-radius:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:radial-gradient(circle, rgba(232,213,255,0.9) 0%, rgba(192,132,252,0.55) 35%, rgba(103,232,249,0) 70%);
+  pointer-events:none; opacity:0;
+}
+#trc-preloader .trc-burst.is-firing{
+  animation: trc-burstPop .8s cubic-bezier(.16,1,.3,1) forwards;
+}
+@keyframes trc-burstPop{
+  0%{ transform:translate(-50%,-50%) scale(0); opacity:.9; }
+  60%{ opacity:.6; }
+  100%{ transform:translate(-50%,-50%) scale(38); opacity:0; }
+}
+
+#trc-preloader .trc-welcome-text{
+  position:absolute; left:0; right:0; z-index:3; text-align:center;
+  font-family:'Outfit', sans-serif; font-weight:700;
+  font-size:clamp(20px, 4.6vw, 28px); line-height:1.3;
+  color:#f5f5f7;
+  opacity:0; transform: scale(0.94);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.16,1,.3,1);
+  pointer-events:none;
+}
+#trc-preloader .trc-welcome-text span{
+  display:block; margin-top:6px;
+  font-weight:800;
+  font-size:clamp(26px, 6vw, 38px);
+  background: linear-gradient(90deg, #c084fc, #67e8f9, #c084fc);
+  background-size:220% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation: trc-textSweep 4.5s linear infinite;
+}
+@keyframes trc-textSweep{ 0%{background-position:0% center;} 100%{background-position:220% center;} }
+#trc-preloader .trc-welcome-text.is-shown{ opacity:1; transform: scale(1); }
+
 #trc-preloader.trc-leaving{ animation: trc-fadeOutShell .8s ease forwards; }
 @keyframes trc-fadeOutShell{ to{ opacity:0; visibility:hidden; } }
 body.trc-loading{ overflow:hidden; }
+
+@media (max-width:480px){
+  #trc-preloader .trc-glass-card{ gap:14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #trc-preloader .trc-glass-card,
+  #trc-preloader .trc-slide-handle,
+  #trc-preloader .trc-slide-fill,
+  #trc-preloader .trc-slide-text,
+  #trc-preloader .trc-welcome-text,
+  #trc-preloader .trc-heading span,
+  #trc-preloader .trc-welcome-text span,
+  #trc-preloader .trc-glow,
+  #trc-preloader .trc-particles span,
+  #trc-preloader .trc-mark svg,
+  #trc-preloader .trc-mark-glow,
+  #trc-preloader .trc-handle-pulse,
+  #trc-preloader .trc-burst{ transition:none; animation:none; }
+  #trc-preloader .trc-glass-card{ opacity:1; transform:none; }
+  #trc-preloader .trc-particles{ display:none; }
+}

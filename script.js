@@ -286,162 +286,141 @@
     }, { passive: true });
     updateScrollTint();
 
-    // PRO-LEVEL NAVBAR: compact + intensify once scrolled past the hero area.
-    const navEl = document.querySelector('nav');
-    let navTicking = false;
-    function updateNavState() {
-      navTicking = false;
-      if (navEl) navEl.classList.toggle('nav-scrolled', window.scrollY > 60);
-    }
-    window.addEventListener('scroll', () => {
-      if (!navTicking) {
-        navTicking = true;
-        requestAnimationFrame(updateNavState);
-      }
-    }, { passive: true });
-    updateNavState();
+    // PREMIUM SPOTLIGHT NAVBAR: a single spotlight cone + indicator bar
+    // spring-glides to whichever link is active/hovered/focused. Also
+    // drives scroll-spy (which section is in view) and keyboard arrow-key
+    // navigation between links. No hamburger, no horizontal scroll — every
+    // icon is always visible, sized responsively in CSS.
+    (function initSpotlightNav() {
+      const track = document.getElementById('trc-nav-links');
+      const cone = document.getElementById('trc-cone');
+      const indicator = document.getElementById('trc-indicator');
+      if (!track || !cone || !indicator) return;
 
-    // NAV SCROLL-PROGRESS RING: the ring around the logo traces real scroll
-    // position (0 → 100%) using its stroke-dashoffset — a live, functional
-    // detail rather than a purely decorative one.
-    (function initNavRing() {
-      const ringFg = document.getElementById('nav-scroll-ring-fg');
-      if (!ringFg) return;
-      const CIRCUMFERENCE = 2 * Math.PI * 21.5; // matches r="21.5" in the SVG
-      let ringTicking = false;
-      function updateRing() {
-        ringTicking = false;
-        const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = scrollableHeight > 0 ? Math.min(Math.max(window.scrollY / scrollableHeight, 0), 1) : 0;
-        ringFg.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - progress));
-      }
-      ringFg.style.strokeDasharray = String(CIRCUMFERENCE);
-      window.addEventListener('scroll', () => {
-        if (!ringTicking) { ringTicking = true; requestAnimationFrame(updateRing); }
-      }, { passive: true });
-      window.addEventListener('resize', updateRing);
-      updateRing();
-    })();
+      const links = Array.prototype.slice.call(track.querySelectorAll('.trc-nav-link'));
+      if (!links.length) return;
 
-    // NAV ACTIVE-SECTION PILL: glides under whichever nav link matches the
-    // section currently in view, using the same section elements already
-    // tracked by the reveal/video IntersectionObservers above.
-    (function initNavPill() {
-      const wrap = document.getElementById('nav-links-wrap');
-      const pill = document.getElementById('nav-active-pill');
-      if (!wrap || !pill) return;
-      const linkMap = {};
-      wrap.querySelectorAll('.elite-nav-link').forEach(a => { linkMap[a.dataset.section] = a; });
-      let currentLink = linkMap['home'];
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      function movePillTo(link) {
-        if (!link) return;
-        currentLink = link;
-        pill.style.left = link.offsetLeft + 'px';
-        pill.style.width = link.offsetWidth + 'px';
-        pill.classList.add('ready');
+      // ---- Lightweight damped-spring animator (stiffness/damping/mass) ----
+      let pos = 0;        // current center position, in px, relative to track
+      let vel = 0;
+      let target = 0;
+      let rafId = null;
+      const STIFFNESS = 160, DAMPING = 22, MASS = 0.95;
+
+      function targetCenterFor(link) {
+        return link.offsetLeft + link.offsetWidth / 2;
       }
 
-      const navObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const link = linkMap[entry.target.id];
-            if (link) movePillTo(link);
-          }
-        });
-      }, { root: null, rootMargin: '-45% 0px -45% 0px', threshold: 0 });
-
-      Object.keys(linkMap).forEach(id => {
-        const el = document.getElementById(id);
-        if (el) navObserver.observe(el);
-      });
-
-      // Keep the pill aligned on resize (link positions shift with layout).
-      window.addEventListener('resize', () => movePillTo(currentLink));
-    })();
-
-    // NAV MAGNETIC LINKS + CURSOR SPOTLIGHT: desktop-only polish — links
-    // nudge gently toward the cursor, and a soft light follows the mouse
-    // across the glass navbar. Skipped for touch devices entirely.
-    (function initNavMagnetAndSpotlight() {
-      const isTouchNav = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      const reduceMotionNav = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (isTouchNav || reduceMotionNav) return;
-
-      const navBox = document.querySelector('.elite-nav-box');
-      if (navBox) {
-        navBox.addEventListener('mousemove', (e) => {
-          const rect = navBox.getBoundingClientRect();
-          navBox.style.setProperty('--spot-x', (e.clientX - rect.left) + 'px');
-          navBox.style.setProperty('--spot-y', (e.clientY - rect.top) + 'px');
-          navBox.style.setProperty('--spot-opacity', '1');
-        });
-        navBox.addEventListener('mouseleave', () => {
-          navBox.style.setProperty('--spot-opacity', '0');
-        });
-      }
-
-      document.querySelectorAll('.elite-nav-link').forEach(link => {
-        link.addEventListener('mousemove', (e) => {
-          const rect = link.getBoundingClientRect();
-          const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.25;
-          const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.25;
-          link.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
-        });
-        link.addEventListener('mouseleave', () => {
-          link.style.transform = '';
-        });
-      });
-    })();
-
-    // MOBILE HAMBURGER MENU: toggles the floating glass dropdown panel.
-    (function initMobileNavMenu() {
-      const btn = document.getElementById('nav-hamburger-btn');
-      const wrap = document.getElementById('nav-links-wrap');
-      const scrim = document.getElementById('nav-menu-scrim');
-      if (!btn || !wrap || !scrim) return;
-
-      // The nav's own transform + overflow:hidden would otherwise become the
-      // containing block for a position:fixed child, breaking the panel's
-      // viewport-relative top/left. Re-parenting to <body> on mobile avoids
-      // that entirely; on desktop it's moved back so the normal flex pill
-      // nav layout (and the active-section pill under it) is untouched.
-      const navParent = wrap.parentElement;
-      const navNextSibling = wrap.nextSibling;
-      let movedOut = false;
-
-      function closeMenu() {
-        wrap.classList.remove('mobile-open');
-        scrim.classList.remove('visible');
-        btn.classList.remove('open');
-        btn.setAttribute('aria-expanded', 'false');
-      }
-      function openMenu() {
-        wrap.classList.add('mobile-open');
-        scrim.classList.add('visible');
-        btn.classList.add('open');
-        btn.setAttribute('aria-expanded', 'true');
-      }
-      function ensurePlacement() {
-        const isMobile = window.innerWidth <= 768;
-        if (isMobile && !movedOut) {
-          document.body.appendChild(scrim);
-          document.body.appendChild(wrap);
-          movedOut = true;
-        } else if (!isMobile && movedOut) {
-          navParent.insertBefore(wrap, navNextSibling);
-          movedOut = false;
-          closeMenu();
+      function applyFrame() {
+        cone.style.transform = 'translateX(' + (pos - 23) + 'px)';
+        indicator.style.transform = 'translateX(' + (pos - indicator.offsetWidth / 2) + 'px)';
+        if (!reduceMotion) {
+          const skew = Math.max(-4, Math.min(4, vel * 0.02));
+          const stretch = 1 + Math.min(0.08, Math.abs(vel) * 0.0006);
+          cone.style.transform += ' skewX(' + skew.toFixed(2) + 'deg) scaleX(' + stretch.toFixed(3) + ')';
         }
       }
 
-      btn.addEventListener('click', () => {
-        wrap.classList.contains('mobile-open') ? closeMenu() : openMenu();
+      function tick() {
+        const dt = 1 / 60;
+        const force = -STIFFNESS * (pos - target) - DAMPING * vel;
+        const acc = force / MASS;
+        vel += acc * dt;
+        pos += vel * dt;
+        applyFrame();
+        if (Math.abs(target - pos) > 0.3 || Math.abs(vel) > 0.3) {
+          rafId = requestAnimationFrame(tick);
+        } else {
+          pos = target;
+          vel = 0;
+          applyFrame();
+          rafId = null;
+        }
+      }
+
+      function moveTo(link, instant) {
+        target = targetCenterFor(link);
+        if (instant || reduceMotion) {
+          pos = target;
+          vel = 0;
+          applyFrame();
+          return;
+        }
+        if (!rafId) rafId = requestAnimationFrame(tick);
+      }
+
+      function setActive(link) {
+        links.forEach(a => a.removeAttribute('aria-current'));
+        link.setAttribute('aria-current', 'page');
+      }
+
+      // Initial placement (Home)
+      requestAnimationFrame(() => {
+        track.classList.add('trc-ready');
+        moveTo(links[0], true);
       });
-      scrim.addEventListener('click', closeMenu);
-      wrap.querySelectorAll('.elite-nav-link').forEach(a => a.addEventListener('click', closeMenu));
-      window.addEventListener('resize', ensurePlacement);
-      ensurePlacement();
+
+      // Hover / focus previews the spotlight without changing active state
+      links.forEach(link => {
+        link.addEventListener('mouseenter', () => moveTo(link));
+        link.addEventListener('focus', () => moveTo(link));
+      });
+      track.addEventListener('mouseleave', () => {
+        const current = track.querySelector('.trc-nav-link[aria-current="page"]') || links[0];
+        moveTo(current);
+      });
+
+      // Click sets the active link explicitly
+      links.forEach(link => {
+        link.addEventListener('click', () => setActive(link));
+      });
+
+      // Left/Right arrow-key navigation across the nav links
+      track.addEventListener('keydown', (e) => {
+        const activeEl = document.activeElement;
+        const i = links.indexOf(activeEl);
+        if (i === -1) return;
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          const next = links[Math.min(links.length - 1, i + 1)];
+          next.focus();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const prev = links[Math.max(0, i - 1)];
+          prev.focus();
+        }
+      });
+
+      // Keep the spotlight aligned with the current active link on resize
+      window.addEventListener('resize', () => {
+        const current = track.querySelector('.trc-nav-link[aria-current="page"]') || links[0];
+        moveTo(current, true);
+      });
+
+      // SCROLL-SPY: highlight whichever section is in view, reusing the ids
+      // already referenced by each link's href (#home, #products, ...).
+      const sectionMap = {};
+      links.forEach(a => {
+        const id = a.getAttribute('data-section');
+        if (id) sectionMap[id] = a;
+      });
+      const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const link = sectionMap[entry.target.id];
+            if (link) {
+              setActive(link);
+              moveTo(link);
+            }
+          }
+        });
+      }, { root: null, rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+      Object.keys(sectionMap).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) navObserver.observe(el);
+      });
     })();
   
 
@@ -764,12 +743,13 @@
       popEls.forEach(el => popObserver.observe(el));
     })();
 
-    /* ---------- 6.45 FAN CAROUSEL — swipeable card slider used by the
-       showcase-style sections. Whichever card sits nearest the track's
-       center becomes the "active" (pink, full color) one; every other
-       card stays grayscale. Works via native scroll + snap so it feels
-       right on a touch screen, with arrow buttons and dots as an
-       alternate way to move for mouse/keyboard users. ---------- */
+    /* ---------- 6.45 FAN CAROUSEL — 3D draggable orbit slider used by the
+       showcase-style sections. All cards sit on an invisible cylinder;
+       dragging horizontally (mouse or touch) rotates the whole ring with
+       momentum on release, snapping so one card faces front. Whichever
+       card sits front becomes the "active" (pink, full color) one; every
+       other card stays grayscale. Arrow buttons and dots offer the same
+       navigation for mouse/keyboard users. ---------- */
     (function(){
       document.querySelectorAll('.fan-carousel').forEach((root) => {
         const track = root.querySelector('.fan-track');
@@ -780,6 +760,10 @@
         const nextBtn = root.querySelector('.fan-next');
         if (!cards.length) return;
 
+        const count = cards.length;
+        const angleStep = 360 / count;
+        let rotation = 0;
+
         // Build dots
         let dots = [];
         if (dotsWrap) {
@@ -787,10 +771,21 @@
           dots = cards.map((_, i) => {
             const d = document.createElement('span');
             d.className = 'fan-dot';
-            d.addEventListener('click', () => scrollToCard(i));
+            d.addEventListener('click', () => rotateToCard(i));
             dotsWrap.appendChild(d);
             return d;
           });
+        }
+
+        function currentIndex() {
+          let closest = 0, minDist = Infinity;
+          cards.forEach((_, i) => {
+            let a = (rotation + i * angleStep) % 360;
+            if (a < 0) a += 360;
+            const dist = Math.min(a, 360 - a);
+            if (dist < minDist) { minDist = dist; closest = i; }
+          });
+          return closest;
         }
 
         function setActive(idx) {
@@ -798,48 +793,104 @@
           dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
         }
 
-        function currentIndex() {
-          const trackRect = track.getBoundingClientRect();
-          const center = trackRect.left + trackRect.width / 2;
-          let closest = 0, minDist = Infinity;
+        // Geometry: work out how far each card sits from the shared
+        // rotation axis so the ring reads as a real cylinder rather than
+        // a flat fan, re-measured whenever the viewport changes.
+        let radius = 260;
+        function measureGeometry() {
+          const cardWidth = cards[0].offsetWidth || 240;
+          radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / count)) + 40;
+          root.style.perspective = Math.min(1200, Math.round(root.clientWidth * 1.25)) + 'px';
           cards.forEach((c, i) => {
-            const r = c.getBoundingClientRect();
-            const dist = Math.abs((r.left + r.width / 2) - center);
-            if (dist < minDist) { minDist = dist; closest = i; }
+            const angle = i * angleStep;
+            c.style.setProperty('--fan-angle', angle + 'deg');
+            c.style.setProperty('--fan-radius', radius + 'px');
           });
-          return closest;
+          const cardHeight = cards[0].offsetHeight || 300;
+          const vPad = window.matchMedia('(min-width: 1024px)').matches ? 94 : (window.matchMedia('(min-width: 640px)').matches ? 86 : 76);
+          track.style.height = (cardHeight + vPad) + 'px';
+          render();
         }
 
-        function scrollToCard(i) {
-          const c = cards[Math.max(0, Math.min(cards.length - 1, i))];
-          if (!c) return;
-          track.scrollTo({
-            left: c.offsetLeft - (track.clientWidth - c.clientWidth) / 2,
-            behavior: 'smooth'
-          });
+        function render() {
+          track.style.transform = `rotateY(${rotation}deg)`;
+          setActive(currentIndex());
         }
 
-        let raf = null;
-        track.addEventListener('scroll', () => {
-          if (raf) return;
-          raf = requestAnimationFrame(() => {
-            setActive(currentIndex());
-            raf = null;
-          });
-        }, { passive: true });
+        function snapTo(targetRotation, animate) {
+          rotation = targetRotation;
+          if (animate && !reduceMotion) {
+            track.classList.add('is-snapping');
+            const done = () => { track.classList.remove('is-snapping'); track.removeEventListener('transitionend', done); };
+            track.addEventListener('transitionend', done);
+          } else {
+            track.classList.remove('is-snapping');
+          }
+          render();
+        }
 
-        cards.forEach((c, i) => c.addEventListener('click', () => {
-          if (!c.classList.contains('is-active')) scrollToCard(i);
+        function rotateToCard(i) {
+          const target = Math.round(rotation / 360) * 360 - i * angleStep;
+          // pick the nearest equivalent rotation to avoid a long spin
+          const alt = target - 360, alt2 = target + 360;
+          let best = target;
+          if (Math.abs(alt - rotation) < Math.abs(best - rotation)) best = alt;
+          if (Math.abs(alt2 - rotation) < Math.abs(best - rotation)) best = alt2;
+          snapTo(best, true);
+        }
+
+        // ---- pointer drag ----
+        let isDragging = false, dragMoved = 0, lastX = 0, lastT = 0, velocity = 0;
+        const DRAG_MULT = 0.16;
+
+        track.addEventListener('pointerdown', (e) => {
+          if (e.target.closest('.cart-add-btn')) return;
+          isDragging = true;
+          dragMoved = 0;
+          velocity = 0;
+          lastX = e.clientX;
+          lastT = performance.now();
+          track.classList.remove('is-snapping');
+          track.classList.add('is-dragging');
+          track.setPointerCapture && e.pointerId != null && track.setPointerCapture(e.pointerId);
+        });
+
+        track.addEventListener('pointermove', (e) => {
+          if (!isDragging) return;
+          const now = performance.now();
+          const dx = e.clientX - lastX;
+          const dt = Math.max(1, now - lastT);
+          rotation += dx * DRAG_MULT;
+          velocity = (dx * DRAG_MULT) / (dt / 16.67);
+          dragMoved += Math.abs(dx);
+          lastX = e.clientX;
+          lastT = now;
+          render();
+        });
+
+        function endDrag() {
+          if (!isDragging) return;
+          isDragging = false;
+          track.classList.remove('is-dragging');
+          const projected = rotation + Math.max(-40, Math.min(40, velocity * 6));
+          snapTo(Math.round(projected / angleStep) * angleStep, true);
+        }
+        track.addEventListener('pointerup', endDrag);
+        track.addEventListener('pointercancel', endDrag);
+
+        // Tap/click a card to bring it to front; ignore taps that were
+        // really the tail end of a drag.
+        cards.forEach((c, i) => c.addEventListener('click', (e) => {
+          if (dragMoved > 6) return;
+          if (!c.classList.contains('is-active')) rotateToCard(i);
         }));
 
-        if (prevBtn) prevBtn.addEventListener('click', () => scrollToCard(currentIndex() - 1));
-        if (nextBtn) nextBtn.addEventListener('click', () => scrollToCard(currentIndex() + 1));
+        if (prevBtn) prevBtn.addEventListener('click', () => rotateToCard(currentIndex() + 1));
+        if (nextBtn) nextBtn.addEventListener('click', () => rotateToCard(currentIndex() - 1));
 
-        // Start centered on the middle card
-        requestAnimationFrame(() => {
-          scrollToCard(Math.floor(cards.length / 2));
-          setTimeout(() => setActive(currentIndex()), 350);
-        });
+        window.addEventListener('resize', measureGeometry);
+
+        requestAnimationFrame(measureGeometry);
       });
     })();
 
@@ -1897,15 +1948,10 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   var chefUnlocked = false;
   var chefTriggered = false;
 
-  function lockBody() {
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-  }
-
-  function unlockBody() {
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
-  }
+  // Scroll-lock disabled: these used to hide overflow to trap the user on
+  // the hero/chef sections. Now no-ops so scrolling is always free.
+  function lockBody() {}
+  function unlockBody() {}
 
   var heroCue = document.getElementById('hero-seq-cue');
   var heroProgressBar = document.querySelector('#hero-seq-progress i');
@@ -2066,31 +2112,7 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
     chefUnlocked = true;
   }
 
-  // --- 3. PREVENT SCROLL WHEN LOCKED ---
-  function preventIfLocked(e) {
-    var isHeroActive = !heroUnlocked;
-    var isChefActive = chefTriggered && !chefUnlocked;
-    if (isHeroActive || isChefActive) {
-      e.preventDefault();
-      return false;
-    }
-  }
-
-  function handleKey(e) {
-    var isHeroActive = !heroUnlocked;
-    var isChefActive = chefTriggered && !chefUnlocked;
-    if (isHeroActive || isChefActive) {
-      var keys = ['ArrowDown', 'PageDown', 'Space', ' ', 'Down', 'ArrowUp', 'PageUp', 'Up'];
-      if (keys.indexOf(e.key) !== -1 || keys.indexOf(e.code) !== -1) {
-        e.preventDefault();
-        return false;
-      }
-    }
-  }
-
-  window.addEventListener('wheel', preventIfLocked, { passive: false });
-  window.addEventListener('touchmove', preventIfLocked, { passive: false });
-  window.addEventListener('keydown', handleKey, { passive: false });
+  // --- 3. SCROLL LOCKING REMOVED — scroll is never blocked anymore ---
 
   // --- 4. OBSERVE CHEF VIDEO FRAME (Triggers only when video frame is fully visible) ---
   if ('IntersectionObserver' in window) {
@@ -2098,14 +2120,6 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
       entries.forEach(function(entry){
         if (entry.isIntersecting && !chefTriggered && !chefUnlocked && heroUnlocked) {
           chefTriggered = true;
-
-          // Smoothly align the video frame into center of screen
-          entry.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-          // Lock scroll on the video frame
-          setTimeout(function() {
-            lockBody();
-          }, 250);
 
           if (chefVideo) {
             try {
