@@ -90,7 +90,47 @@
 
 
 </head>
-<body class="selection:bg-pink-500 selection:text-black">
+<body class="selection:bg-pink-500 selection:text-black trc-loading">
+
+<div id="trc-preloader">
+  <div class="trc-dust" id="trc-dust"></div>
+  <div class="trc-scan"></div>
+
+  <div class="trc-stage">
+    <div class="trc-emblem-wrap">
+      <div class="trc-emblem-glow"></div>
+      <div class="trc-ring r2"></div>
+      <div class="trc-ring r3"></div>
+      <div class="trc-emblem">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="trcG1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#e8cbb0"/>
+              <stop offset="45%" stop-color="#d9b98a"/>
+              <stop offset="100%" stop-color="#A8432E"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#trcG1)" d="M50 6c3 6 1 11-3 14 7-2 13 1 16 7 3-6 9-9 15-8-5 4-7 10-5 16 5-3 11-2 15 2-6 2-10 7-10 13 0 12-10 20-22 20h-2c-1 5-5 9-10 9-6 0-11-5-11-11 0-3 1-5 3-7-8-1-14-8-14-16 0-6 3-11 8-14-3-5-2-11 2-15 3 5 8 8 14 8-2-6 0-13 4-18z"/>
+          <circle cx="63" cy="34" r="2.4" fill="#14070c"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="trc-wordmark">
+      <div class="trc-brand-title">The Red Cocks</div>
+      <div class="trc-brand-sub">Premium Poultry &amp; Meat</div>
+    </div>
+
+    <div class="trc-progress-wrap">
+      <div class="trc-progress-track"><div class="trc-progress-fill" id="trc-fill"></div></div>
+      <div class="trc-progress-meta">
+        <span>Loading</span>
+        <span id="trc-pct">0%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="scroll-progress-bar" aria-hidden="true"><i></i></div>
 <div id="canvas3d-container" aria-hidden="true">
   <canvas id="lux-tree-canvas"></canvas>
@@ -837,6 +877,14 @@
         </div>
       </div>
       <div class="contact-trust-strip">
+        <span class="contact-trust-item"><span class="cti-dot"></span>Govt. MSME Registered</span>
+        <span class="contact-trust-item"><span class="cti-dot"></span>100% Farm-Fresh</span>
+        <span class="contact-trust-item"><span class="cti-dot"></span>Hygienic Processing</span>
+        <span class="contact-trust-item"><span class="cti-dot"></span>Response &lt; 2 Hrs</span>
+      </div>
+    </div>
+  </section>
+
   <!-- ── 🔪 CULINARY ARTISTRY SECTION (Chef Video & Premium Craftsmanship) ── -->
   <section id="culinary" data-theme-color="0x080205" data-intensity="2.4" class="scroll-section relative py-28 px-4 w-full border-t border-pink-600/20 overflow-hidden">
     <div class="max-w-7xl mx-auto">
@@ -1306,5 +1354,65 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="script.js"></script>
+<script>
+  (function(){
+    var dustEl = document.getElementById('trc-dust');
+    var N = 26;
+    for(var i=0;i<N;i++){
+      var s = document.createElement('span');
+      var left = Math.random()*100;
+      var delay = Math.random()*7;
+      var dur = 6 + Math.random()*4;
+      var dx = (Math.random()*80 - 40) + 'px';
+      var size = (Math.random()*2.2 + 1).toFixed(1);
+      s.style.width = size+'px';
+      s.style.height = size+'px';
+      s.style.left = left+'vw';
+      s.style.bottom = '-10px';
+      s.style.animationDelay = delay+'s';
+      s.style.animationDuration = dur+'s';
+      s.style.setProperty('--dx', dx);
+      dustEl.appendChild(s);
+    }
+
+    var fill = document.getElementById('trc-fill');
+    var pct = document.getElementById('trc-pct');
+    var preloader = document.getElementById('trc-preloader');
+    var p = 0;
+    var realDone = false;
+
+    function setProgress(v){
+      p = Math.max(p, Math.min(v, 100));
+      fill.style.width = p + '%';
+      pct.textContent = Math.round(p) + '%';
+    }
+
+    // fake but smooth progress while real assets load in the background
+    var ticker = setInterval(function(){
+      var cap = realDone ? 100 : 90;
+      if(p < cap){
+        setProgress(p + Math.random()*7 + 2);
+      }
+      if(p >= 100){
+        clearInterval(ticker);
+        finish();
+      }
+    }, 220);
+
+    window.addEventListener('load', function(){
+      realDone = true;
+    });
+
+    function finish(){
+      setTimeout(function(){
+        preloader.classList.add('trc-leaving');
+        document.body.classList.remove('trc-loading');
+        setTimeout(function(){
+          preloader.remove();
+        }, 850);
+      }, 300);
+    }
+  })();
+</script>
 </body>
 </html>

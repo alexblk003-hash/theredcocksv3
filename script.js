@@ -195,25 +195,13 @@
       entries.forEach(entry => {
         const sectionVideos = entry.target.querySelectorAll('video');
 
-        if(entry.isIntersecting) {
-          entry.target.classList.add('active');
-          // First time this section is seen: lock its cinematic entrance
-          // in place permanently (opacity/transform/blur settle to final
-          // state) so it never replays on later scroll-backs — only the
-          // much smaller .lux-exiting dimming (below) reverses.
-          entry.target.classList.add('lux-locked');
-          entry.target.classList.remove('lux-exiting');
+        // Replays every time the section enters/leaves the viewport —
+        // scrolling down AND scrolling back up — instead of only once.
+        entry.target.classList.toggle('active', entry.isIntersecting);
 
-          // Only decode/play videos for sections actually on screen
+        if (entry.isIntersecting) {
           sectionVideos.forEach(v => v.play().catch(() => {}));
         } else {
-          entry.target.classList.remove('active');
-          // Quiet, subtle "leaving" dim — only once it's already been
-          // revealed at least once; never applies before the first reveal.
-          if (entry.target.classList.contains('lux-locked')) {
-            entry.target.classList.add('lux-exiting');
-          }
-
           sectionVideos.forEach(v => v.pause());
         }
       });
@@ -232,7 +220,6 @@
         const rect = sec.getBoundingClientRect();
         if (rect.top < window.innerHeight && rect.bottom > 0) {
           sec.classList.add('active');
-          sec.classList.add('lux-locked');
         }
       });
     }, 1200);
