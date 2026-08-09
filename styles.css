@@ -2076,7 +2076,7 @@
       #cart-drawer {
         top: auto; left: 0; right: 0; bottom: 0;
         width: 100%;
-        max-height: 85vh;
+        max-height: 65vh;
         border-left: none;
         border-top: 1.5px solid rgba(74,36,24,0.5);
         border-radius: 22px 22px 0 0;
