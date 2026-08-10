@@ -1306,6 +1306,18 @@
     }
     .fan-track.is-dragging { cursor: grabbing; }
     .fan-track.is-snapping { transition: transform .42s cubic-bezier(.22,1,.36,1); }
+    /* While a finger/mouse is actively holding the drag, the active card
+       flips (is-active toggles) every time the ring crosses a new card
+       into "front" position. Left as-is, each flip still plays the full
+       .5s scale/opacity/filter transition below, so a slow manual drag
+       feels like it's fighting a queue of half-finished animations
+       instead of tracking the hand 1:1. Arrow taps and post-release
+       flicks only trigger ONE flip, so that .5s transition reads as an
+       intentional snap there — it's only the continuous mid-drag case
+       that needed instant (no-transition) card updates. */
+    .fan-carousel .fan-track.is-dragging .fan-card {
+      transition: none !important;
+    }
     .fan-card {
       position: absolute;
       top: 50%;
@@ -1539,7 +1551,7 @@
       animation: auroraDrift 16s ease-in-out infinite;
     }
     .fan-card .fan-art-ring {
-      position: absolute; top: 50%; left: 50%;
+      position: absolute; top: 42%; left: 50%;
       width: 118px; height: 118px;
       margin: -59px 0 0 -59px;
       border-radius: 999px;
@@ -1547,7 +1559,7 @@
     }
     .fan-card .fan-art-badge {
       --glow: #4A2418;
-      position: absolute; top: 50%; left: 50%;
+      position: absolute; top: 42%; left: 50%;
       width: 92px; height: 92px;
       margin: -46px 0 0 -46px;
       border-radius: 999px;
