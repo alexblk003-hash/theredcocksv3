@@ -4109,3 +4109,22 @@ body.trc-loading{ overflow:hidden; }
   #trc-preloader .trc-glass-card{ opacity:1; transform:none; }
   #trc-preloader .trc-particles{ display:none; }
 }
+
+/* ---------- Mobile fix: keep the 3D coverflow rotation, but the active
+   (front) card was being over-magnified by the perspective/translateZ
+   projection on narrow screens, pushing its text past the viewport
+   edges. We widen the base card to ~88vw (so it reads as the "perfect
+   size" ~90% width card at rest) and script.js now uses a much larger
+   perspective distance on mobile so that projection magnification stays
+   subtle instead of blowing the card up 2-3x. */
+@media (max-width: 640px) {
+  .fan-card {
+    width: 80vw;
+    max-width: 320px;
+    border-radius: 20px;
+  }
+  .fan-card .fan-media { aspect-ratio: 3 / 4; }
+  .fan-card .fan-panel { padding: 16px 20px 20px; }
+  .fan-card .fan-title { font-size: 16px; }
+  .fan-card .fan-sub { font-size: 11.5px; }
+}

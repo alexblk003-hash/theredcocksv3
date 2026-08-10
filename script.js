@@ -800,7 +800,15 @@
         function measureGeometry() {
           const cardWidth = cards[0].offsetWidth || 240;
           radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / count)) + 40;
-          root.style.perspective = Math.min(1200, Math.round(root.clientWidth * 1.25)) + 'px';
+          // On narrow/mobile viewports a small perspective distance sits
+          // too close to the translateZ radius, which magnifies the
+          // front card far beyond its CSS width (text overflows the
+          // screen edges). Use a much larger perspective there so the
+          // 3D rotation still reads, without blowing the active card up.
+          const isMobile = window.matchMedia('(max-width: 640px)').matches;
+          root.style.perspective = isMobile
+            ? Math.max(2400, Math.round(root.clientWidth * 7)) + 'px'
+            : Math.min(1200, Math.round(root.clientWidth * 1.25)) + 'px';
           cards.forEach((c, i) => {
             const angle = i * angleStep;
             c.style.setProperty('--fan-angle', angle + 'deg');
