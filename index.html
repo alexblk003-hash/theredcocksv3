@@ -651,15 +651,13 @@
 
           <!-- Video Aspect Ratio Frame (Guaranteed Visible on All Devices & Phones) -->
           <div class="relative w-full aspect-video rounded-[18px] sm:rounded-[28px] overflow-hidden bg-black shadow-2xl border border-pink-500/40">
-            <iframe 
-              src="https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=video_7_geh9ln&player%5Bautoplay%5D=true&player%5Bloop%5D=true&player%5Bmuted%5D=true&player%5Bcontrols%5D=false" 
-              class="absolute inset-0 w-full h-full border-0 rounded-[18px] sm:rounded-[28px]" 
+            <video
+              class="absolute inset-0 w-full h-full object-cover rounded-[18px] sm:rounded-[28px]"
               style="width: 100%; height: 100%; border: 0;"
-              allow="autoplay; fullscreen; encrypted-media; picture-in-picture" 
-              allowfullscreen 
-              loading="lazy" 
+              autoplay muted loop playsinline preload="metadata"
               title="THE RED COCKS - Pan India Vision Video">
-            </iframe>
+              <source src="assets/videos/video_7.mp4" type="video/mp4">
+            </video>
 
             <!-- Top Floating Live Badge -->
             <div class="absolute top-3 left-3 sm:top-4 sm:left-4 z-20 flex items-center gap-2 bg-black/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-pink-500/50 shadow-xl pointer-events-none">
@@ -874,6 +872,13 @@
         </div>
       </div>
       <div class="contact-trust-strip">
+        <span class="contact-trust-item"><span class="cti-dot"></span>Udyam MSME Registered</span>
+        <span class="contact-trust-item"><span class="cti-dot"></span>100% Organic Farm Sourcing</span>
+        <span class="contact-trust-item"><span class="cti-dot"></span>Express Cold-Chain Supply</span>
+        <span class="contact-trust-item"><span class="cti-dot"></span>Halal Method Followed</span>
+      </div>
+    </div>
+  </section>
   <!-- ── 🔪 CULINARY ARTISTRY SECTION (Chef Video & Premium Craftsmanship) ── -->
   <section id="culinary" data-theme-color="0x080205" data-intensity="2.4" class="scroll-section relative py-28 px-4 w-full border-t border-pink-600/20 overflow-hidden">
     <div class="max-w-7xl mx-auto">

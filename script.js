@@ -850,6 +850,7 @@
         // ---- pointer drag ----
         let isDragging = false, dragMoved = 0, lastX = 0, lastT = 0, velocity = 0;
         const DRAG_MULT = 0.16;
+        let dragRaf = null;
 
         track.addEventListener('pointerdown', (e) => {
           if (e.target.closest('.cart-add-btn')) return;
@@ -863,6 +864,13 @@
           track.setPointerCapture && e.pointerId != null && track.setPointerCapture(e.pointerId);
         });
 
+        // Rotation is applied on the next animation frame rather than
+        // straight off the raw pointermove — pointermove can fire far
+        // faster than the screen can paint, so writing the transform
+        // every single event just queues up redundant layout work and
+        // reads as stutter. Coalescing to one write per frame is what
+        // actually makes the orbit feel smooth while still tracking the
+        // finger 1:1.
         track.addEventListener('pointermove', (e) => {
           if (!isDragging) return;
           const now = performance.now();
@@ -873,13 +881,16 @@
           dragMoved += Math.abs(dx);
           lastX = e.clientX;
           lastT = now;
-          render();
+          if (!dragRaf) {
+            dragRaf = requestAnimationFrame(() => { dragRaf = null; render(); });
+          }
         });
 
         function endDrag() {
           if (!isDragging) return;
           isDragging = false;
           track.classList.remove('is-dragging');
+          if (dragRaf) { cancelAnimationFrame(dragRaf); dragRaf = null; }
           const projected = rotation + Math.max(-40, Math.min(40, velocity * 6));
           snapTo(Math.round(projected / angleStep) * angleStep, true);
         }
@@ -2169,43 +2180,7 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   'use strict';
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // 1. Tag all cards, grids, sections with spatial reveal system
-  function initSpatialTargets() {
-    var cards = document.querySelectorAll('.pro-glass-card, .fan-card, .chef-video-card-wrapper, .ceo-photocard, section .grid > div');
-    cards.forEach(function(el){
-      if (!el.classList.contains('fable-spatial-target')) {
-        el.classList.add('fable-spatial-target');
-        el.classList.add('fable-spatial-hidden');
-      }
-    });
-
-    var grids = document.querySelectorAll('section .grid, .fan-track');
-    grids.forEach(function(g){
-      g.classList.add('fable-stagger');
-    });
-  }
-
-  // 2. IntersectionObserver for 3D Spatial Entrance
-  function bindSpatialObserver() {
-    if (!('IntersectionObserver' in window)) return;
-    var obs = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if (entry.isIntersecting) {
-          entry.target.classList.remove('fable-spatial-hidden');
-          entry.target.classList.add('fable-spatial-in');
-        }
-      });
-    }, {
-      threshold: 0.12,
-      rootMargin: '0px 0px -50px 0px'
-    });
-
-    document.querySelectorAll('.fable-spatial-target').forEach(function(el){
-      obs.observe(el);
-    });
-  }
-
-  // 3. Interactive 3D Touch & Gyro Tilt Effect for Cards (Desktop mouse only to keep Mobile Android 60FPS)
+  // Interactive 3D Touch & Gyro Tilt Effect for Cards (Desktop mouse only to keep Mobile Android 60FPS)
   function bind3DTilt() {
     var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouchDevice) return; // Skip 3D card tilt on touch screens to guarantee butter-smooth Android scrolling
@@ -2238,8 +2213,6 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   }
 
   function boot() {
-    initSpatialTargets();
-    bindSpatialObserver();
     bind3DTilt();
   }
 

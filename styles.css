@@ -1305,7 +1305,7 @@
       user-select: none;
     }
     .fan-track.is-dragging { cursor: grabbing; }
-    .fan-track.is-snapping { transition: transform .6s cubic-bezier(.22,1,.36,1); }
+    .fan-track.is-snapping { transition: transform .42s cubic-bezier(.22,1,.36,1); }
     .fan-card {
       position: absolute;
       top: 50%;
@@ -4119,12 +4119,12 @@ body.trc-loading{ overflow:hidden; }
    subtle instead of blowing the card up 2-3x. */
 @media (max-width: 640px) {
   .fan-card {
-    width: 80vw;
-    max-width: 320px;
-    border-radius: 20px;
+    width: 56vw;
+    max-width: 208px;
+    border-radius: 18px;
   }
   .fan-card .fan-media { aspect-ratio: 3 / 4; }
-  .fan-card .fan-panel { padding: 16px 20px 20px; }
-  .fan-card .fan-title { font-size: 16px; }
-  .fan-card .fan-sub { font-size: 11.5px; }
+  .fan-card .fan-panel { padding: 12px 14px 16px; }
+  .fan-card .fan-title { font-size: 14px; }
+  .fan-card .fan-sub { font-size: 10.5px; }
 }
