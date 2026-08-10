@@ -2011,7 +2011,7 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
     }
   }
 
-  function setHeroMuted(muted) {
+  function setHeroMuted(muted, updateControl) {
     if (!heroIframe) return;
     heroCurrentlyMuted = muted;
     // Swap src parameter so Cloudinary video actually plays its original sound track
@@ -2019,8 +2019,19 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
     if (heroIframe.src !== newSrc) {
       heroIframe.src = newSrc;
     }
-    setSoundIcon(!muted);
+    if (updateControl !== false) setSoundIcon(!muted);
   }
+
+  // The entry slider is a genuine visitor interaction, so it can safely be
+  // used to begin the hero with sound. Reloading the Cloudinary embed here
+  // starts its loop at 0 instead of continuing the muted preloader playback.
+  // The sound control stays hidden: entering is the explicit audio choice.
+  window.trcEnterWithHeroSound = function() {
+    if (!heroIframe) return;
+    heroSoundWanted = true;
+    if (soundBtn) soundBtn.hidden = true;
+    setHeroMuted(false, false);
+  };
 
   if (soundBtn && heroIframe) {
     setSoundIcon(false);

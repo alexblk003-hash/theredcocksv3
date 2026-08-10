@@ -1455,6 +1455,10 @@
       function complete(){
         if (done) return;
         done = true;
+        // This runs directly inside the completed slide gesture. It grants
+        // the hero video permission to restart from the beginning with sound,
+        // without exposing or animating the sound button.
+        if (window.trcEnterWithHeroSound) window.trcEnterWithHeroSound();
         handle.style.transition = reduceMotion ? 'none' : 'transform .3s ease';
         fill.style.transition = reduceMotion ? 'none' : 'width .3s ease';
         render(maxX);
