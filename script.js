@@ -1930,16 +1930,8 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   if (checkoutBtn) {
     checkoutBtn.addEventListener('click', function(){
       if (!cart.length) return;
-      var lines = cart.map(function(it){
-        return '- ' + it.name + '  x' + it.qty + '  (' + formatINR(it.price * it.qty) + ')';
-      });
-      var subtotal = cart.reduce(function(sum, it){ return sum + it.price * it.qty; }, 0);
-      var body = 'Hello THE RED COCKS,\n\nI would like to enquire about the following:\n\n' +
-        lines.join('\n') + '\n\nPlease confirm availability, price and delivery details.\n';
-      var mailto = 'mailto:www.theredcocks@gmail.com' +
-        '?subject=' + encodeURIComponent('Product enquiry — THE RED COCKS') +
-        '&body=' + encodeURIComponent(body);
-      window.location.href = mailto;
+      var customOrderButton = document.querySelector('[data-open-custom-order]');
+      if (customOrderButton) customOrderButton.click();
     });
   }
 
@@ -2495,4 +2487,107 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
   }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
 
   targets.forEach(function (target) { observer.observe(target); });
+})();
+
+/* Guided custom order flow — local UI only; final confirmation happens on WhatsApp. */
+(function(){
+  'use strict';
+  var modal = document.getElementById('custom-order-modal');
+  if (!modal) return;
+  var chat = document.getElementById('custom-order-chat');
+  var actions = document.getElementById('custom-order-actions');
+  var summary = document.getElementById('custom-order-summary');
+  var progress = modal.querySelectorAll('.custom-order-progress span');
+  var selection = {};
+  var currentStage = 'products';
+  var ownerNumber = '917044662505';
+  var products = ['Eggs', 'Poultry', 'Poultry Cut Meat', 'Country Hen', 'Broiler Hen', 'Koyal Hen'];
+  var productsContainer = document.querySelector('#products .max-w-7xl');
+  if (productsContainer) productsContainer.appendChild(modal);
+
+  function setProgress(step){
+    progress.forEach(function(dot, i){ dot.classList.toggle('is-active', i <= step); });
+  }
+  function say(text){ chat.innerHTML = text; }
+  function options(items){
+    actions.className = 'custom-order-actions';
+    actions.innerHTML = items.map(function(item){
+      return '<button type="button" class="custom-choice' + (item.primary ? ' is-primary' : '') + '" data-custom-action="' + item.action + '" data-value="' + (item.value || '') + '">' + item.label + '</button>';
+    }).join('');
+  }
+  function open(){
+    modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false');
+    selection = {}; summary.hidden = true; chooseProduct();
+    setTimeout(function(){ modal.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 30);
+  }
+  function close(){ modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true'); }
+  function chooseProduct(){
+    currentStage = 'products';
+    setProgress(0); say('<strong>Hi, I\'m the Red Cocks order assistant.</strong><br>What would you like to customize today?');
+    actions.className = 'custom-order-actions custom-product-grid';
+    var icons = { 'Eggs':'&#9673;', 'Poultry':'&#10022;', 'Poultry Cut Meat':'&#10087;', 'Country Hen':'&#9825;', 'Broiler Hen':'&#9670;', 'Koyal Hen':'&#10041;' };
+    actions.innerHTML = products.map(function(product){ return '<button type="button" class="custom-choice custom-product-choice" data-custom-action="product" data-value="' + product + '"><span class="custom-choice-icon">' + icons[product] + '</span><span>' + product + '</span><small>Customize</small></button>'; }).join('');
+  }
+  function askWeight(){
+    currentStage = 'weight';
+    setProgress(1);
+    say('<strong>' + selection.product + '</strong> selected. Choose the required weight.');
+    actions.innerHTML = '<div class="custom-weight-control"><input id="custom-weight" type="range" min="1.5" max="100" step="0.5" value="1.5" aria-label="Select weight"><div><b id="custom-weight-value">1.5 kg</b><span>1.5 kg — 100 kg</span></div></div><button type="button" class="custom-choice is-primary" data-custom-action="weight-next">Continue with this weight</button><button type="button" class="custom-choice" data-custom-action="back">← Back</button>';
+  }
+  function askEggs(){
+    currentStage = 'eggs';
+    setProgress(1); say('<strong>Fresh Eggs</strong> selected. How many eggs would you like?');
+    options([10,20,30,40,50,60,80,100].map(function(q){ return {label: q + ' eggs', action: 'eggs', value: q}; }).concat([{label:'← Back', action:'back'}]));
+  }
+  function askColour(){
+    currentStage = 'colour';
+    setProgress(1); say('<strong>' + selection.product + '</strong> selected. Pick your preferred colour.');
+    options(['Red','Black','Gray','Mix colour'].map(function(c){ return {label:c, action:'colour', value:c}; }).concat([{label:'← Back', action:'back'}]));
+  }
+  function askCut(){
+    currentStage = 'cut';
+    setProgress(2); say('Would you like the meat <strong>machine cut</strong> or <strong>hand-cut with a knife</strong>?');
+    options([{label:'Machine cut',action:'cut',value:'Machine cut'},{label:'Hand-cut (knife)',action:'cut',value:'Hand-cut with knife'},{label:'← Back',action:'back'}]);
+  }
+  function review(){
+    currentStage = 'review';
+    setProgress(2);
+    var lines = ['<b>Product:</b> ' + selection.product];
+    if (selection.weight) lines.push('<b>Weight:</b> ' + selection.weight + ' kg');
+    if (selection.quantity) lines.push('<b>Quantity:</b> ' + selection.quantity + ' eggs');
+    if (selection.colour) lines.push('<b>Colour:</b> ' + selection.colour);
+    if (selection.cut) lines.push('<b>Preparation:</b> ' + selection.cut);
+    summary.innerHTML = lines.join('<br>'); summary.hidden = false;
+    say('<strong>Your request is ready.</strong><br>Tap Order now to speak with the owner and confirm availability, price and delivery.');
+    options([{label:'Order now — chat with owner', action:'whatsapp', primary:true},{label:'← Back', action:'back'},{label:'Start over', action:'restart'}]);
+  }
+  function contactOwner(){
+    var message = 'Hello THE RED COCKS, I would like to customize an order:\n\nProduct: ' + selection.product +
+      (selection.weight ? '\nWeight: ' + selection.weight + ' kg' : '') +
+      (selection.quantity ? '\nQuantity: ' + selection.quantity + ' eggs' : '') +
+      (selection.colour ? '\nColour: ' + selection.colour : '') +
+      (selection.cut ? '\nPreparation: ' + selection.cut : '') +
+      '\n\nPlease confirm availability, price and delivery. I understand payment is arranged directly, not online.';
+    window.open('https://wa.me/' + ownerNumber + '?text=' + encodeURIComponent(message), '_blank', 'noopener');
+  }
+  document.querySelectorAll('[data-open-custom-order]').forEach(function(button){ button.addEventListener('click', open); });
+  modal.querySelectorAll('[data-custom-close]').forEach(function(button){ button.addEventListener('click', close); });
+  actions.addEventListener('input', function(e){
+    if (e.target.id === 'custom-weight') {
+      document.getElementById('custom-weight-value').textContent = e.target.value + ' kg';
+    }
+  });
+  actions.addEventListener('click', function(e){
+    var button = e.target.closest('[data-custom-action]'); if (!button) return;
+    var action = button.getAttribute('data-custom-action'); var value = button.getAttribute('data-value');
+    if (action === 'product') { selection = { product: value }; if (value === 'Country Hen') { say('<strong>Country Hen orders are personally confirmed.</strong><br>Please chat with the owner for current availability and the best recommendation.'); setProgress(2); options([{label:'Chat with owner on WhatsApp',action:'whatsapp',primary:true},{label:'← Back',action:'back'}]); } else if (value === 'Eggs') askEggs(); else if (value === 'Broiler Hen' || value === 'Koyal Hen') askColour(); else askWeight(); }
+    if (action === 'weight-next') { var slider = document.getElementById('custom-weight'); selection.weight = slider.value; askCut(); }
+    if (action === 'eggs') { selection.quantity = value; review(); }
+    if (action === 'colour') { selection.colour = value; askWeight(); }
+    if (action === 'cut') { selection.cut = value; review(); }
+    if (action === 'whatsapp') contactOwner();
+    if (action === 'restart') { selection = {}; summary.hidden = true; chooseProduct(); }
+    if (action === 'back') { summary.hidden = true; if (currentStage === 'products' || selection.product === 'Country Hen') chooseProduct(); else if (currentStage === 'eggs') chooseProduct(); else if (currentStage === 'colour') chooseProduct(); else if (currentStage === 'weight') { if (selection.product === 'Broiler Hen' || selection.product === 'Koyal Hen') askColour(); else chooseProduct(); } else if (currentStage === 'cut') askWeight(); else if (currentStage === 'review') { if (selection.product === 'Eggs') askEggs(); else askCut(); } }
+  });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && modal.classList.contains('is-open')) close(); });
 })();

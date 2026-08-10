@@ -14,7 +14,7 @@
   <meta name="author" content="Aniruddha Mondal">
   <meta name="owner" content="Aniruddha Mondal">
   <meta name="copyright" content="THE RED COCKS - Founded by Aniruddha Mondal">
-  <meta name="description" content="THE RED COCKS is a poultry and meat business founded by Aniruddha Mondal and registered under Udyam MSME (UDYAM-WB-18-0206197).">
+  <meta name="description" content="Official website of THE RED COCKS, a Udyam MSME-registered poultry and meat business in Kolkata, West Bengal. Orders and delivery are confirmed directly; no online payment is accepted.">
   <meta name="theme-color" content="#14070c">
   <meta property="og:type" content="website">
   <meta property="og:title" content="THE RED COCKS | Poultry & Meat">
@@ -34,7 +34,7 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
+        "@type": "LocalBusiness",
         "@id": "https://theredcocks.top/#organization",
         "name": "THE RED COCKS",
         "legalName": "THE RED COCKS",
@@ -43,6 +43,19 @@
         "image": "https://res.cloudinary.com/dbpra7jk/image/upload/v1785942880/WhatsApp_Image_2026-08-05_at_8.30.55_PM_a2vgin.jpg",
         "description": "THE RED COCKS is a poultry and meat business registered under Udyam MSME (UDYAM-WB-18-0206197).",
         "email": "www.theredcocks@gmail.com",
+        "telephone": "+91-7044662505",
+        "priceRange": "₹₹",
+        "paymentAccepted": "Cash / hand-to-hand payment only; no online payment",
+        "areaServed": {
+          "@type": "AdministrativeArea",
+          "name": "Kolkata and South 24 Parganas, West Bengal"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+91-7044662505",
+          "contactType": "customer service",
+          "availableLanguage": ["English", "Hindi", "Bengali"]
+        },
         "sameAs": [
           "https://instagram.com/ik.aniii"
         ],
@@ -235,11 +248,29 @@
         <span>Subtotal</span>
         <span id="cart-subtotal-amount">Price on confirmation</span>
       </div>
-      <button id="cart-checkout-btn" type="button">Send enquiry by email</button>
-      <p class="cart-footnote">Availability, price and delivery details are confirmed by email.</p>
+      <button id="cart-checkout-btn" type="button">Customize your cart order</button>
+      <p class="cart-footnote">Choose weight, quantity, colour and cut preference first. WhatsApp opens only at the final step.</p>
     </div>
   </aside>
   <div id="cart-toast" role="status" aria-live="polite"></div>
+
+  <div id="custom-order-modal" class="custom-order-modal custom-order-inline" role="dialog" aria-modal="false" aria-labelledby="custom-order-title" aria-hidden="true">
+    <div class="custom-order-backdrop" data-custom-close></div>
+    <section class="custom-order-panel">
+      <div class="custom-order-glow custom-order-glow-one"></div><div class="custom-order-glow custom-order-glow-two"></div>
+      <button type="button" class="custom-order-close" data-custom-close aria-label="Close order assistant">&times;</button>
+      <div class="custom-order-head">
+        <div class="custom-order-brand"><span class="custom-order-avatar">TR</span><span><b>THE RED COCKS</b><small><i></i> Personal order concierge</small></span></div>
+        <span class="custom-order-eyebrow">Order assistant</span>
+        <h2 id="custom-order-title">Customize your order</h2>
+        <p>Tell us what you need. We will prepare your order details for a quick chat with the owner.</p>
+      </div>
+      <div class="custom-order-progress"><span class="is-active"></span><span></span><span></span></div>
+      <div class="custom-order-chat-wrap"><span class="custom-order-mini-avatar">TR</span><div id="custom-order-chat" class="custom-order-chat" aria-live="polite"></div></div>
+      <div id="custom-order-actions" class="custom-order-actions"></div>
+      <div id="custom-order-summary" class="custom-order-summary" hidden></div>
+    </section>
+  </div>
 
   <!-- ============================================================
        WEBSITE FAQ CHATBOT — no external API, fully self-contained.
@@ -339,8 +370,9 @@
           Product Selection
         </h2>
         <p class="text-gray-400 text-sm sm:text-base mt-3 max-w-2xl mx-auto tracking-wide">
-          Product availability and prices are confirmed directly by email.
+          Add your favourites to cart or build a made-to-order request with our order assistant.
         </p>
+        <button type="button" class="custom-order-launch" data-open-custom-order>Customize your order <span>&rarr;</span></button>
       </div>
       <div class="fan-carousel">
         <div class="fan-track">
@@ -359,78 +391,62 @@
             </div>
           </div>
           <div class="fan-card">
-            <span class="fan-tag">Pork Meat</span>
+            <span class="fan-tag">Poultry</span>
             <div class="fan-media">
-              <video muted loop playsinline preload="metadata" class="lazy-below-video">
-                <source src="assets/videos/video_5.mp4" type="video/mp4">
-              </video>
+              <img src="https://res.cloudinary.com/dbpra7jk/image/upload/v1786374679/WhatsApp_Image_2026-08-10_at_20.31.54_1_njfxtj.jpg" alt="Poultry" loading="lazy">
               <div class="fan-overlay"></div>
               <div class="fan-panel">
-                <div class="fan-title">Pork</div>
+                <div class="fan-title">Poultry</div>
                 <div class="fan-sub">Availability and price on confirmation.</div>
-                <button type="button" class="reserve-btn cart-add-btn" data-id="pork" data-name="Pork" data-tag="Pork">Add to Cart</button>
+                <button type="button" class="reserve-btn cart-add-btn" data-id="pork" data-name="Poultry" data-tag="Poultry">Add to Cart</button>
 </div>
             </div>
           </div>
           <div class="fan-card">
-            <span class="fan-tag">Chicken Meat</span>
+            <span class="fan-tag">Poultry Cut Meat</span>
             <div class="fan-media">
-              <video muted loop playsinline preload="metadata" class="lazy-below-video">
-                <source src="assets/videos/video_3.mp4" type="video/mp4">
-              </video>
+              <img src="https://res.cloudinary.com/dbpra7jk/image/upload/v1786374679/WhatsApp_Image_2026-08-10_at_20.31.54_b5epz3.jpg" alt="Poultry Cut Meat" loading="lazy">
               <div class="fan-overlay"></div>
               <div class="fan-panel">
-                <div class="fan-title">Chicken</div>
+                <div class="fan-title">Poultry Cut Meat</div>
                 <div class="fan-sub">Availability and price on confirmation.</div>
-                <button type="button" class="reserve-btn cart-add-btn" data-id="chicken" data-name="Chicken" data-tag="Chicken Meat">Add to Cart</button>
+                <button type="button" class="reserve-btn cart-add-btn" data-id="chicken" data-name="Poultry Cut Meat" data-tag="Poultry Cut Meat">Add to Cart</button>
 </div>
             </div>
           </div>
           <div class="fan-card">
-            <span class="fan-tag">Chicken Meat</span>
+            <span class="fan-tag">Broiler Hen</span>
             <div class="fan-media">
-              <iframe
-                src="https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=video_201e013075be_oyx6ns&autoplay=true&muted=true&loop=true&controls=false"
-                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                loading="lazy"
-              ></iframe>
+              <img src="https://res.cloudinary.com/dbpra7jk/image/upload/v1786374680/WhatsApp_Image_2026-08-10_at_20.31.53_euboj6.jpg" alt="Broiler Hen" loading="lazy">
               <div class="fan-overlay"></div>
               <div class="fan-panel">
-                <div class="fan-title">Chicken</div>
+                <div class="fan-title">Broiler Hen</div>
                 <div class="fan-sub">Availability and price on confirmation.</div>
-                <button type="button" class="reserve-btn cart-add-btn" data-id="chicken-cut" data-name="Chicken (cut request)" data-tag="Chicken Meat">Add to Cart</button>
+                <button type="button" class="reserve-btn cart-add-btn" data-id="chicken-cut" data-name="Broiler Hen (cut request)" data-tag="Broiler Hen">Add to Cart</button>
 </div>
             </div>
           </div>
           <div class="fan-card">
-            <span class="fan-tag">Pork Meat</span>
+            <span class="fan-tag">Koyal Hen</span>
             <div class="fan-media">
-              <iframe
-                src="https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=video_0c6e7e358d7f_rnqpv3&autoplay=true&muted=true&loop=true&controls=false"
-                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                loading="lazy"
-              ></iframe>
+              <img src="https://res.cloudinary.com/dbpra7jk/image/upload/v1786374679/WhatsApp_Image_2026-08-10_at_20.31.53_1_uylquh.jpg" alt="Koyal Hen" loading="lazy">
               <div class="fan-overlay"></div>
               <div class="fan-panel">
-                <div class="fan-title">Pork</div>
+                <div class="fan-title">Koyal Hen</div>
                 <div class="fan-sub">Availability and price on confirmation.</div>
-                <button type="button" class="reserve-btn cart-add-btn" data-id="pork-cut" data-name="Pork (cut request)" data-tag="Pork Meat">Add to Cart</button>
+                <button type="button" class="reserve-btn cart-add-btn" data-id="pork-cut" data-name="Koyal Hen (cut request)" data-tag="Koyal Hen">Add to Cart</button>
 </div>
             </div>
           </div>
           <div class="fan-card">
-            <span class="fan-tag">Eggs</span>
+            <span class="fan-tag">Country Hen</span>
             <div class="fan-media">
-              <iframe
-                src="https://player.cloudinary.com/embed/?cloud_name=dbpra7jk&public_id=video_20aa91bed6e6_e5p4ch&autoplay=true&muted=true&loop=true&controls=false"
-                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                loading="lazy"
-              ></iframe>
+              <img src="https://res.cloudinary.com/dbpra7jk/image/upload/v1786374692/Screenshot_2026-08-10_204058_wzacxt.png" alt="Country Hen" loading="lazy">
               <div class="fan-overlay"></div>
               <div class="fan-panel">
-                <div class="fan-title">Eggs</div>
+                <div class="fan-title">Country Hen</div>
                 <div class="fan-sub">Availability and price on confirmation.</div>
-                <button type="button" class="reserve-btn cart-add-btn" data-id="eggs-enquiry" data-name="Eggs (enquiry)" data-tag="Eggs">Add to Cart</button>
+                <button type="button" class="reserve-btn cart-add-btn" data-id="eggs-enquiry" data-name="Country Hen (enquiry)" data-tag="Country Hen">Add to Cart</button>
 </div>
             </div>
           </div>
@@ -1269,10 +1285,12 @@
         </div>
         <div>
           <span class="block text-white font-black text-xs uppercase tracking-widest mb-4">Get In Touch</span>
+          <a href="https://wa.me/917044662505" target="_blank" rel="noopener noreferrer" class="block mb-3 text-xs sm:text-sm text-pink-300 hover:text-white transition-colors">WhatsApp / Call: 7044662505</a>
           <ul class="flex flex-col gap-3 text-xs sm:text-sm text-gray-400">
             <li>📍 Kolkata, West Bengal, South 24 Parganas, 700149</li>
             <li>✉️ www.theredcocks@gmail.com</li>
           </ul>
+          <a href="policies.html#payment" class="footer-payment-note">Secure order policy: no online payment. Payment is arranged directly, hand-to-hand only.</a>
         </div>
       </div>
       <div class="mt-12 pt-8 border-t border-pink-600/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
