@@ -654,12 +654,11 @@
     if ('IntersectionObserver' in window) {
       const headingObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            headingObserver.unobserve(entry.target);
-          }
+          // Toggle instead of unobserving so the reveal feels alive in both
+          // directions: it replays naturally when the user comes back up.
+          entry.target.classList.toggle('in-view', entry.isIntersecting);
         });
-      }, { threshold: 0.4 });
+      }, { threshold: 0.28, rootMargin: '0px 0px -8% 0px' });
       headings.forEach((h) => headingObserver.observe(h));
     } else {
       headings.forEach((h) => h.classList.add('in-view'));
@@ -701,12 +700,9 @@
       } else if ('IntersectionObserver' in window) {
         const itemObserver = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('in-view');
-              itemObserver.unobserve(entry.target);
-            }
+            entry.target.classList.toggle('in-view', entry.isIntersecting);
           });
-        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        }, { threshold: 0.12, rootMargin: '0px 0px -10% 0px' });
         revealItems.forEach((el) => itemObserver.observe(el));
       } else {
         revealItems.forEach((el) => el.classList.add('in-view'));
@@ -907,7 +903,26 @@
         if (prevBtn) prevBtn.addEventListener('click', () => rotateToCard(currentIndex() + 1));
         if (nextBtn) nextBtn.addEventListener('click', () => rotateToCard(currentIndex() - 1));
 
-        window.addEventListener('resize', measureGeometry);
+        // Smooth wheel/trackpad navigation: one gentle card step per gesture.
+        let wheelLock = false;
+        let wheelAccum = 0;
+        root.addEventListener('wheel', (e) => {
+          const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+          if (!delta) return;
+          // Only hijack the wheel when the gesture is meaningfully horizontal
+          // or the pointer is over the carousel; this keeps page scrolling natural.
+          if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) && Math.abs(e.deltaY) < 18) return;
+          e.preventDefault();
+          wheelAccum += delta;
+          if (wheelLock || Math.abs(wheelAccum) < 24) return;
+          const direction = wheelAccum > 0 ? 1 : -1;
+          wheelAccum = 0;
+          wheelLock = true;
+          rotateToCard(currentIndex() - direction);
+          window.setTimeout(() => { wheelLock = false; }, reduceMotion ? 40 : 360);
+        }, { passive: false });
+
+        window.addEventListener('resize', measureGeometry, { passive: true });
 
         requestAnimationFrame(measureGeometry);
       });
@@ -2601,4 +2616,125 @@ window.HERITAGE_FRAMES=["assets/images/heritage-seq/frame_001.webp", "assets/ima
     if (action === 'back') { summary.hidden = true; if (currentStage === 'products' || selection.product === 'Country Hen') chooseProduct(); else if (currentStage === 'eggs') chooseProduct(); else if (currentStage === 'colour') chooseProduct(); else if (currentStage === 'weight') { if (selection.product === 'Broiler Hen' || selection.product === 'Koyal Hen') askColour(); else chooseProduct(); } else if (currentStage === 'cut') askWeight(); else if (currentStage === 'review') { if (selection.product === 'Eggs') askEggs(); else askCut(); } }
   });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && modal.classList.contains('is-open')) close(); });
+})();
+
+
+/* ============================================================
+   APPOINTMENT BOOKING -> WHATSAPP
+   ============================================================ */
+(function initAppointmentBooking() {
+  const openBtn = document.getElementById('appointment-open-btn');
+  const modal = document.getElementById('appointment-modal');
+  const closeBtn = document.getElementById('appointment-close-btn');
+  const form = document.getElementById('appointment-form');
+  const dateInput = document.getElementById('appointment-date');
+  const timeInput = document.getElementById('appointment-time');
+  const summary = document.getElementById('appointment-summary-value');
+
+  if (!openBtn || !modal || !closeBtn || !form || !dateInput || !timeInput) return;
+
+  const whatsappNumber = '917044662505';
+
+  function getLocalDateISO() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  dateInput.min = getLocalDateISO();
+
+  function updateSummary() {
+    if (!dateInput.value || !timeInput.value) {
+      summary.textContent = 'Choose a date and time';
+      return;
+    }
+
+    const date = new Date(`${dateInput.value}T${timeInput.value}:00`);
+    const formattedDate = new Intl.DateTimeFormat('en-IN', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    }).format(date);
+
+    summary.textContent = `${formattedDate} at ${timeInput.value}`;
+  }
+
+  function openModal() {
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('appointment-open');
+    dateInput.min = getLocalDateISO();
+
+    if (!dateInput.value) dateInput.value = dateInput.min;
+    if (!timeInput.value) timeInput.value = '10:00';
+
+    updateSummary();
+    window.setTimeout(() => dateInput.focus(), 80);
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('appointment-open');
+    openBtn.focus();
+  }
+
+  openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+
+  modal.querySelectorAll('[data-appointment-close]').forEach(el => {
+    el.addEventListener('click', closeModal);
+  });
+
+  dateInput.addEventListener('change', updateSummary);
+  timeInput.addEventListener('change', updateSummary);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+      closeModal();
+    }
+  });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const dateValue = dateInput.value;
+    const timeValue = timeInput.value;
+
+    if (!dateValue || !timeValue) {
+      form.reportValidity();
+      return;
+    }
+
+const [hours, minutes] = timeValue.split(':').map(Number);
+const totalMinutes = hours * 60 + minutes;
+
+if (totalMinutes < 360 || totalMinutes >= 1380) {
+      alert("Sorry, we can't accept appointments at this time. Please choose a time between 6:00 AM and 10:59 PM.");
+      return;
+    }
+
+    const selected = new Date(`${dateValue}T${timeValue}:00`);
+
+    const formattedDate = new Intl.DateTimeFormat('en-IN', {
+      weekday: 'long',
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    }).format(selected);
+
+    const message = encodeURIComponent(
+      `Hello THE RED COCKS!\n\n` +
+      `I would like to book an appointment.\n\n` +
+      `Date: ${formattedDate}\n` +
+      `Time: ${timeValue}\n\n` +
+      `Please confirm my appointment for this date and time.`
+    );
+
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    closeModal();
+  });
 })();

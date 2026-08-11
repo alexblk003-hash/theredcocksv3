@@ -1186,25 +1186,45 @@
       #products .product-live-pill .dot { animation: none; }
     }
 
-    /* CINEMATIC SECTION REVEAL — strong zoom-in every time the section
-       enters the viewport (scrolling down OR back up), not just once.
-       Kept to opacity + transform only (no blur/filter) since those two
-       are the only GPU-composited properties that stay smooth on cheap
-       phone GPUs — this is what keeps it light enough for budget devices
-       even though it replays on every pass. */
+    /* AWARD-LEVEL SCROLL REVEAL — cinematic but restrained.
+       Sections enter with a tiny depth shift, scale settle and a soft
+       focus transition. The old scale(.4) made the whole page feel like
+       it was zooming from far away; this keeps the content grounded while
+       still giving every section a premium reveal. Standalone transform
+       properties avoid fighting with existing card transforms. */
     .scroll-section {
       opacity: 0;
-      transform: scale(0.4);
-      transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform, opacity;
+      translate: 0 34px;
+      scale: .985;
+      filter: blur(5px);
+      transition:
+        opacity 900ms cubic-bezier(.16,1,.3,1),
+        translate 1000ms cubic-bezier(.16,1,.3,1),
+        scale 1000ms cubic-bezier(.16,1,.3,1),
+        filter 900ms cubic-bezier(.16,1,.3,1);
+      will-change: opacity, translate, scale, filter;
     }
-    .scroll-section.active { opacity: 1; transform: scale(1); }
+    .scroll-section.active {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+      filter: blur(0);
+    }
+    @media (max-width: 768px) {
+      .scroll-section {
+        translate: 0 22px;
+        scale: .992;
+        filter: blur(3px);
+        transition-duration: 760ms;
+      }
+    }
     @media (prefers-reduced-motion: reduce) {
       .scroll-section,
       .scroll-section.active {
         opacity: 1 !important;
-        transform: none !important;
+        translate: 0 0 !important;
+        scale: 1 !important;
+        filter: none !important;
         transition: none !important;
       }
     }
@@ -1474,6 +1494,25 @@
     .fan-card.is-active .fan-panel {
       opacity: 1;
       transform: translateY(0);
+    }
+    /* Selected card: subtle lift + premium glow. Only the centered card gets this. */
+    .fan-carousel .fan-track .fan-card.is-active {
+      transform: translate(-50%, -50%) rotateY(var(--fan-angle, 0deg)) translateZ(var(--fan-radius, 260px)) translateY(-8px) scale(1.035) !important;
+      border-color: rgba(191,130,86,.82);
+      box-shadow:
+        0 22px 55px -14px rgba(74,36,24,.72),
+        0 0 24px rgba(191,130,86,.24),
+        0 0 0 1px rgba(191,130,86,.22) inset,
+        0 0 42px rgba(74,36,24,.18);
+    }
+    .fan-carousel .fan-track.is-dragging .fan-card.is-active {
+      transform: translate(-50%, -50%) rotateY(var(--fan-angle, 0deg)) translateZ(var(--fan-radius, 260px)) translateY(-5px) scale(1.02) !important;
+      box-shadow:
+        0 18px 42px -14px rgba(74,36,24,.58),
+        0 0 18px rgba(191,130,86,.18);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fan-carousel .fan-track .fan-card { transition-duration: .01ms !important; }
     }
     .fan-nav {
       display: flex;
@@ -2350,24 +2389,48 @@
     }
     @keyframes heroLetterIn { to { opacity: 1; transform: translateY(0) rotateX(0deg); } }
 
-    /* ── Generic scroll-word-reveal for section headings ── */
+    /* ── Premium word reveal for section headings ── */
     .reveal-words span {
-      display: inline-block; opacity: 0; transform: translateY(0.5em);
-      filter: blur(4px);
-      transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1), filter 0.6s ease;
+      display: inline-block;
+      opacity: 0;
+      translate: 0 .55em;
+      scale: .985;
+      filter: blur(5px);
+      transition:
+        opacity 700ms cubic-bezier(.16,1,.3,1),
+        translate 800ms cubic-bezier(.16,1,.3,1),
+        scale 800ms cubic-bezier(.16,1,.3,1),
+        filter 700ms cubic-bezier(.16,1,.3,1);
     }
-    .reveal-words.in-view span { opacity: 1; transform: translateY(0); filter: blur(0); }
+    .reveal-words.in-view span {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+      filter: blur(0);
+    }
 
-    /* ── Generic staggered "rise + fade in" for cards, badges, grid items,
-         FAQ rows, footer columns — applied broadly so every section has
-         scroll-driven motion, not just the section container itself. ── */
+    /* ── Premium staggered reveal for cards, badges, grids and FAQ rows.
+         Uses compositor-friendly individual transform properties so an
+         existing card transform is not overwritten. ── */
     .reveal-up {
       opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
-      transition-delay: calc(var(--d, 0) * 0.09s);
+      translate: 0 30px;
+      scale: .975;
+      filter: blur(4px);
+      transition:
+        opacity 720ms cubic-bezier(.16,1,.3,1),
+        translate 820ms cubic-bezier(.16,1,.3,1),
+        scale 820ms cubic-bezier(.16,1,.3,1),
+        filter 720ms cubic-bezier(.16,1,.3,1);
+      transition-delay: calc(var(--d, 0) * 75ms);
+      will-change: opacity, translate, scale, filter;
     }
-    .reveal-up.in-view { opacity: 1; transform: translateY(0); }
+    .reveal-up.in-view {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+      filter: blur(0);
+    }
 
     /* ── "POP UP" ON SCROLL for every video / cover / description / info
          card (product cards, the about/CEO video frames, testimonial &
@@ -2395,8 +2458,8 @@
       #cursor-dot, #cursor-ring, #cursor-glow { display: none !important; }
       html.has-custom-cursor, html.has-custom-cursor * { cursor: auto !important; }
       .hero-letters span, #preloader-word span { opacity: 1 !important; transform: none !important; animation: none !important; }
-      .reveal-words span { opacity: 1 !important; transform: none !important; filter: none !important; }
-      .reveal-up { opacity: 1 !important; transform: none !important; transition: none !important; }
+      .reveal-words span { opacity: 1 !important; translate: 0 0 !important; scale: 1 !important; filter: none !important; transition: none !important; }
+      .reveal-up { opacity: 1 !important; translate: 0 0 !important; scale: 1 !important; filter: none !important; transition: none !important; }
     }
 
     /* ================= GLOW ICON BADGE (universal) =================
@@ -4168,3 +4231,1190 @@ body.trc-loading{ overflow:hidden; }
   .fan-card .fan-title { font-size: 14px; }
   .fan-card .fan-sub { font-size: 10.5px; }
 }
+
+
+/* ============================================================
+   APPOINTMENT BOOKING
+   ============================================================ */
+.trc-appointment-link {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+}
+
+.trc-appointment-link:hover,
+.trc-appointment-link:focus-visible {
+  color: #f2f2f2;
+}
+
+.trc-appointment-link:focus-visible {
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+  border-radius: 10px;
+}
+
+.appointment-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .28s ease, visibility .28s ease;
+}
+
+.appointment-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.appointment-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.appointment-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 520px);
+  max-height: min(90vh, 720px);
+  overflow: auto;
+  padding: 34px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(168,67,46,.18), transparent 35%),
+    linear-gradient(160deg, rgba(30,10,16,.96), rgba(8,3,6,.98));
+  border: 1px solid rgba(192,138,82,.42);
+  box-shadow:
+    0 35px 100px rgba(0,0,0,.8),
+    0 0 60px rgba(168,67,46,.18),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  transform: translateY(18px) scale(.98);
+  transition: transform .32s cubic-bezier(.16,1,.3,1);
+}
+
+.appointment-modal.is-open .appointment-card {
+  transform: translateY(0) scale(1);
+}
+
+.appointment-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+  color: #fff;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.appointment-close:hover {
+  background: rgba(255,255,255,.12);
+  transform: rotate(90deg);
+}
+
+.appointment-kicker {
+  color: #d9b98a;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.appointment-title {
+  margin: 0;
+  color: #fff;
+  font-family: 'Cinzel', 'Game Of Squids', serif !important;
+  font-size: clamp(25px, 6vw, 36px);
+  line-height: 1.15;
+  letter-spacing: .06em;
+}
+
+.appointment-subtitle {
+  margin: 12px 0 24px;
+  color: rgba(255,255,255,.68);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.appointment-form {
+  display: grid;
+  gap: 16px;
+}
+
+.appointment-field {
+  display: grid;
+  gap: 8px;
+}
+
+.appointment-field > span {
+  color: rgba(255,255,255,.78);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.appointment-field input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 14px;
+  border-radius: 13px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.055);
+  color: #fff;
+  outline: none;
+  color-scheme: dark;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.appointment-field input:focus {
+  border-color: rgba(192,138,82,.7);
+  background: rgba(255,255,255,.075);
+  box-shadow: 0 0 0 3px rgba(168,67,46,.13);
+}
+
+.appointment-summary {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 13px;
+  background: rgba(168,67,46,.08);
+  border: 1px solid rgba(168,67,46,.2);
+}
+
+.appointment-summary span {
+  color: rgba(255,255,255,.48);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.appointment-summary strong {
+  color: #f5dfbd;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.appointment-confirm-btn {
+  min-height: 52px;
+  border: 0;
+  border-radius: 14px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: linear-gradient(135deg, #4A2418, #A8432E 55%, #C08A52);
+  color: #fff;
+  font-family: 'Cinzel', serif !important;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 10px 35px rgba(168,67,46,.28), inset 0 1px 0 rgba(255,255,255,.25);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.appointment-confirm-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 42px rgba(168,67,46,.42), inset 0 1px 0 rgba(255,255,255,.3);
+}
+
+.appointment-confirm-btn:active {
+  transform: scale(.98);
+}
+
+.appointment-note {
+  margin: 0;
+  text-align: center;
+  color: rgba(255,255,255,.42);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.appointment-note strong {
+  color: rgba(255,255,255,.7);
+}
+
+body.appointment-open {
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .appointment-modal {
+    align-items: flex-end;
+    padding: 10px;
+  }
+
+  .appointment-card {
+    width: 100%;
+    max-height: 92vh;
+    padding: 28px 20px 22px;
+    border-radius: 22px;
+  }
+
+  .appointment-title {
+    padding-right: 36px;
+  }
+
+  .trc-appointment-link .trc-icon {
+    width: clamp(18px, 5vw, 20px);
+    height: clamp(18px, 5vw, 20px);
+  }
+}
+
+
+/* Compact glowing appointment icon */
+.trc-appointment-link {
+  position: relative;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+}
+.trc-appointment-link .appointment-glow-icon {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #f2a65a;
+  background: rgba(242, 166, 90, .08);
+  border: 1px solid rgba(242, 166, 90, .45);
+  box-shadow: 0 0 8px rgba(242,166,90,.35), 0 0 18px rgba(242,166,90,.15);
+  animation: appointmentIconGlow 2s ease-in-out infinite;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.trc-appointment-link .appointment-glow-icon svg { width: 17px; height: 17px; }
+.trc-appointment-link:hover .appointment-glow-icon,
+.trc-appointment-link:focus-visible .appointment-glow-icon {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(242,166,90,.7), 0 0 26px rgba(242,166,90,.3);
+}
+@keyframes appointmentIconGlow {
+  0%, 100% { box-shadow: 0 0 7px rgba(242,166,90,.28), 0 0 16px rgba(242,166,90,.12); }
+  50% { box-shadow: 0 0 12px rgba(242,166,90,.65), 0 0 26px rgba(242,166,90,.28); }
+}
+@media (max-width: 700px) {
+  .trc-appointment-link { width: 40px; min-width: 40px; height: 40px; }
+  .trc-appointment-link .appointment-glow-icon { width: 28px; height: 28px; }
+}
+
+
+
+/* ============================================================
+   PROVENANCE — EDITORIAL / NEWSPAPER V2
+   Visual-only treatment. Existing text, colors and video remain.
+   ============================================================ */
+.provenance-newspaper{
+  --news-rule: rgba(218,190,151,.28);
+  --news-rule-soft: rgba(255,255,255,.10);
+  --news-paper: rgba(28,18,15,.32);
+  position:relative !important;
+  overflow:hidden !important;
+  isolation:isolate;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(192,138,82,.075), transparent 28%),
+    radial-gradient(circle at 88% 72%, rgba(168,67,46,.055), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 5px);
+}
+
+/* A restrained newspaper frame around the entire spread. */
+.provenance-newspaper::before{
+  content:"";
+  position:absolute;
+  inset:24px;
+  border-top:1px solid var(--news-rule);
+  border-bottom:1px solid var(--news-rule);
+  pointer-events:none;
+  z-index:0;
+}
+
+.provenance-newspaper::after{
+  content:"THE RED COCKS  •  PROVENANCE EDITION  •  VERIFIED ARCHIVE";
+  position:absolute;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  padding:0 16px;
+  font:600 8px/1.4 "JetBrains Mono","Courier New",monospace;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:rgba(218,190,151,.62);
+  background:#070506;
+  z-index:2;
+}
+
+/* Editorial rules across the content area. */
+.provenance-newspaper > .max-w-6xl{
+  position:relative;
+  padding-top:34px;
+  padding-bottom:34px;
+}
+
+.provenance-newspaper > .max-w-6xl::before,
+.provenance-newspaper > .max-w-6xl::after{
+  content:"";
+  display:block;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--news-rule), transparent);
+}
+
+.provenance-newspaper > .max-w-6xl::before{
+  margin-bottom:34px;
+}
+
+.provenance-newspaper > .max-w-6xl::after{
+  margin-top:34px;
+}
+
+/* Turn the main row into an editorial spread. */
+.provenance-newspaper > .max-w-6xl > .flex{
+  display:grid !important;
+  grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr) !important;
+  align-items:start !important;
+  gap:clamp(28px,5vw,72px) !important;
+  margin-bottom:0 !important;
+}
+
+/* Left article column. */
+.provenance-newspaper > .max-w-6xl > .flex > .w-full:first-child{
+  position:relative;
+  padding-right:clamp(18px,3vw,44px);
+  border-right:1px solid var(--news-rule);
+}
+
+.provenance-newspaper > .max-w-6xl > .flex > .w-full:first-child::before{
+  content:"01  /  PROVENANCE";
+  display:block;
+  margin-bottom:16px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--news-rule-soft);
+  font:700 9px/1 "JetBrains Mono","Courier New",monospace;
+  letter-spacing:.24em;
+  color:rgba(218,190,151,.58);
+}
+
+/* Make the badge read like an editorial kicker instead of a pill. */
+.provenance-newspaper > .max-w-6xl > .flex > .w-full:first-child > div:first-child{
+  display:inline-block;
+  border-radius:0 !important;
+  background:transparent !important;
+  border-left:0 !important;
+  border-right:0 !important;
+  border-top:1px solid rgba(192,138,82,.55) !important;
+  border-bottom:1px solid rgba(192,138,82,.55) !important;
+  box-shadow:none !important;
+  padding:8px 0 !important;
+  margin-bottom:18px !important;
+}
+
+/* Editorial headline treatment without changing its existing color. */
+.provenance-newspaper > .max-w-6xl > .flex > .w-full:first-child h2{
+  font-family:"Playfair Display",Georgia,serif !important;
+  font-weight:800 !important;
+  letter-spacing:.035em !important;
+  line-height:.98 !important;
+  margin-bottom:24px !important;
+  max-width:11ch;
+}
+
+/* Article copy gets a newspaper-like measure. */
+.provenance-newspaper > .max-w-6xl > .flex > .w-full:first-child > .flex.gap-4{
+  max-width:62ch;
+  padding-top:16px;
+  border-top:1px solid var(--news-rule-soft);
+  position:relative;
+}
+
+.provenance-newspaper > .max-w-6xl > .flex > .w-full:first-child > .flex.gap-4::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-14px;
+  border-bottom:1px solid var(--news-rule-soft);
+}
+
+/* Dossier becomes a framed newspaper information box. */
+.provenance-newspaper .heritage-plate{
+  border-radius:2px !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.018), transparent 18%, transparent 82%, rgba(255,255,255,.018)),
+    rgba(17,10,10,.72) !important;
+  border:1px solid var(--news-rule) !important;
+  box-shadow:inset 0 0 0 5px rgba(255,255,255,.012), 0 18px 50px rgba(0,0,0,.20) !important;
+  margin-top:30px;
+}
+
+.provenance-newspaper .heritage-row{
+  border-radius:0 !important;
+}
+
+/* Video becomes the right-hand newspaper photo plate. */
+.provenance-newspaper > .max-w-6xl > .flex > .w-full:last-child{
+  position:relative;
+  padding-top:34px;
+}
+
+.provenance-newspaper > .max-w-6xl > .flex > .w-full:last-child::before{
+  content:"02  /  VISUAL RECORD";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--news-rule);
+  font:700 9px/1 "JetBrains Mono","Courier New",monospace;
+  letter-spacing:.24em;
+  color:rgba(218,190,151,.58);
+}
+
+.provenance-newspaper .ceo-photocard{
+  border:1px solid var(--news-rule);
+  padding:10px;
+  background:rgba(12,8,8,.72);
+  box-shadow:0 24px 60px rgba(0,0,0,.30);
+}
+
+.provenance-newspaper .ceo-photocard::after{
+  content:"THE RED COCKS  •  CERTIFIED STANDARD";
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:10px;
+  height:26px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(4,3,3,.78);
+  border-top:1px solid rgba(218,190,151,.28);
+  font:600 8px/1 "JetBrains Mono","Courier New",monospace;
+  letter-spacing:.18em;
+  color:rgba(255,255,255,.72);
+  pointer-events:none;
+}
+
+/* Keep the existing video fully visible; only frame it. */
+.provenance-newspaper .ceo-photocard video{
+  filter:saturate(.96) contrast(1.02);
+}
+
+/* Editorial drop-cap-like emphasis, while preserving the paragraph color. */
+.provenance-newspaper > .max-w-6xl > .flex > .w-full:first-child > .flex.gap-4 p{
+  text-align:left;
+  text-wrap:pretty;
+}
+
+/* Mobile: turn the spread into a single clean newspaper column. */
+@media (max-width:900px){
+  .provenance-newspaper::before{inset:14px;}
+  .provenance-newspaper::after{
+    font-size:7px;
+    letter-spacing:.16em;
+    max-width:90vw;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex{
+    grid-template-columns:1fr !important;
+    gap:38px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex > .w-full:first-child{
+    padding-right:0;
+    border-right:0;
+    border-bottom:1px solid var(--news-rule);
+    padding-bottom:34px;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex > .w-full:first-child h2{
+    max-width:none;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex > .w-full:last-child{
+    padding-top:34px;
+  }
+}
+
+@media (max-width:560px){
+  .provenance-newspaper::before{inset:10px;}
+  .provenance-newspaper > .max-w-6xl{
+    padding-top:28px;
+    padding-bottom:28px;
+  }
+  .provenance-newspaper > .max-w-6xl > .flex > .w-full:first-child h2{
+    font-size:clamp(2rem,11vw,3rem) !important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .provenance-newspaper *,
+  .provenance-newspaper *::before,
+  .provenance-newspaper *::after{
+    scroll-behavior:auto !important;
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+}
+
+
+
+/* ============================================================
+   PROVENANCE — ACTUAL NEWSPAPER PAGE / EDITORIAL SPREAD
+   ============================================================ */
+
+.provenance-newspaper{
+  position:relative !important;
+  overflow:hidden !important;
+  isolation:isolate;
+  padding:clamp(22px,4vw,54px) 0 !important;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,220,170,.055), transparent 30%),
+    radial-gradient(circle at 85% 90%, rgba(122,62,34,.08), transparent 35%),
+    linear-gradient(180deg, rgba(30,23,21,.96), rgba(13,10,10,.98)) !important;
+}
+
+/* The page of paper: visible edges, rules and print-like grain. */
+.provenance-newspaper > .max-w-6xl{
+  position:relative !important;
+  max-width:min(1180px, calc(100% - 32px)) !important;
+  padding:clamp(22px,3.5vw,48px) clamp(20px,4vw,58px) !important;
+  border:1px solid rgba(218,190,151,.38);
+  background:
+    linear-gradient(rgba(255,255,255,.018) 50%, transparent 50%) 0 0/100% 4px,
+    radial-gradient(rgba(255,255,255,.025) .6px, transparent .7px) 0 0/5px 5px,
+    rgba(19,14,13,.94);
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.36),
+    inset 0 0 0 1px rgba(255,255,255,.025);
+}
+
+/* Double newspaper border. */
+.provenance-newspaper > .max-w-6xl::before{
+  content:"";
+  position:absolute;
+  inset:9px;
+  border:1px solid rgba(218,190,151,.18);
+  pointer-events:none;
+}
+
+.provenance-newspaper > .max-w-6xl::after{
+  content:"";
+  position:absolute;
+  left:clamp(20px,4vw,58px);
+  right:clamp(20px,4vw,58px);
+  top:clamp(82px,8vw,112px);
+  height:1px;
+  background:rgba(218,190,151,.28);
+  pointer-events:none;
+}
+
+/* Newspaper masthead. */
+.provenance-newspaper > .max-w-6xl > .flex:first-child{
+  display:block !important;
+  text-align:center;
+  padding-bottom:clamp(28px,4vw,42px);
+  margin-bottom:clamp(26px,4vw,42px) !important;
+  border-top:3px double rgba(218,190,151,.5);
+  border-bottom:3px double rgba(218,190,151,.5);
+}
+
+.provenance-newspaper > .max-w-6xl > .flex:first-child::before{
+  content:"THE RED COCKS";
+  display:block;
+  margin:9px 0 4px;
+  font:700 clamp(24px,4vw,46px)/.9 Georgia,"Times New Roman",serif;
+  letter-spacing:.13em;
+  color:inherit;
+}
+
+.provenance-newspaper > .max-w-6xl > .flex:first-child::after{
+  content:"EST. 2026  •  PROVENANCE & CRAFT  •  SPECIAL EDITION";
+  display:block;
+  margin-top:9px;
+  font:700 8px/1.3 "Courier New",monospace;
+  letter-spacing:.28em;
+  opacity:.62;
+}
+
+/* The actual content becomes newspaper columns. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child){
+  display:grid !important;
+  grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr) !important;
+  gap:0 !important;
+  align-items:start !important;
+}
+
+/* Left article page. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child{
+  padding:0 clamp(18px,3vw,42px) 0 0 !important;
+  border-right:1px solid rgba(218,190,151,.28);
+}
+
+/* Small newspaper section label. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child::before{
+  content:"PROVENANCE  /  01";
+  display:block;
+  width:max-content;
+  padding:5px 9px;
+  margin-bottom:13px;
+  border-top:1px solid currentColor;
+  border-bottom:1px solid currentColor;
+  font:700 8px/1 "Courier New",monospace;
+  letter-spacing:.2em;
+  opacity:.7;
+}
+
+/* Heading becomes a real newspaper headline. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) h2{
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-weight:900 !important;
+  font-size:clamp(42px,6.2vw,78px) !important;
+  line-height:.88 !important;
+  letter-spacing:-.045em !important;
+  text-transform:uppercase;
+  margin:0 0 22px !important;
+  text-align:left !important;
+}
+
+/* Thin headline sub-rule. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) h2::after{
+  content:"";
+  display:block;
+  width:100%;
+  margin-top:18px;
+  border-bottom:1px solid rgba(218,190,151,.3);
+}
+
+/* Body becomes editorial text with a narrow measure. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child > .flex.gap-4{
+  max-width:70ch;
+  display:block !important;
+  padding:0 !important;
+  margin:0 !important;
+  columns:2 210px;
+  column-gap:28px;
+  column-rule:1px solid rgba(218,190,151,.18);
+}
+
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child > .flex.gap-4 p{
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-size:clamp(14px,1.15vw,17px) !important;
+  line-height:1.7 !important;
+  text-align:justify;
+}
+
+/* Preserve the existing colors while making the dossier a newspaper fact box. */
+.provenance-newspaper .heritage-plate{
+  margin-top:28px !important;
+  border-radius:0 !important;
+  border:1px solid rgba(218,190,151,.38) !important;
+  border-top:4px double rgba(218,190,151,.42) !important;
+  background:rgba(10,8,8,.48) !important;
+  box-shadow:none !important;
+}
+
+.provenance-newspaper .heritage-plate::before{
+  content:"VERIFIED CREDENTIALS";
+  display:block;
+  padding:0 0 10px;
+  margin-bottom:3px;
+  border-bottom:1px solid rgba(218,190,151,.2);
+  font:700 8px/1 "Courier New",monospace;
+  letter-spacing:.22em;
+  opacity:.7;
+}
+
+/* Right side = newspaper photograph / visual evidence. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:last-child{
+  padding:0 0 0 clamp(18px,3vw,42px) !important;
+  position:relative;
+}
+
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:last-child::before{
+  content:"VISUAL RECORD  /  02";
+  display:block;
+  padding-bottom:10px;
+  margin-bottom:14px;
+  border-bottom:1px solid rgba(218,190,151,.25);
+  font:700 8px/1 "Courier New",monospace;
+  letter-spacing:.2em;
+  opacity:.7;
+}
+
+.provenance-newspaper .ceo-photocard{
+  border-radius:0 !important;
+  border:1px solid rgba(218,190,151,.42) !important;
+  padding:9px !important;
+  background:rgba(8,7,7,.72) !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.32) !important;
+}
+
+.provenance-newspaper .ceo-photocard::after{
+  content:"CERTIFIED STANDARD  •  THE RED COCKS";
+  position:absolute;
+  left:9px;
+  right:9px;
+  bottom:9px;
+  min-height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 8px;
+  background:rgba(5,4,4,.86);
+  border-top:1px solid rgba(218,190,151,.3);
+  font:700 8px/1.2 "Courier New",monospace;
+  letter-spacing:.18em;
+  color:inherit;
+  pointer-events:none;
+}
+
+.provenance-newspaper .ceo-photocard video{
+  display:block;
+  width:100%;
+}
+
+/* A small caption line below the photo. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:last-child::after{
+  content:"ARCHIVAL VISUAL • PROCESSING • VERIFIED";
+  display:block;
+  padding-top:9px;
+  font:700 7px/1.3 "Courier New",monospace;
+  letter-spacing:.18em;
+  text-align:right;
+  opacity:.5;
+}
+
+/* Mobile newspaper becomes a single-page editorial. */
+@media (max-width:900px){
+  .provenance-newspaper > .max-w-6xl{
+    max-width:calc(100% - 20px) !important;
+    padding:22px 18px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child){
+    grid-template-columns:1fr !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child{
+    padding:0 0 28px !important;
+    border-right:0;
+    border-bottom:1px solid rgba(218,190,151,.28);
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:last-child{
+    padding:28px 0 0 !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child > .flex.gap-4{
+    columns:1;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) h2{
+    font-size:clamp(38px,12vw,60px) !important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .provenance-newspaper *{
+    animation-duration:.01ms !important;
+    transition-duration:.01ms !important;
+  }
+}
+
+
+
+/* ============================================================
+   PROVENANCE — BALANCED EDITORIAL NEWSPAPER
+   Final visual correction: compact masthead, balanced columns,
+   no oversized empty area.
+   ============================================================ */
+.provenance-newspaper{
+  padding:clamp(42px,6vw,78px) 0 !important;
+}
+
+.provenance-newspaper > .max-w-6xl{
+  max-width:1180px !important;
+  padding:clamp(26px,3vw,42px) clamp(22px,3.5vw,50px) !important;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(192,138,82,.045), transparent 28%),
+    linear-gradient(135deg,rgba(30,20,18,.96),rgba(12,9,10,.98)) !important;
+  border:1px solid rgba(192,138,82,.30);
+  box-shadow:0 22px 70px rgba(0,0,0,.30);
+}
+
+/* Compact editorial header — no giant newspaper masthead. */
+.provenance-newspaper > .max-w-6xl > .flex:first-child{
+  display:flex !important;
+  align-items:flex-end !important;
+  justify-content:space-between !important;
+  gap:20px !important;
+  text-align:left !important;
+  padding:0 0 16px !important;
+  margin:0 0 28px !important;
+  border-top:0 !important;
+  border-bottom:1px solid rgba(192,138,82,.35) !important;
+}
+
+.provenance-newspaper > .max-w-6xl > .flex:first-child::before{
+  content:"THE RED COCKS  /  EDITORIAL ARCHIVE" !important;
+  display:block !important;
+  margin:0 !important;
+  font:700 10px/1 "JetBrains Mono","Courier New",monospace !important;
+  letter-spacing:.22em !important;
+  color:rgba(218,190,151,.62) !important;
+}
+
+.provenance-newspaper > .max-w-6xl > .flex:first-child::after{
+  content:"PROVENANCE  •  2026 EDITION" !important;
+  display:block !important;
+  margin:0 !important;
+  font:700 8px/1 "JetBrains Mono","Courier New",monospace !important;
+  letter-spacing:.18em !important;
+  opacity:.55;
+}
+
+/* Real content spread: left 55%, right 45%, aligned at top. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child){
+  display:grid !important;
+  grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr) !important;
+  gap:clamp(26px,4vw,52px) !important;
+  align-items:start !important;
+  margin:0 !important;
+}
+
+/* Left editorial article. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child{
+  padding:0 clamp(20px,3vw,42px) 0 0 !important;
+  border-right:1px solid rgba(192,138,82,.25) !important;
+}
+
+/* Small kicker stays compact. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child::before{
+  content:"01  /  PROVENANCE" !important;
+  display:inline-block;
+  padding:6px 9px;
+  margin:0 0 14px;
+  border-top:1px solid rgba(192,138,82,.42);
+  border-bottom:1px solid rgba(192,138,82,.42);
+  font:700 8px/1 "JetBrains Mono","Courier New",monospace;
+  letter-spacing:.20em;
+  opacity:.65;
+}
+
+/* IMPORTANT: restore the actual existing title size/position. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) h2{
+  max-width:none !important;
+  font-size:clamp(34px,4.2vw,58px) !important;
+  line-height:.98 !important;
+  margin:0 0 18px !important;
+  text-align:left !important;
+  letter-spacing:-.025em !important;
+}
+
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) h2::after{
+  content:"";
+  display:block;
+  width:72px;
+  margin-top:14px;
+  border-bottom:2px solid rgba(192,138,82,.45);
+}
+
+/* Body is one readable editorial column, not a huge blank two-column void. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child > .flex.gap-4{
+  display:flex !important;
+  columns:auto !important;
+  max-width:62ch;
+  padding:0 !important;
+  margin:0 0 22px !important;
+  border:0 !important;
+}
+
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child > .flex.gap-4 p{
+  text-align:left !important;
+  font-family:inherit !important;
+  font-size:clamp(14px,1.1vw,16px) !important;
+  line-height:1.7 !important;
+}
+
+/* Dossier sits naturally below the article. */
+.provenance-newspaper .heritage-plate{
+  margin-top:20px !important;
+  border-radius:14px !important;
+  border:1px solid rgba(192,138,82,.30) !important;
+  border-top:1px solid rgba(192,138,82,.42) !important;
+  background:linear-gradient(135deg,rgba(45,27,22,.55),rgba(12,9,10,.72)) !important;
+  box-shadow:0 12px 34px rgba(0,0,0,.18) !important;
+}
+
+/* Video is a proper editorial visual, vertically aligned with title. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:last-child{
+  padding:0 !important;
+  padding-top:0 !important;
+}
+
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:last-child::before{
+  content:"02  /  VISUAL RECORD" !important;
+  display:block;
+  padding:6px 0 10px;
+  margin:0 0 12px;
+  border-bottom:1px solid rgba(192,138,82,.25);
+  font:700 8px/1 "JetBrains Mono","Courier New",monospace;
+  letter-spacing:.20em;
+  opacity:.65;
+}
+
+.provenance-newspaper .ceo-photocard{
+  width:100%;
+  border-radius:10px !important;
+  padding:8px !important;
+  border:1px solid rgba(192,138,82,.35) !important;
+  background:rgba(7,5,6,.80) !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.30) !important;
+}
+
+.provenance-newspaper .ceo-photocard video{
+  border-radius:5px;
+}
+
+/* Small caption gives the right side editorial character. */
+.provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:last-child::after{
+  content:"CERTIFIED STANDARD  /  HYGIENIC PROCESSING" !important;
+  display:block;
+  margin-top:10px;
+  padding-top:9px;
+  border-top:1px solid rgba(192,138,82,.20);
+  font:700 8px/1.3 "JetBrains Mono","Courier New",monospace;
+  letter-spacing:.16em;
+  text-align:right;
+  opacity:.55;
+}
+
+/* Mobile stays compact and balanced. */
+@media (max-width:900px){
+  .provenance-newspaper > .max-w-6xl > .flex:first-child{
+    align-items:flex-start !important;
+    flex-direction:column !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child){
+    grid-template-columns:1fr !important;
+    gap:30px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child{
+    padding:0 0 28px !important;
+    border-right:0 !important;
+    border-bottom:1px solid rgba(192,138,82,.25) !important;
+  }
+}
+
+@media (max-width:560px){
+  .provenance-newspaper{
+    padding:28px 0 !important;
+  }
+  .provenance-newspaper > .max-w-6xl{
+    max-width:calc(100% - 16px) !important;
+    padding:22px 16px !important;
+  }
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) h2{
+    font-size:clamp(30px,10vw,44px) !important;
+  }
+}
+
+
+
+/* ============================================================
+   PROVENANCE — MOBILE-FIRST POLISH
+   No blank canvas, compact spacing, content-first composition.
+   ============================================================ */
+@media (max-width:900px){
+  .provenance-newspaper{
+    padding:18px 0 26px !important;
+    margin:0 !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl{
+    width:calc(100% - 20px) !important;
+    max-width:none !important;
+    margin:0 auto !important;
+    padding:20px 16px 22px !important;
+    border-radius:14px !important;
+    background:
+      linear-gradient(135deg,rgba(30,20,18,.98),rgba(10,8,9,.99)) !important;
+    box-shadow:0 12px 32px rgba(0,0,0,.25) !important;
+  }
+
+  /* Remove desktop newspaper ornaments that create empty-looking space. */
+  .provenance-newspaper > .max-w-6xl::before{
+    inset:7px !important;
+  }
+  .provenance-newspaper > .max-w-6xl::after{
+    display:none !important;
+  }
+
+  /* Compact header. */
+  .provenance-newspaper > .max-w-6xl > .flex:first-child{
+    display:block !important;
+    padding:0 0 13px !important;
+    margin:0 0 18px !important;
+    border-bottom:1px solid rgba(192,138,82,.30) !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:first-child::before{
+    font-size:8px !important;
+    letter-spacing:.16em !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:first-child::after{
+    margin-top:6px !important;
+    font-size:7px !important;
+    letter-spacing:.12em !important;
+  }
+
+  /* One compact content column. */
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child){
+    display:flex !important;
+    flex-direction:column !important;
+    gap:22px !important;
+    margin:0 !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child{
+    width:100% !important;
+    padding:0 0 20px !important;
+    border-right:0 !important;
+    border-bottom:1px solid rgba(192,138,82,.24) !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child::before{
+    margin-bottom:10px !important;
+    font-size:7px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) h2{
+    font-size:clamp(27px,8.5vw,40px) !important;
+    line-height:1 !important;
+    letter-spacing:-.02em !important;
+    margin:0 0 13px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) h2::after{
+    margin-top:10px !important;
+    width:52px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child > .flex.gap-4{
+    display:block !important;
+    max-width:none !important;
+    margin:0 0 14px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:first-child > .flex.gap-4 p{
+    font-size:14px !important;
+    line-height:1.55 !important;
+    text-align:left !important;
+    margin:0 !important;
+  }
+
+  .provenance-newspaper .heritage-plate{
+    margin-top:14px !important;
+    padding:15px !important;
+    border-radius:10px !important;
+  }
+
+  /* Video immediately follows the text; no vertical dead space. */
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:last-child{
+    width:100% !important;
+    padding:0 !important;
+    margin:0 !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:last-child::before{
+    margin:0 0 9px !important;
+    padding-bottom:8px !important;
+    font-size:7px !important;
+  }
+
+  .provenance-newspaper .ceo-photocard{
+    width:100% !important;
+    padding:6px !important;
+    border-radius:9px !important;
+  }
+
+  .provenance-newspaper .ceo-photocard video{
+    width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    object-fit:cover !important;
+    border-radius:5px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) > .w-full:last-child::after{
+    margin-top:7px !important;
+    padding-top:7px !important;
+    font-size:6.5px !important;
+    letter-spacing:.12em !important;
+  }
+}
+
+@media (max-width:480px){
+  .provenance-newspaper > .max-w-6xl{
+    width:calc(100% - 12px) !important;
+    padding:17px 13px 18px !important;
+    border-radius:11px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:first-child{
+    margin-bottom:15px !important;
+    padding-bottom:10px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child){
+    gap:17px !important;
+  }
+
+  .provenance-newspaper > .max-w-6xl > .flex:not(:first-child) h2{
+    font-size:clamp(25px,8.8vw,34px) !important;
+  }
+
+  .provenance-newspaper .heritage-plate{
+    padding:12px !important;
+    margin-top:11px !important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .provenance-newspaper *{
+    animation-duration:.01ms !important;
+    transition-duration:.01ms !important;
+  }
+}
+
