@@ -192,59 +192,180 @@
   .provenance-newspaper *{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important;}
 }
 </style>
+<style>
+/* THE RED COCKS — Premium Entry Overlay */
+#trc-premium-entry{
+  position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(900px 500px at 50% 45%,rgba(36,61,93,.20),transparent 65%),
+    radial-gradient(700px 420px at 50% 90%,rgba(181,145,74,.07),transparent 70%),
+    #050505;
+  color:#f4f1e9;overflow:hidden;touch-action:none;
+  font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  transition:opacity .7s cubic-bezier(.76,0,.24,1),visibility .7s;
+}
+#trc-premium-entry.trc-leave{opacity:0;visibility:hidden;pointer-events:none}
+#trc-premium-entry:before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+}
+.trc-entry-glow{position:absolute;width:48vw;height:48vw;max-width:650px;max-height:650px;border-radius:50%;
+  background:radial-gradient(circle,rgba(100,130,160,.10),transparent 68%);filter:blur(20px);animation:trc-breathe 5s ease-in-out infinite}
+@keyframes trc-breathe{50%{transform:scale(1.08);opacity:.72}}
+.trc-entry-inner{position:relative;width:min(88vw,760px);height:100%;display:flex;align-items:center;justify-content:center;text-align:center}
+.trc-language{position:absolute;top:18%;left:0;right:0;height:90px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.trc-language span{position:absolute;font-size:clamp(28px,5vw,54px);letter-spacing:-.035em;font-weight:500;opacity:0;transform:translateY(22px) scale(.98);
+  transition:opacity .38s ease,transform .55s cubic-bezier(.2,.8,.2,1)}
+.trc-language span.active{opacity:1;transform:translateY(0) scale(1)}
+.trc-rule{position:absolute;top:calc(18% + 86px);width:44px;height:1px;background:linear-gradient(90deg,transparent,#b89b62,transparent);opacity:.7}
+.trc-brand{position:absolute;top:36%;left:0;right:0;opacity:0;transform:translateY(16px);transition:opacity .9s ease,transform 1s cubic-bezier(.16,1,.3,1)}
+.trc-brand.show{opacity:1;transform:none}
+.trc-kicker{font-size:10px;letter-spacing:.42em;text-transform:uppercase;color:#b8a27a;margin-bottom:18px}
+.trc-title{margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(31px,6vw,70px);letter-spacing:.08em;line-height:1.05}
+.trc-sub{margin-top:16px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#777}
+.trc-swipe{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);width:min(84vw,390px);opacity:0;transition:opacity .8s ease}
+.trc-swipe.show{opacity:1}
+.trc-swipe-label{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:#8f8f8f;margin-bottom:15px}
+.trc-swipe-track{height:62px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(255,255,255,.025);box-shadow:inset 0 0 30px rgba(255,255,255,.018),0 15px 50px rgba(0,0,0,.35);display:flex;align-items:center;padding:6px;position:relative}
+.trc-swipe-track:after{content:"";position:absolute;left:22%;right:22%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent)}
+.trc-swipe-knob{height:50px;width:50px;border-radius:50%;background:linear-gradient(145deg,#e4d5b5,#9d814d);color:#090909;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 5px 25px rgba(0,0,0,.5);cursor:grab;position:relative;z-index:2;transition:transform .08s linear}
+.trc-swipe-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;color:#aaa;font-size:9px;letter-spacing:.25em;text-transform:uppercase}
+.trc-swipe-track.done .trc-swipe-knob{transform:translateX(calc(min(84vw,390px) - 74px))}
+.trc-entry-progress{position:absolute;bottom:7%;font-size:8px;letter-spacing:.22em;color:#555;text-transform:uppercase}
+@media(max-width:600px){
+  .trc-language{top:22%}.trc-rule{top:calc(22% + 78px)}
+  .trc-brand{top:39%}.trc-swipe{bottom:14%}
+}
+@media(prefers-reduced-motion:reduce){
+  #trc-premium-entry *,#trc-premium-entry{animation:none!important;transition:none!important}
+}
+@media(max-width:420px){
+  .trc-entry-glow{filter:blur(8px)}.trc-language span{font-size:30px}
+}
+</style>
+<style>
+/* Premium cinematic reveal: the entry screen clears quickly into the real site. */
+#trc-premium-entry.trc-cinematic-exit:after{
+  content:"";position:absolute;inset:0;z-index:20;pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.96) 0%,rgba(210,224,236,.62) 5%,rgba(9,11,14,.96) 33%,#050505 72%);
+  transform:scale(.12);opacity:1;
+  animation:trcFlashReveal .62s cubic-bezier(.16,1,.3,1) forwards;
+}
+#trc-premium-entry.trc-cinematic-exit .trc-entry-inner{
+  animation:trcEntryLift .48s cubic-bezier(.76,0,.24,1) forwards;
+}
+#trc-premium-entry.trc-cinematic-exit .trc-swipe-track{
+  animation:trcSwipeFlash .34s ease-out forwards;
+}
+#trc-premium-entry.trc-cinematic-exit.trc-leave{opacity:0;visibility:hidden}
+@keyframes trcFlashReveal{
+  0%{transform:scale(.12);opacity:1}
+  38%{transform:scale(1.7);opacity:.95}
+  68%{transform:scale(7);opacity:.72}
+  100%{transform:scale(18);opacity:0}
+}
+@keyframes trcEntryLift{
+  0%{transform:scale(1);opacity:1}
+  100%{transform:scale(1.025) translateY(-5px);opacity:0}
+}
+@keyframes trcSwipeFlash{
+  0%{box-shadow:0 0 0 rgba(226,207,166,0)}
+  50%{box-shadow:0 0 65px rgba(226,207,166,.5)}
+  100%{box-shadow:0 0 0 rgba(226,207,166,0)}
+}
+@media(prefers-reduced-motion:reduce){
+  #trc-premium-entry.trc-cinematic-exit:after{animation-duration:.2s}
+}
+</style>
+<style>
+/* Entry swipe now owns audio unlock; legacy visible sound/tap controls stay hidden. */
+button[id*="sound" i],button[class*="sound" i],
+button[id*="audio" i],button[class*="audio" i],
+button[id*="unmute" i],button[class*="unmute" i],
+[class*="sound-toggle" i],[class*="audio-toggle" i],
+[data-sound-toggle],[data-audio-toggle],[data-unmute]{
+  display:none!important;
+}
+</style>
+<style>
+/* Audio is intentionally unlocked by the entry swipe. No second hero sound control. */
+#hero-sound-toggle{display:none!important;visibility:hidden!important;pointer-events:none!important}
+</style>
+
+<style id="trc-remove-legacy-preloader">
+#trc-preloader{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+</style>
+
+<style id="trc-language-personalities">
+.trc-language span{will-change:transform,opacity;text-shadow:0 10px 35px rgba(0,0,0,.32)}
+.trc-language .trc-lang-hello{
+  font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:.075em;
+  color:#f3efe6;font-style:italic;
+}
+.trc-language .trc-lang-namaste{
+  font-family:"Trebuchet MS",Arial,sans-serif;font-weight:300;letter-spacing:.19em;
+  color:#d9c6a0;text-transform:uppercase;
+}
+.trc-language .trc-lang-hola{
+  font-family:Georgia,"Times New Roman",serif;font-weight:700;letter-spacing:-.025em;
+  color:#f6f4ee;
+}
+.trc-language .trc-lang-kamusta{
+  font-family:"Arial Narrow",Arial,sans-serif;font-weight:800;letter-spacing:.13em;
+  color:#b7c9d8;text-transform:uppercase;
+}
+.trc-language .trc-lang-bonjour{
+  font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:.055em;
+  color:#eee1c8;
+}
+.trc-language .trc-lang-ciao{
+  font-family:"Trebuchet MS",Arial,sans-serif;font-weight:500;letter-spacing:.03em;
+  color:#d8d1ff;font-style:italic;
+}
+.trc-language .trc-lang-salam{
+  font-family:Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:.11em;
+  color:#c9d7d1;
+}
+.trc-language .trc-lang-namaskar{
+  font-family:Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:.04em;
+  color:#f0d7a6;text-shadow:0 0 34px rgba(220,190,130,.16);
+}
+</style>
 </head>
-<body class="selection:bg-pink-500 selection:text-black trc-loading">
+<body class="selection:bg-pink-500 selection:text-black">
 
-<div id="trc-preloader">
-  <div class="trc-grid-bg" aria-hidden="true"></div>
-  <div class="trc-glow trc-glow-a" aria-hidden="true"></div>
-  <div class="trc-glow trc-glow-b" aria-hidden="true"></div>
-  <div class="trc-particles" id="trc-particles" aria-hidden="true"></div>
-
-  <div class="trc-glass-card" id="trc-glass-card">
-    <div class="trc-mark">
-      <div class="trc-mark-glow"></div>
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="trcMarkG" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#e9d5ff"/>
-            <stop offset="50%" stop-color="#c084fc"/>
-            <stop offset="100%" stop-color="#67e8f9"/>
-          </linearGradient>
-        </defs>
-        <path fill="url(#trcMarkG)" d="M50 6c3 6 1 11-3 14 7-2 13 1 16 7 3-6 9-9 15-8-5 4-7 10-5 16 5-3 11-2 15 2-6 2-10 7-10 13 0 12-10 20-22 20h-2c-1 5-5 9-10 9-6 0-11-5-11-11 0-3 1-5 3-7-8-1-14-8-14-16 0-6 3-11 8-14-3-5-2-11 2-15 3 5 8 8 14 8-2-6 0-13 4-18z"/>
-        <circle cx="63" cy="34" r="2.4" fill="#060608"/>
-      </svg>
-    </div>
-
-    <p class="trc-cat-label">Premium Poultry &amp; Meat</p>
-    <h1 class="trc-heading">Step Into <span>The Red Cocks</span></h1>
-    <p class="trc-sub-desc">Farm-fresh, hygienically prepared poultry &amp; meat — crafted with care, delivered with trust.</p>
-
-    <div class="trc-enter-wrap" id="trc-enter-wrap">
-      <div class="trc-slide-track" id="trc-slide-track">
-        <div class="trc-slide-fill" id="trc-slide-fill"></div>
-        <span class="trc-slide-text" id="trc-slide-text">Slide to Enter</span>
-        <div class="trc-slide-handle"
-             id="trc-slide-handle"
-             role="slider"
-             tabindex="0"
-             aria-label="Slide to enter The Red Cocks website"
-             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <span class="trc-handle-pulse" id="trc-handle-pulse" aria-hidden="true"></span>
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 5l6 7-6 7" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M13 5l6 7-6 7" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
-          </svg>
-        </div>
-      </div>
-      <p class="trc-enter-hint" id="trc-enter-hint">Drag right to continue</p>
-    </div>
-  </div>
-
-  <div class="trc-burst" id="trc-burst" aria-hidden="true"></div>
-  <div class="trc-welcome-text" id="trc-welcome-text" aria-live="polite">Welcome to <span>The Red Cocks</span></div>
+<div id="trc-premium-entry" aria-label="THE RED COCKS welcome screen">
+  <div class="trc-entry-glow"></div>
+  <div class="trc-entry-inner">
+    <div class="trc-language" id="trcLanguages">
+  <span class="trc-lang-hello">Hello</span>
+  <span class="trc-lang-namaste">Namaste</span>
+  <span class="trc-lang-hola">Hola</span>
+  <span class="trc-lang-kamusta">Kamusta</span>
+  <span class="trc-lang-bonjour">Bonjour</span>
+  <span class="trc-lang-ciao">Ciao</span>
+  <span class="trc-lang-salam">Salam</span>
+  <span class="trc-lang-namaskar">Namaskar</span>
 </div>
+    <div class="trc-rule"></div>
+    <div class="trc-brand" id="trcBrand">
+      <div class="trc-kicker">An invitation to experience</div>
+      <h1 class="trc-title">THE RED COCKS</h1>
+      <div class="trc-sub">Est. with character · crafted with distinction</div>
+    </div>
+    <div class="trc-swipe" id="trcSwipe">
+      <div class="trc-swipe-label">Swipe to enter</div>
+      <div class="trc-swipe-track" id="trcTrack">
+        <div class="trc-swipe-hint">Enter the experience</div>
+        <div class="trc-swipe-knob" id="trcKnob">→</div>
+      </div>
+    </div>
+    <div class="trc-entry-progress" id="trcProgress">THE RED COCKS · 01</div>
+  </div>
+</div>
+
+
+
 
 <div id="scroll-progress-bar" aria-hidden="true"><i></i></div>
 <div id="canvas3d-container" aria-hidden="true">
@@ -458,11 +579,7 @@
         </div>
       </div>
       <div class="hero-seq-veil"></div>
-      <button type="button" id="hero-sound-toggle" class="hero-sound-btn" aria-label="Turn on video sound" aria-pressed="false">
-        <svg id="hero-sound-icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="22" y1="9" x2="16" y2="15"></line><line x1="16" y1="9" x2="22" y2="15"></line></svg>
-        <svg id="hero-sound-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
-      </button>
-      <div class="hero-seq-content">
+<div class="hero-seq-content">
         <div class="hero-kicker">
           <span class="hk-line"></span>
           <span class="hk-text">Poultry &amp; Meat Business</span>
@@ -1502,165 +1619,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="script.js"></script>
-<script>
-  (function(){
-    var preloader = document.getElementById('trc-preloader');
 
-    // ---- Ambient floating particles ----
-    var particlesEl = document.getElementById('trc-particles');
-    if (particlesEl) {
-      var colors = ['#c084fc', '#67e8f9', '#e9d5ff'];
-      for (var i = 0; i < 24; i++) {
-        var s = document.createElement('span');
-        var left = Math.random() * 100;
-        var delay = Math.random() * 8;
-        var dur = 7 + Math.random() * 5;
-        var dx = (Math.random() * 70 - 35) + 'px';
-        var size = (Math.random() * 2.4 + 1.2).toFixed(1);
-        s.style.width = size + 'px';
-        s.style.height = size + 'px';
-        s.style.left = left + 'vw';
-        s.style.bottom = '-10px';
-        s.style.background = colors[i % colors.length];
-        s.style.boxShadow = '0 0 7px 1px ' + colors[i % colors.length];
-        s.style.animationDelay = delay + 's';
-        s.style.animationDuration = dur + 's';
-        s.style.setProperty('--dx', dx);
-        particlesEl.appendChild(s);
-      }
-    }
-
-    function finish(){
-      preloader.classList.add('trc-leaving');
-      document.body.classList.remove('trc-loading');
-      setTimeout(function(){
-        preloader.remove();
-      }, 850);
-    }
-
-    // ---- Slide-to-Enter gate ------------------------------------------
-    (function(){
-      var track = document.getElementById('trc-slide-track');
-      var fill = document.getElementById('trc-slide-fill');
-      var handle = document.getElementById('trc-slide-handle');
-      var label = document.getElementById('trc-slide-text');
-      var card = document.getElementById('trc-glass-card');
-
-      var hint = document.getElementById('trc-enter-hint');
-      var welcome = document.getElementById('trc-welcome-text');
-      var pulse = document.getElementById('trc-handle-pulse');
-      var burst = document.getElementById('trc-burst');
-      if (!track || !handle) { finish(); return; }
-
-      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var dragging = false;
-      var startX = 0;
-      var startLeft = 0;
-      var maxX = 0;
-      var current = 0; // 0..maxX
-      var done = false;
-
-      function metrics(){
-        maxX = Math.max(1, track.clientWidth - handle.offsetWidth - 8);
-      }
-      metrics();
-      window.addEventListener('resize', metrics);
-
-      function render(x){
-        current = Math.max(0, Math.min(maxX, x));
-        var frac = current / maxX;
-        var scale = dragging ? 1.06 : 1;
-        handle.style.transform = 'translateX(' + current + 'px) scale(' + scale + ')';
-        fill.style.width = (current + handle.offsetWidth) + 'px';
-        label.style.opacity = Math.max(0, 1 - frac * 1.6);
-        label.style.transform = 'translateX(' + (frac * 14) + 'px)';
-        handle.setAttribute('aria-valuenow', Math.round(frac * 100));
-      }
-
-      function snapBack(){
-        handle.style.transition = reduceMotion ? 'none' : 'transform .45s cubic-bezier(.34,1.56,.64,1)';
-        fill.style.transition = reduceMotion ? 'none' : 'width .45s cubic-bezier(.34,1.56,.64,1)';
-        label.style.transition = reduceMotion ? 'none' : 'opacity .3s ease, transform .3s ease';
-        render(0);
-        setTimeout(function(){
-          handle.style.transition = '';
-          fill.style.transition = '';
-        }, 460);
-      }
-
-      function complete(){
-        if (done) return;
-        done = true;
-        // This runs directly inside the completed slide gesture. It grants
-        // the hero video permission to restart from the beginning with sound,
-        // without exposing or animating the sound button.
-        if (window.trcEnterWithHeroSound) window.trcEnterWithHeroSound();
-        handle.style.transition = reduceMotion ? 'none' : 'transform .3s ease';
-        fill.style.transition = reduceMotion ? 'none' : 'width .3s ease';
-        render(maxX);
-        handle.setAttribute('aria-valuenow', 100);
-
-        if (burst) burst.classList.add('is-firing');
-
-        setTimeout(function(){
-          if (card) card.classList.add('trc-card-done');
-          if (welcome) welcome.classList.add('is-shown');
-          setTimeout(finish, reduceMotion ? 250 : 1100);
-        }, reduceMotion ? 0 : 250);
-      }
-
-      function onPointerDown(e){
-        if (done) return;
-        dragging = true;
-        handle.classList.add('is-dragging');
-        if (pulse) pulse.classList.add('is-stopped');
-        if (hint) hint.classList.add('is-shown');
-        handle.style.transition = 'none';
-        fill.style.transition = 'none';
-        label.style.transition = 'none';
-        startX = (e.touches ? e.touches[0].clientX : e.clientX);
-        startLeft = current;
-        document.addEventListener('pointermove', onPointerMove, { passive: false });
-        document.addEventListener('pointerup', onPointerUp);
-        document.addEventListener('touchmove', onPointerMove, { passive: false });
-        document.addEventListener('touchend', onPointerUp);
-      }
-      function onPointerMove(e){
-        if (!dragging) return;
-        e.preventDefault();
-        var clientX = (e.touches ? e.touches[0].clientX : e.clientX);
-        render(startLeft + (clientX - startX));
-      }
-      function onPointerUp(){
-        if (!dragging) return;
-        dragging = false;
-        handle.classList.remove('is-dragging');
-        document.removeEventListener('pointermove', onPointerMove);
-        document.removeEventListener('pointerup', onPointerUp);
-        document.removeEventListener('touchmove', onPointerMove);
-        document.removeEventListener('touchend', onPointerUp);
-        if (current >= maxX * 0.82) {
-          complete();
-        } else {
-          snapBack();
-        }
-      }
-
-      handle.addEventListener('pointerdown', onPointerDown);
-      handle.addEventListener('touchstart', onPointerDown, { passive: true });
-      handle.addEventListener('keydown', function(e){
-        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-          e.preventDefault();
-          complete();
-        }
-      });
-
-      if (hint) {
-        setTimeout(function(){ hint.classList.add('is-shown'); }, 1400);
-      }
-    })();
-  })();
-</script>
 
 <script>
   // ── THE RED COCKS: App install (PWA) ──────────────────────────────
@@ -1764,5 +1723,218 @@
     }
   })();
 </script>
+
+<script>
+(function(){
+  const overlay=document.getElementById('trc-premium-entry');
+  if(!overlay) return;
+  const langs=[...overlay.querySelectorAll('.trc-language span')];
+  const brand=document.getElementById('trcBrand'), swipe=document.getElementById('trcSwipe');
+  const track=document.getElementById('trcTrack'), knob=document.getElementById('trcKnob');
+  const progress=document.getElementById('trcProgress');
+  let i=0,dragging=false,startX=0,current=0,unlocked=false;
+  let ac=null, master=null, osc=null, osc2=null;
+  let impactPlayed=false;
+
+  function showLang(n){
+    langs.forEach((el,k)=>el.classList.toggle('active',k===n));
+    if(progress) progress.textContent='THE RED COCKS · '+String(n+1).padStart(2,'0');
+  }
+  showLang(0);
+  const interval=setInterval(()=>{
+    i++;
+    if(i<langs.length) showLang(i);
+    else {
+      clearInterval(interval);
+      setTimeout(()=>brand.classList.add('show'),180);
+      setTimeout(()=>swipe.classList.add('show'),650);
+    }
+  },430);
+
+  function startSwipeSound(){
+    if(ac) return;
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC) return;
+      ac=new AC();
+      if(ac.state==="suspended") ac.resume();
+      const now=ac.currentTime;
+      master=ac.createGain();
+      master.gain.setValueAtTime(0.0001,now);
+      master.gain.exponentialRampToValueAtTime(0.028,now+0.10);
+      master.connect(ac.destination);
+
+      osc=ac.createOscillator();
+      const g1=ac.createGain();
+      osc.type="sine";
+      osc.frequency.setValueAtTime(220,now);
+      osc.frequency.linearRampToValueAtTime(300,now+0.45);
+      g1.gain.value=0.34;
+      osc.connect(g1); g1.connect(master); osc.start();
+
+      osc2=ac.createOscillator();
+      const g2=ac.createGain();
+      osc2.type="sine";
+      osc2.frequency.setValueAtTime(329.63,now);
+      osc2.frequency.linearRampToValueAtTime(392,now+0.55);
+      g2.gain.value=0.10;
+      osc2.connect(g2); g2.connect(master); osc2.start();
+    }catch(e){}
+  }
+
+  function stopSwipeSound(){
+    if(!ac || !master) return;
+    try{
+      const now=ac.currentTime;
+      master.gain.cancelScheduledValues(now);
+      master.gain.setValueAtTime(Math.max(master.gain.value,0.0001),now);
+      master.gain.exponentialRampToValueAtTime(0.0001,now+0.10);
+      if(osc) osc.stop(now+0.12);
+      if(osc2) osc2.stop(now+0.12);
+    }catch(e){}
+    osc=null; osc2=null; master=null;
+    setTimeout(()=>{try{ac.close()}catch(e){} ac=null},180);
+  }
+
+  function unlockHeroAudio(){
+    /*
+     * The hero is a Cloudinary iframe, not a normal <video>.
+     * Do NOT unmute every video on the page: that can make other media
+     * become audible after entry. Change ONLY the hero iframe to muted=false.
+     */
+    const hero=document.getElementById('hero-video-iframe-el');
+    if(hero){
+      try{
+        const u=new URL(hero.src,window.location.href);
+        u.searchParams.set('autoplay','true');
+        u.searchParams.set('muted','false');
+        u.searchParams.set('controls','false');
+        u.searchParams.set('playsinline','true');
+        hero.src=u.toString();
+      }catch(e){
+        try{
+          hero.src=hero.src.replace(/([?&])muted=true\b/i,'$1muted=false');
+        }catch(_){}
+      }
+    }
+    document.dispatchEvent(new CustomEvent('trcEntryUnlocked'));
+  }
+
+  function playRevealImpact(){
+    /* One very short, soft cinematic hit — played only after the swipe sound
+       has been released, and only from the same user gesture. */
+    if(impactPlayed) return;
+    impactPlayed=true;
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC) return;
+      const ctx=new AC();
+      const now=ctx.currentTime;
+      const bus=ctx.createGain();
+      bus.gain.setValueAtTime(0.0001,now);
+      bus.gain.exponentialRampToValueAtTime(0.045,now+0.012);
+      bus.gain.exponentialRampToValueAtTime(0.0001,now+0.22);
+      bus.connect(ctx.destination);
+
+      const low=ctx.createOscillator();
+      const lg=ctx.createGain();
+      low.type='sine';
+      low.frequency.setValueAtTime(105,now);
+      low.frequency.exponentialRampToValueAtTime(48,now+0.20);
+      lg.gain.value=0.7;
+      low.connect(lg); lg.connect(bus); low.start(now); low.stop(now+0.23);
+
+      const air=ctx.createOscillator();
+      const ag=ctx.createGain();
+      air.type='triangle';
+      air.frequency.setValueAtTime(880,now);
+      air.frequency.exponentialRampToValueAtTime(430,now+0.12);
+      ag.gain.value=0.035;
+      air.connect(ag); ag.connect(bus); air.start(now); air.stop(now+0.14);
+
+      setTimeout(()=>{try{ctx.close()}catch(_){ }},300);
+    }catch(e){}
+  }
+
+  function finish(){
+    if(unlocked) return;
+    unlocked=true;
+    clearInterval(interval);
+    stopSwipeSound();
+
+    track.classList.add('done');
+    overlay.classList.add('trc-cinematic-exit');
+
+    /* The swipe itself is the user gesture: after the swipe tone is stopped,
+       fire exactly one tiny reveal impact and unlock ONLY the hero audio. */
+    setTimeout(playRevealImpact,115);
+    unlockHeroAudio();
+
+    setTimeout(()=>overlay.classList.add('trc-leave'),180);
+    setTimeout(()=>overlay.remove(),850);
+  }
+
+  function move(x){
+    const rect=track.getBoundingClientRect(), max=rect.width-62;
+    current=Math.max(0,Math.min(max,x-startX+current));
+    knob.style.transform='translate3d('+current+'px,0,0)';
+    if(current>max*.72) finish();
+  }
+
+  knob.addEventListener('pointerdown',e=>{
+    if(unlocked)return;
+    dragging=true; startX=e.clientX-current;
+    try{knob.setPointerCapture(e.pointerId)}catch(_){}
+    knob.style.cursor='grabbing'; track.classList.add('trc-dragging');
+    startSwipeSound();
+  });
+  knob.addEventListener('pointermove',e=>{
+    if(dragging){
+      move(e.clientX);
+      /* The tone follows the physical swipe rather than playing after entry. */
+      if(ac && osc && track){
+        try{
+          const rect=track.getBoundingClientRect(), max=Math.max(1,rect.width-62);
+          const pct=Math.max(0,Math.min(1,current/max));
+          osc.frequency.setTargetAtTime(220+160*pct,ac.currentTime,0.045);
+          if(osc2) osc2.frequency.setTargetAtTime(330+150*pct,ac.currentTime,0.06);
+        }catch(_){}
+      }
+    }
+  });
+
+  function reset(){
+    if(unlocked)return;
+    dragging=false; knob.style.cursor='grab'; track.classList.remove('trc-dragging');
+    current=0; knob.style.transform='translate3d(0,0,0)';
+    stopSwipeSound();
+  }
+  knob.addEventListener('pointerup',reset);
+  knob.addEventListener('pointercancel',reset);
+
+  let sx=0,sy=0;
+  overlay.addEventListener('touchstart',e=>{
+    if(unlocked)return;
+    const t=e.changedTouches[0]; sx=t.clientX; sy=t.clientY;
+  },{passive:true});
+  overlay.addEventListener('touchmove',e=>{
+    if(unlocked)return;
+    const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+    /* Audio starts only once the finger is physically moving horizontally.
+       A stationary tap/touch is completely silent. */
+    if(Math.abs(dx)>4 && Math.abs(dx)>Math.abs(dy)) startSwipeSound();
+  },{passive:true});
+  overlay.addEventListener('touchend',e=>{
+    const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+    if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)) finish();
+    else stopSwipeSound();
+  },{passive:true});
+
+  setTimeout(()=>{
+    if(!unlocked){brand.classList.add('show');swipe.classList.add('show')}
+  },7000);
+})();
+</script>
+
 </body>
 </html>
